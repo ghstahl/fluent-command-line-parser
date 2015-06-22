@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Fclp.Internals.Parsing;
 
 namespace Fclp.Internals
@@ -53,25 +54,10 @@ namespace Fclp.Internals
 		/// </summary>
 		void BindDefault();
 
-		/// <summary>
-		/// Gets the short name of this <see cref="ICommandLineOption"/>.
-		/// </summary>
-		string ShortName { get; }
-
-		/// <summary>
-		/// Gets the long name of this <see cref="ICommandLineOption"/>.
-		/// </summary>
-		string LongName { get; }
-
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> has a long name.
-		/// </summary>
-		bool HasLongName { get; }
-
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> has a short name.
-		/// </summary>
-		bool HasShortName { get; }
+        /// <summary>
+        /// All the option names that are associated with this option
+        /// </summary>
+        IDictionary<string,string> OptionNames { get; }
 
 		/// <summary>
 		/// Gets whether this <see cred="ICommandLineOption"/> has a callback setup.

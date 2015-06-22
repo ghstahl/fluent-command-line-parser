@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -43,49 +44,12 @@ namespace Fclp.Internals.Validators
 		/// <exception cref="ArgumentNullException">if <paramref name="commandLineOption"/> is null.</exception>
 		public void Validate(ICommandLineOption commandLineOption)
 		{
-			if (commandLineOption == null) throw new ArgumentNullException("commandLineOption");
+			if (commandLineOption == null) 
+                throw new ArgumentNullException("commandLineOption");
+            if (commandLineOption.OptionNames == null) 
+                throw new NullReferenceException("commandLineOption.OptionNames");
+ 		}
 
-			ValidateShortName(commandLineOption.ShortName);
-			ValidateLongName(commandLineOption.LongName);
-			ValidateShortAndLongName(commandLineOption.ShortName, commandLineOption.LongName);
-		}
-
-		private static void ValidateShortAndLongName(string shortName, string longName)
-		{
-			if (string.IsNullOrEmpty(shortName) && string.IsNullOrEmpty(longName))
-			{
-				ThrowInvalid(string.Empty, "A short or long name must be provided.");
-			}
-		}
-
-		private static void ValidateLongName(string longName)
-		{
-			if (string.IsNullOrEmpty(longName)) return;
-
-			VerifyDoesNotContainsReservedChar(longName);
-
-			if (longName.Length == 1)
-			{
-				ThrowInvalid(longName, "Long names must be longer than a single character. Single characters are reserved for short options only.");
-			}
-		}
-
-		private static void ValidateShortName(string shortName)
-		{
-			if (string.IsNullOrEmpty(shortName)) return;
-
-			if (shortName.Length > 1)
-			{
-				ThrowInvalid(shortName, "Short names must be a single character only.");
-			}
-
-			VerifyDoesNotContainsReservedChar(shortName);
-
-			if (char.IsControl(shortName, 0))
-			{
-				ThrowInvalid(shortName, "The character '" + shortName + "' is not valid for a short name.");
-			}
-		}
 
 		private static void VerifyDoesNotContainsReservedChar(string value)
 		{

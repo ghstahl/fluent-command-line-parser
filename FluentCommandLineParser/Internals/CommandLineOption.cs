@@ -38,29 +38,64 @@ namespace Fclp.Internals
 	public class CommandLineOption<T> : ICommandLineOptionResult<T>
 	{
 		#region Constructors
+ 
+        private void InternalConstructor(string[] names, ICommandLineOptionParser<T> parser)
+	    {
 
-		/// <summary>
-		/// Initialises a new instance of the <see cref="CommandLineOption{T}"/> class.
-		/// </summary>
-		/// <param name="shortName">The short name for this Option or <c>null</c> if not required. Either <paramref name="shortName"/> or <paramref name="longName"/> must not be <c>null</c>, <c>empty</c> or contain only <c>whitespace</c>.</param>
-		/// <param name="longName">The long name for this Option or <c>null</c> if not required. Either <paramref name="shortName"/> or <paramref name="longName"/> must not be <c>null</c>, <c>empty</c> or contain only <c>whitespace</c>.</param>
-		/// <param name="parser">The parser to use for this Option.</param>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if both <paramref name="shortName"/> and <paramref name="longName"/> are <c>null</c>, <c>empty</c> or contain only <c>whitespace</c>.</exception>
-		/// <exception cref="ArgumentNullException">If <paramref name="parser"/> is <c>null</c>.</exception>
-		public CommandLineOption(string shortName, string longName, ICommandLineOptionParser<T> parser)
-		{
-			if (parser == null) throw new ArgumentNullException("parser");
+            if (parser == null)
+                throw new ArgumentNullException("parser");
 
-			this.ShortName = shortName;
-			this.LongName = longName;
-			this.Parser = parser;
-		}
+            if (names == null)
+                throw new ArgumentNullException("names");
+
+            if (!names.Any())
+            {
+                throw new ArgumentOutOfRangeException("names", "names is empty");
+            }
+
+            foreach (var name in names)
+            {
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    OptionsDictionary.Add(name, "");
+                }
+            }
+            if (OptionsDictionary.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException("names", "names contained nothing that could be used");
+            }
+            this.Parser = parser;
+	    }
+
+	    /// <summary>
+	    /// Construct with string array of names
+	    /// </summary>
+	    /// <param name="names"></param>
+	    /// <param name="parser"></param>
+	    /// <exception cref="ArgumentNullException"></exception>
+	    public CommandLineOption(string[] names, ICommandLineOptionParser<T> parser)
+	    {
+	        InternalConstructor(names, parser);
+	    }
 
 		#endregion
 
 		#region Properties
 
-		/// <inheritdoc/>
+	    private Dictionary<string, string> _caseInsensitiveOptionsDictionary;
+
+	    private Dictionary<string, string> OptionsDictionary
+	    {
+	        get
+	        {
+	            return _caseInsensitiveOptionsDictionary
+	                   ??
+	                   (_caseInsensitiveOptionsDictionary =
+	                       new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
+	        }
+	    }
+
+	    /// <inheritdoc/>
 		/// <summary>
 		/// Gets or sets the parser to use for this <see cref="CommandLineOption{T}"/>.
 		/// </summary>
@@ -82,15 +117,7 @@ namespace Fclp.Internals
 		/// </summary>
 		public bool IsRequired { get; set; }
 
-		/// <summary>
-		/// Gets the short name of this <see cref="ICommandLineOption"/>.
-		/// </summary>
-		public string ShortName { get; set; }
 
-		/// <summary>
-		/// Gets the long name of this <see cref="ICommandLineOption"/>.
-		/// </summary>
-		public string LongName { get; set; }
 
 		/// <summary>
 		/// Gets whether this <see cref="ICommandLineOption"/> has a default value setup.
@@ -108,22 +135,6 @@ namespace Fclp.Internals
 				var genericArgs = type.GetGenericArguments();
 				return genericArgs.Any() ? genericArgs.First() : type;
 			}
-		}
-
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOptionFluent{T}"/> has a long name.
-		/// </summary>
-		public bool HasLongName
-		{
-			get { return this.LongName.IsNullOrWhiteSpace() == false; }
-		}
-
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOptionFluent{T}"/> has a short name.
-		/// </summary>
-		public bool HasShortName
-		{
-			get { return this.ShortName.IsNullOrWhiteSpace() == false; }
 		}
 
 		/// <summary>
@@ -168,7 +179,15 @@ namespace Fclp.Internals
 				this.Bind(this.Default);
 		}
 
-		void Bind(T value)
+	    /// <summary>
+	    /// Returns a Dictionary of option names
+	    /// </summary>
+        public IDictionary<string, string> OptionNames
+	    {
+	        get { return OptionsDictionary; }
+	    }
+
+	    void Bind(T value)
 		{
 			if (this.HasCallback)
 				this.ReturnCallback(value);

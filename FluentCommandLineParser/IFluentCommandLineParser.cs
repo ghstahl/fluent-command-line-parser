@@ -34,58 +34,21 @@ namespace Fclp
 	/// </summary>
 	public interface IFluentCommandLineParser
 	{
-		/// <summary>
-		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified short and long Option name.
-		/// </summary>
-		/// <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
-		/// <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-		/// <returns></returns>
-		/// <exception cref="OptionAlreadyExistsException">
-		/// A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="IFluentCommandLineParser"/>.
-		/// </exception>
-		/// <exception cref="InvalidOptionNameException">
-		/// Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
-		/// or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-		/// </exception>
-		ICommandLineOptionFluent<T> Setup<T>(char shortOption, string longOption);
 
-		/// <summary>
-		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified short and long Option name.
-		/// </summary>
-		/// <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
-		/// <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-		/// <returns></returns>
-		/// <exception cref="OptionAlreadyExistsException">
-		/// A Option with the same <paramref name="shortOption"/> name or <paramref name="longOption"/> name already exists in the <see cref="IFluentCommandLineParser"/>.
-		/// </exception>
-		/// <exception cref="InvalidOptionNameException">
-		/// Either <paramref name="shortOption"/> or <paramref name="longOption"/> are not valid. <paramref name="shortOption"/> must not be <c>whitespace</c>
-		/// or a control character. <paramref name="longOption"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-		/// </exception>
-		[Obsolete("Use new overload Setup<T>(char, string) to specify both a short and long option name instead.")]
-		ICommandLineOptionFluent<T> Setup<T>(string shortOption, string longOption);
-			
-		/// <summary>
-		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified short Option name.
-		/// </summary>
-		/// <param name="shortOption">The short name for the Option. This must not be <c>whitespace</c> or a control character.</param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOptionNameException">if <paramref name="shortOption"/> is invalid for a short option.</exception>
-		/// <exception cref="OptionAlreadyExistsException">
-		/// A Option with the same <paramref name="shortOption"/> name 
-		/// already exists in the <see cref="IFluentCommandLineParser"/>.
-		/// </exception>
-		ICommandLineOptionFluent<T> Setup<T>(char shortOption);
-
-		/// <summary>
-		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified long Option name.
-		/// </summary>
-		/// <param name="longOption">The long name for the Option. This must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.</param>
-		/// <exception cref="InvalidOptionNameException">if <paramref name="longOption"/> is invalid for a long option.</exception>
-		/// <exception cref="OptionAlreadyExistsException">
-		/// A Option with the same <paramref name="longOption"/> name already exists in the <see cref="IFluentCommandLineParser"/>.
-		/// </exception>
-		ICommandLineOptionFluent<T> Setup<T>(string longOption);
+	    /// <summary>
+	    /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
+	    /// </summary>
+	    /// <typeparam name="T"></typeparam>
+	    /// <param name="optionNames"></param>
+	    /// <returns></returns>
+	    /// <exception cref="OptionAlreadyExistsException">
+	    /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
+	    /// </exception>
+	    /// <exception cref="InvalidOptionNameException">
+	    /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
+	    /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
+	    /// </exception>
+	    ICommandLineOptionFluent<T> Setup<T>(string[] optionNames);
 
 		/// <summary>
 		/// Setup the help args.
@@ -93,7 +56,7 @@ namespace Fclp
 		/// <param name="helpArgs">The help arguments to register.</param>
 		IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs);
 
-		/// <summary>
+        /// <summary>
 		/// Parses the specified <see><cref>T:System.String[]</cref></see> using the setup Options.
 		/// </summary>
 		/// <param name="args">The <see><cref>T:System.String[]</cref></see> to parse.</param>

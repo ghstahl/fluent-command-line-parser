@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Text;
 using Fclp.Internals.Errors;
 using Fclp.Internals.Extensions;
@@ -86,9 +87,13 @@ namespace Fclp
 
 		private static string GetOptionText(ICommandLineParserError error)
 		{
-			var optionText = error.Option.LongName.IsNullOrWhiteSpace()
-				                 ? error.Option.ShortName
-				                 : error.Option.ShortName + ":" + error.Option.LongName;
+            var optionText = "";
+            foreach (var name in error.Option.OptionNames)
+            {
+                optionText += name + ":";
+            }
+            optionText = optionText.TrimEnd(':');
+
 			return optionText;
 		}
 	}

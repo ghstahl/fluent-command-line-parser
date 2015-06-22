@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Linq;
 
 namespace Fclp.Internals.Validators
 {
@@ -52,33 +53,26 @@ namespace Fclp.Internals.Validators
 		{
 			get { return _parser.IsCaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase; }
 		}
-		
-		/// <summary>
-		/// Verifies that the specified <see cref="ICommandLineOption"/> will not cause any duplication.
-		/// </summary>
-		/// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate.</param>
-		public void Validate(ICommandLineOption commandLineOption)
-		{
-			foreach (var option in _parser.Options)
-			{
-				if (string.IsNullOrEmpty(commandLineOption.ShortName) == false)
-				{
-					ValuesAreEqual(commandLineOption.ShortName, option.ShortName);
-				}
 
-				if (string.IsNullOrEmpty(commandLineOption.LongName) == false)
-				{
-					ValuesAreEqual(commandLineOption.LongName, option.LongName);
-				}				
-			}
-		}
+	    /// <summary>
+	    /// Verifies that the specified <see cref="ICommandLineOption"/> will not cause any duplication.
+	    /// </summary>
+	    /// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate.</param>
+	    public void Validate(ICommandLineOption commandLineOption)
+	    {
+	        foreach (var option in _parser.Options)
+	        {
+	            foreach (var targetOption in commandLineOption.OptionNames)
+	            {
+	                var key = targetOption.Key;
+	                if (option.OptionNames.ContainsKey(key))
+	                {
+	                    throw new OptionAlreadyExistsException(key.ToString());
+	                }
 
-		private void ValuesAreEqual(string value, string otherValue)
-		{
-			if (string.Equals(value, otherValue, ComparisonType))
-			{
-				throw new OptionAlreadyExistsException(value);
-			}
-		}
+	            }
+	        }
+	    }
+
 	}
 }

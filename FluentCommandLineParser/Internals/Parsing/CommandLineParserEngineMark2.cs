@@ -77,19 +77,12 @@ namespace Fclp.Internals.Parsing
 			}
 		}
 
-		private void AddParsedOptionToList(ParsedOption parsedOption)
-		{
-			if (ShortOptionNeedsToBeSplit(parsedOption))
-			{
-				_parsedOptions.AddRange(CloneAndSplit(parsedOption));
-			}
-			else
-			{
-				_parsedOptions.Add(parsedOption);
-			}
-		}
+	    private void AddParsedOptionToList(ParsedOption parsedOption)
+	    {
+	        _parsedOptions.Add(parsedOption);
+	    }
 
-		private void AddAdditionArgument(string argument)
+	    private void AddAdditionArgument(string argument)
 		{
 			if (IsEndOfOptionsKey(argument) == false)
 			{
@@ -100,11 +93,6 @@ namespace Fclp.Internals.Parsing
 		private static bool ShortOptionNeedsToBeSplit(ParsedOption parsedOption)
 		{
 			return PrefixIsShortOption(parsedOption.Prefix) && parsedOption.Key.Length > 1;
-		}
-
-		private static IEnumerable<ParsedOption> CloneAndSplit(ParsedOption parsedOption)
-		{
-			return parsedOption.Key.Select(c => Clone(parsedOption, c)).ToList();
 		}
 
 		private static ParsedOption Clone(ParsedOption toClone, char c)
