@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using System.Globalization;
 using Fclp.Internals;
 using Fclp.Internals.Validators;
@@ -43,7 +44,7 @@ namespace Fclp.Tests.Internals.Validators
 		{
 			abstract class ValidateTestContext : CommandLineOptionNameValidatorTestContext
 			{
-				protected const string ValidShortName = "s";
+				protected const string ValidShortName = WellKnownOptionNames.LittleS;
 				protected const string ValidLongName = "long";
 
 				protected static Mock<ICommandLineOption> option;
@@ -57,8 +58,14 @@ namespace Fclp.Tests.Internals.Validators
 
 				protected static void SetupOptionWith(string shortName = ValidShortName, string longName = ValidLongName)
 				{
-					option.SetupGet(it => it.ShortName).Returns(shortName);
-					option.SetupGet(it => it.LongName).Returns(longName);
+					var _dictMock = new Dictionary<string, string>();
+					if(!string.IsNullOrWhiteSpace(shortName))
+						_dictMock.Add(shortName,"");
+					if (!string.IsNullOrWhiteSpace(longName))
+						_dictMock.Add(longName, "");
+
+					var option = new Mock<ICommandLineOption>();
+					option.SetupGet(x => x.OptionNames).Returns(_dictMock);
 				}
 			}
 

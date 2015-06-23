@@ -42,9 +42,7 @@ namespace Fclp.Tests
 		{
 			class when_initialised : FluentCommandLineParserBuilderTestContext
 			{
-				It should_enable_case_sensitive = () =>
-					sut.IsCaseSensitive.ShouldBeTrue();
-
+ 
 				It should_have_the_fluent_parser_by_default = () =>
 					sut.Parser.ShouldBeOfType<IFluentCommandLineParser>();
 
@@ -53,32 +51,7 @@ namespace Fclp.Tests
 			}
 		}
 
-		sealed class IsCaseSensitive
-		{
-			abstract class IsCaseSensitiveTestContext : FluentCommandLineParserBuilderTestContext { }
-
-			class when_enabled : IsCaseSensitiveTestContext
-			{
-				Because of = () => sut.IsCaseSensitive = true;
-
-				It should_return_enabled = () =>
-					sut.IsCaseSensitive.ShouldBeTrue();
-
-				It should_enable_case_sensitivity_on_the_parser = () =>
-					sut.Parser.IsCaseSensitive.ShouldBeTrue();
-			}
-
-			class when_disabled : IsCaseSensitiveTestContext
-			{
-				Because of = () => sut.IsCaseSensitive = false;
-
-				It should_return_disabled = () =>
-					sut.IsCaseSensitive.ShouldBeFalse();
-
-				It should_disable_case_sensitivity_on_the_parser = () =>
-					sut.Parser.IsCaseSensitive.ShouldBeFalse();
-			}
-		}
+		 
 
 		sealed class Parse
 		{
@@ -96,13 +69,13 @@ namespace Fclp.Tests
 				Establish context = () =>
 				{
 					sut.Setup(x => x.NewValue)
-					   .As('v', "value");
+					   .As(WellKnownOptionNames.LittleV, "value");
 
 					sut.Setup(x => x.RecordId)
-					   .As('r', "recordId");
+					   .As(WellKnownOptionNames.LittleR, "recordId");
 
 					sut.Setup(x => x.Silent)
-					   .As('s', "silent");
+					   .As(WellKnownOptionNames.LittleS, "silent");
 
 					args = new[] { "-r", "10", "-v", "Mr. Smith", "--silent" };
 				};
@@ -122,7 +95,7 @@ namespace Fclp.Tests
 				Establish context = () =>
 				{
 					sut.Setup(x => x.NewValue)
-					   .As('v', "value")
+					   .As(WellKnownOptionNames.LittleV, "value")
 					   .Required();
 
 					args = new[] { "-r", "10", "--silent" };
@@ -141,13 +114,13 @@ namespace Fclp.Tests
 					Create(out expectedDefaultValue);
 
 					sut.Setup(x => x.RecordId)
-					   .As('r', "recordId");
+					   .As(WellKnownOptionNames.LittleR, "recordId");
 
 					sut.Setup(x => x.Silent)
-					   .As('s', "silent");
+					   .As(WellKnownOptionNames.LittleS, "silent");
 
 					sut.Setup(x => x.NewValue)
-					   .As('v', "value")
+					   .As(WellKnownOptionNames.LittleV, "value")
 					   .SetDefault(expectedDefaultValue);
 
 					args = new[] { "-r", "10", "--silent" };
@@ -170,7 +143,7 @@ namespace Fclp.Tests
 						expectedTestEnum = TestEnum.Value1;
 
 						sut.Setup(x => x.Enum)
-							.As('e', "enum");
+							.As(WellKnownOptionNames.LittleE, "enum");
 					};
 				}
 
@@ -183,7 +156,7 @@ namespace Fclp.Tests
 						sut.Object.Enum.ShouldEqual(expectedTestEnum);
 				}
 
-                class when_enum_is_specified_as_valid_int32 : ParseEnumTestContext
+				class when_enum_is_specified_as_valid_int32 : ParseEnumTestContext
 				{
 					Establish context = () =>
 						args = new[] { "-e", ((int)expectedTestEnum).ToString(CultureInfo.InvariantCulture) };
@@ -197,25 +170,25 @@ namespace Fclp.Tests
 					Establish context = () =>
 						args = new[] { "-e", "not-a-valid-enum" };
 
-				    It should_return_an_error_as_part_of_the_result = () =>
-				        result.HasErrors.ShouldBeTrue();
+					It should_return_an_error_as_part_of_the_result = () =>
+						result.HasErrors.ShouldBeTrue();
 
-                    It should_return_an_error_for_the_enum_option = () =>
-                        result.Errors.Single().Option.OptionNames.ContainsKey("e").ShouldBeTrue();
+					It should_return_an_error_for_the_enum_option = () =>
+						result.Errors.Single().Option.OptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
 
 				}
 
-                class when_enum_is_specified_as_invalid_int32 : ParseEnumTestContext
+				class when_enum_is_specified_as_invalid_int32 : ParseEnumTestContext
 				{
 					Establish context = () =>
 						args = new[] { "-e", "123456" };
 
-				    It should_return_an_error_as_part_of_the_result = () =>
-				        result.HasErrors.ShouldBeTrue();
+					It should_return_an_error_as_part_of_the_result = () =>
+						result.HasErrors.ShouldBeTrue();
 
-                    It should_return_an_error_for_the_enum_option = () =>
-                        result.Errors.Single().Option.OptionNames.ContainsKey("e").ShouldBeTrue();
-                }
+					It should_return_an_error_for_the_enum_option = () =>
+						result.Errors.Single().Option.OptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
+				}
 			}
 		}
 	}

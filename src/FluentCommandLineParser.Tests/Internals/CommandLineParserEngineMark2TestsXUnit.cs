@@ -182,15 +182,15 @@ namespace Fclp.Tests.Internals
 		}
 
 		[Theory]
-		[InlineData("-b", "-", "b", null, null)]
-		[InlineData("-b+", "-", "b", null, "+")]
-		[InlineData("-b-", "-", "b", null, "-")]
-		[InlineData("/b", "/", "b", null, null)]
-		[InlineData("/b+", "/", "b", null, "+")]
-		[InlineData("/b-", "/", "b", null, "-")]
-		[InlineData("--b", "--", "b", null, null)]
-		[InlineData("--b+", "--", "b", null, "+")]
-		[InlineData("--b-", "--", "b", null, "-")]
+		[InlineData("-b", "-", WellKnownOptionNames.LittleB, null, null)]
+		[InlineData("-b+", "-", WellKnownOptionNames.LittleB, null, "+")]
+		[InlineData("-b-", "-", WellKnownOptionNames.LittleB, null, "-")]
+		[InlineData("/b", "/", WellKnownOptionNames.LittleB, null, null)]
+		[InlineData("/b+", "/", WellKnownOptionNames.LittleB, null, "+")]
+		[InlineData("/b-", "/", WellKnownOptionNames.LittleB, null, "-")]
+		[InlineData("--b", "--", WellKnownOptionNames.LittleB, null, null)]
+		[InlineData("--b+", "--", WellKnownOptionNames.LittleB, null, "+")]
+		[InlineData("--b-", "--", WellKnownOptionNames.LittleB, null, "-")]
 		public void should_parse_boolean_values_correctly(
 			string arguments,
 			string expectedPrefix,

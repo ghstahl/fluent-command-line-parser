@@ -21,7 +21,7 @@ namespace Fclp.Tests
         [Test]
         public void GenericFclp_UriAsString()
         {
-            const char shortKey = 'u';
+            const string shortKey = "u";
             const string longKey = "uri";
             const string uri = "http://services.internal/backoffce/service/svc";
 
@@ -45,7 +45,7 @@ namespace Fclp.Tests
         [Test]
         public void StandardFclp_UriAsString()
         {
-            const char shortKey = 'u';
+            const string shortKey = "u";
             const string longKey = "uri";
             const string uri = "http://services.internal/backoffce/service/svc";
             string uriAsString = null;
@@ -68,7 +68,7 @@ namespace Fclp.Tests
         [Test]
         public void GenericFclp_Uri()
         {
-            const char shortKey = 'u';
+            const string shortKey = "u";
             const string longKey = "uri";
             const string uri = "http://services.internal/backoffce/service/svc";
 
@@ -92,7 +92,7 @@ namespace Fclp.Tests
         [Test]
         public void StandardFclp_Uri()
         {
-            const char shortKey = 'u';
+            const string shortKey = "u";
             const string longKey = "uri";
             const string uri = "http://services.internal/backoffce/service/svc";
             Uri actualUri = null;
@@ -112,9 +112,9 @@ namespace Fclp.Tests
             }
         }
 
-        private static IEnumerable<TestArguments> CreateAllKeyVariations(char shortKey, string longKey, string value)
+        private static IEnumerable<TestArguments> CreateAllKeyVariations(string shortKey, string longKey, string value)
         {
-            return CreateKeyVariations(new[] { "-", "/" }, shortKey.ToString(), value)
+            return CreateKeyVariations(new[] { "-", "/" }, shortKey, value)
                 .Union(CreateKeyVariations(new[] { "--", "/" }, longKey, value));
         }
 

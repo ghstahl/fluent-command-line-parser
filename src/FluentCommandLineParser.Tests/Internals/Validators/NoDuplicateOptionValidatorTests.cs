@@ -55,8 +55,8 @@ namespace Fclp.Tests.Internals.Validators
 				Establish context = () =>
 				{
 					CreateMock(out option);
-                    var optionNames = new Dictionary<string, string>();
-                    option.SetupGet(it => it.OptionNames).Returns(optionNames);
+					var optionNames = new Dictionary<string, string>();
+					option.SetupGet(it => it.OptionNames).Returns(optionNames);
 				};
 
 				Because of = () =>
@@ -70,15 +70,15 @@ namespace Fclp.Tests.Internals.Validators
 
 				protected static ICommandLineOption CreateOptionWith(string shortName = null, string longName = null)
 				{
-                    var optionNames = new Dictionary<string, string>();
-                    if(!string.IsNullOrWhiteSpace(shortName))
-                        optionNames.Add(shortName,"");
-                    if (!string.IsNullOrWhiteSpace(longName))
-                        optionNames.Add(longName, "");
+					var optionNames = new Dictionary<string, string>();
+					if(!string.IsNullOrWhiteSpace(shortName))
+						optionNames.Add(shortName,"");
+					if (!string.IsNullOrWhiteSpace(longName))
+						optionNames.Add(longName, "");
 
-                    var existingOption = CreateMock<ICommandLineOption>();
+					var existingOption = CreateMock<ICommandLineOption>();
 
-                    existingOption.SetupGet(it => it.OptionNames).Returns(optionNames);
+					existingOption.SetupGet(it => it.OptionNames).Returns(optionNames);
 
 					return existingOption.Object;
 				}
@@ -91,178 +91,7 @@ namespace Fclp.Tests.Internals.Validators
 
 				It should_not_throw_an_error = () => error.ShouldBeNull();
 			}
-
-			sealed class when_case_sensitive
-			{
-				abstract class CaseSensitiveTestContext : ValidateTestContext
-				{
-					Establish context = () => parser.SetupGet(it => it.IsCaseSensitive).Returns(true);
-				}
-
-				class when_an_existing_option_contains_the_same_short_name_but_it_differs_by_case : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_not_throw_an_error = () => error.ShouldBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_name : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_long_name_but_it_differs_by_case : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(longName: option.Object.LongName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_not_throw_an_error = () => error.ShouldBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_long_name : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(longName: option.Object.LongName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_AND_long_name_but_they_differs_by_case : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName.ToUpperInvariant(), longName: option.Object.LongName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_not_throw_an_error = () => error.ShouldBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_AND_long_name : CaseSensitiveTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName, longName: option.Object.LongName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-			}
-
-			sealed class when_ignore_case
-			{
-				abstract class IgnoreCaseTestContext : ValidateTestContext
-				{
-					Establish context = () => parser.SetupGet(it => it.IsCaseSensitive).Returns(false);
-				}
-
-				class when_an_existing_option_contains_the_same_short_name_but_it_differs_by_case : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error_because_case_is_ignored = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_name : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_long_name_but_it_differs_by_case : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(longName: option.Object.LongName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error_because_case_is_ignored = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_long_name : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(longName: option.Object.LongName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_AND_long_name_but_they_differs_by_case : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName.ToUpperInvariant(), longName: option.Object.LongName.ToUpperInvariant());
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error_because_case_is_ignored = () => error.ShouldNotBeNull();
-				}
-
-				class when_an_existing_option_contains_the_same_short_AND_long_name : IgnoreCaseTestContext
-				{
-					Establish context = () =>
-					{
-						var existingOption =
-							CreateOptionWith(shortName: option.Object.ShortName, longName: option.Object.LongName);
-
-						SetupExistingParserOptions(existingOption);
-					};
-
-					It should_throw_an_error = () => error.ShouldNotBeNull();
-				}
-			}
+ 
 		}
 	}
 }

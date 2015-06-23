@@ -48,7 +48,7 @@ namespace Fclp
 	    /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
 	    /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
 	    /// </exception>
-	    ICommandLineOptionFluent<T> Setup<T>(string[] optionNames);
+	    ICommandLineOptionFluent<T> Setup<T>(params string[] optionNames);
 
 		/// <summary>
 		/// Setup the help args.
@@ -73,9 +73,5 @@ namespace Fclp
         /// </summary>
         IHelpCommandLineOption HelpOption { get; set; }
 
-		/// <summary>
-		/// Gets or sets whether values that differ by case are considered different. 
-		/// </summary>
-		bool IsCaseSensitive { get; set; }
 	}
 }

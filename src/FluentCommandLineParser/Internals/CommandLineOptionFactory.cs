@@ -52,9 +52,9 @@ namespace Fclp.Internals
         /// <typeparam name="T">The type of <see cref="ICommandLineOptionResult{T}"/> to create.</typeparam>
         /// <param name="optionNames">An array of option names. Must not be null, empty, or contain nonsense</param>
         /// <returns></returns>
-	    public ICommandLineOptionResult<T> CreateOption<T>(string[] optionNames)
+	    public ICommandLineOptionResult<T> CreateOption<T>(params string[] optionNames)
 	    {
-            return new CommandLineOption<T>(optionNames, this.ParserFactory.CreateParser<T>());
+            return new CommandLineOption<T>( this.ParserFactory.CreateParser<T>(),optionNames);
 	    }
 
 	    /// <summary>

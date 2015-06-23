@@ -42,22 +42,13 @@ namespace Fclp
 	{
 	    private StringComparer StringComparer
 	    {
-	        get { return IsCaseSensitive ? StringComparer.InvariantCultureIgnoreCase : StringComparer.InvariantCulture; }
-	    }
-
-	    /// <summary>
-        /// Initialises a new instance of the <see cref="FluentCommandLineParser"/> class.
-        /// </summary>
-        public FluentCommandLineParser(bool caseSensitive)
-	    {
-	        IsCaseSensitive = caseSensitive;
+	        get { return StringComparer.InvariantCultureIgnoreCase; }
 	    }
 
 		/// <summary>
 		/// Initialises a new instance of the <see cref="FluentCommandLineParser"/> class.
 		/// </summary>
         public FluentCommandLineParser()
-            : this(true)
 		{
 		}
 
@@ -84,14 +75,13 @@ namespace Fclp
 		/// </summary>
 		public bool IsCaseSensitive
 		{
-			get { return StringComparison == CaseSensitiveComparison; }
-			set { StringComparison = value ? CaseSensitiveComparison : IgnoreCaseComparison; }
+			get { return false; }
 		}
 
 		/// <summary>
 		/// Gets the <see cref="StringComparison"/> to use when matching values.
 		/// </summary>
-		internal StringComparison StringComparison { get; private set; }
+		internal StringComparison StringComparison { get { return IgnoreCaseComparison; } }
 
 		/// <summary>
 		/// Gets the list of Options
@@ -198,7 +188,7 @@ namespace Fclp
         /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
         /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
         /// </exception>
-        public ICommandLineOptionFluent<T> Setup<T>(string[] optionNames)
+        public ICommandLineOptionFluent<T> Setup<T>(params string[] optionNames)
 		{
             return SetupInternal<T>(optionNames);
 		}

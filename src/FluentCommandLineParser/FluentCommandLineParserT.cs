@@ -83,15 +83,6 @@ namespace Fclp
 			return Parser.SetupHelp(helpArgs);
 		}
 
-		/// <summary>
-		/// Gets or sets whether values that differ by case are considered different. 
-		/// </summary>
-		public bool IsCaseSensitive
-		{
-			get { return Parser.IsCaseSensitive; }
-			set { Parser.IsCaseSensitive = value; }
-		}
-
         /// <summary>
         /// Gets or sets the option used for when help is detected in the command line args.
         /// </summary>

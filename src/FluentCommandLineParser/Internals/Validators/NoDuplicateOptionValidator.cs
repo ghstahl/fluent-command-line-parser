@@ -51,7 +51,7 @@ namespace Fclp.Internals.Validators
 		/// </summary>
 		private StringComparison ComparisonType
 		{
-			get { return _parser.IsCaseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase; }
+			get { return StringComparison.CurrentCultureIgnoreCase; }
 		}
 
 	    /// <summary>

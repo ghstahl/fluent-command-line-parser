@@ -116,7 +116,7 @@ namespace Fclp.Tests.Internals
 					result.ParsedOptions.Count().ShouldEqual(1);
 
 				It should_set_the_parsed_key_to_the_correct_value = () =>
-					result.ParsedOptions.First().Key.ShouldEqual("b");
+					result.ParsedOptions.First().Key.ShouldEqual(WellKnownOptionNames.LittleB);
 
 				It should_set_the_parsed_raw_key_to_the_correct_value = () =>
 					result.ParsedOptions.First().RawKey.ShouldEqual("-b");

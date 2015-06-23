@@ -34,7 +34,7 @@ namespace Fclp.Tests.FluentCommandLineParser
 	{
 		public class that_is_custom : SettingUpALongOptionTestContext
 		{
-		    private const string valid_short_name_custom_factory = "s";
+		    private const string valid_short_name_custom_factory = WellKnownOptionNames.LittleS;
 		    static ICommandLineOptionFactory customOptionFactory { get { return mockedOptionFactory.Object; } }
 			static Mock<ICommandLineOptionFactory> mockedOptionFactory;
 

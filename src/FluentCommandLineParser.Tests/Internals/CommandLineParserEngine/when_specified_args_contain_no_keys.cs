@@ -54,7 +54,7 @@ namespace Fclp.Tests
 			static string key;
 			Establish context = () =>
 									{
-										key = "s";
+										key = WellKnownOptionNames.LittleS;
 										string arg = string.Format(CultureInfo.InvariantCulture, "{0}{1}{2}", '-', key, '=');
 										args = new[] { arg };
 									};

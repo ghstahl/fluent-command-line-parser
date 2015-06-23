@@ -82,8 +82,11 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             T actual = default(T);
 
-            parser.Setup<T>('s', "long")
-                .Callback(val => actual = val);
+            parser.Setup<T>(WellKnownOptionNames.LittleS, "long")
+                .Callback(val =>
+                {
+                    actual = val;
+                });
 
             var assert = new Action<string[], ICommandLineParserResult>((args, result) =>
             {
@@ -93,7 +96,7 @@ namespace Fclp.Tests
                 Assert.IsFalse(result.Errors.Any(), msg);
             });
 
-            CallParserWithAllKeyVariations(parser, "short", value, assert);
+            CallParserWithAllKeyVariations(parser, WellKnownOptionNames.LittleS, value, assert);
             CallParserWithAllKeyVariations(parser, "long", value, assert);
         }
 
@@ -108,7 +111,7 @@ namespace Fclp.Tests
 
             const string expected = "my description";
 
-            var cmdOption = parser.Setup<string>('s').WithDescription(expected);
+            var cmdOption = parser.Setup<string>(WellKnownOptionNames.LittleS).WithDescription(expected);
 
             var actual = ((ICommandLineOption)cmdOption).Description;
 
@@ -138,7 +141,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<string>('s', key)
+                .Setup<string>(WellKnownOptionNames.LittleS, key)
                 .Callback(val => actual = val);
 
             CallParserWithAllKeyVariations(parser, key, expected, (args, result) =>
@@ -159,7 +162,7 @@ namespace Fclp.Tests
         {
             const int expected = int.MaxValue;
             RunTest(expected.ToString(CultureInfo.InvariantCulture), expected);
-            //const string shortKey = "i";
+            //const string shortKey = WellKnownOptionNames.LittleI;
             //int actual = default(int);
 
             //var parser = CreateFluentParser();
@@ -181,7 +184,7 @@ namespace Fclp.Tests
         public void Ensure_Parser_Calls_The_Callback_With_Expected_Int32_When_Using_Long_option()
         {
             const int expected = int.MaxValue;
-            const char shortKey = 'i';
+            const string shortKey = WellKnownOptionNames.LittleI;
             const string longKey = "int32";
             int actual = default(int);
 
@@ -228,7 +231,7 @@ namespace Fclp.Tests
         {
             const double expected = 1.23456789d;
             RunTest(expected.ToString(CultureInfo.InvariantCulture), expected);
-            //const string shortKey = "d";
+            //const string shortKey = WellKnownOptionNames.LittleD;
             //double actual = default(double);
 
             //var parser = CreateFluentParser();
@@ -249,7 +252,7 @@ namespace Fclp.Tests
         public void Ensure_Parser_Calls_The_Callback_With_Expected_Double_When_Using_Long_option()
         {
             const double expected = 1.23456789d;
-            const char shortKey = 'd';
+            const string shortKey = WellKnownOptionNames.LittleD;
             const string longKey = "double";
             double actual = default(double);
 
@@ -300,7 +303,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e')
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString() });
@@ -318,7 +321,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e', "enum")
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString() });
@@ -336,7 +339,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e')
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", ((int)expected).ToString(CultureInfo.InvariantCulture) });
@@ -354,7 +357,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e', "enum")
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", ((int)expected).ToString(CultureInfo.InvariantCulture) });
@@ -372,7 +375,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e')
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString().ToLowerInvariant() });
@@ -390,7 +393,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e', "enum")
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString().ToLowerInvariant() });
@@ -408,7 +411,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e')
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString().ToUpperInvariant() });
@@ -426,7 +429,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>('e', "enum")
+                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString().ToUpperInvariant() });
@@ -446,7 +449,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>('e')
+                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString() });
@@ -462,7 +465,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>('e')
+                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", TestEnumFlag.Value1.ToString(), TestEnumFlag.Value2.ToString() });
@@ -481,7 +484,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>('e')
+                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", TestEnumFlag.Value1.ToString(), TestEnumFlag.Value2.ToString(), TestEnumFlag.Value0.ToString(), TestEnumFlag.Value64.ToString() });
@@ -560,7 +563,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime>('d', "datetime")
+                .Setup<DateTime>(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", expected.ToString("yyyy-MM-ddThh:mm:ss", CultureInfo.CurrentCulture) });
@@ -582,7 +585,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>('i', "integer")
+            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer", "1"});
@@ -600,7 +603,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>('i', "integer")
+            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer", "abc"});
@@ -618,7 +621,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>('i', "integer")
+            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer"} );
@@ -640,7 +643,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>('d', "double")
+            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double", expected.Value.ToString(CultureInfo.InvariantCulture) });
@@ -658,7 +661,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>('d', "double")
+            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double", "not-a-double" });
@@ -676,7 +679,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>('d', "double")
+            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double" });
@@ -699,7 +702,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>('d', "datetime")
+                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", expected.Value.ToString("yyyy-MM-ddThh:mm:ss", CultureInfo.CurrentCulture) });
@@ -718,7 +721,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>('d', "datetime")
+                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", "not-a-date-time" });
@@ -737,7 +740,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>('d', "datetime")
+                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime" });
@@ -759,7 +762,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>('b', "bool")
+            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool", "true" });
@@ -777,7 +780,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>('b', "bool")
+            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool", "not-a-bool" });
@@ -795,7 +798,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>('b', "bool")
+            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool" });
@@ -817,7 +820,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>('u', "uri")
+            parser.Setup<Uri>("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri", expected });
@@ -834,7 +837,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>('u', "uri")
+            parser.Setup<Uri>("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri", "not-a-uri" });
@@ -851,7 +854,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>('u', "uri")
+            parser.Setup<Uri>("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri" });
@@ -884,11 +887,10 @@ namespace Fclp.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOptionNameException))]
-        public void Cannot_have_single_character_long_option()
+        public void Can_have_single_character_long_option()
         {
             var parser = CreateFluentParser();
-            parser.Setup<string>("s");
+            parser.Setup<string>(WellKnownOptionNames.LittleS);
         }
 
         #endregion
@@ -900,7 +902,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s')
+            parser.Setup<string>(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(null);
@@ -917,7 +919,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s')
+            parser.Setup<string>(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(new string[0]);
@@ -934,7 +936,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s')
+            parser.Setup<string>(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(new[] { "-d" });
@@ -951,7 +953,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s');
+            parser.Setup<string>(WellKnownOptionNames.LittleS);
 
             var result = parser.Parse(new[] { "-d" });
 
@@ -965,9 +967,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s', "string");
+            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>('s', "int32");
+            parser.Setup<int>(WellKnownOptionNames.LittleS, "int32");
         }
 
         [Test]
@@ -976,9 +978,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s', "string");
+            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>('s', "string");
+            parser.Setup<int>(WellKnownOptionNames.LittleS, "string");
         }
 
         [Test]
@@ -987,9 +989,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>('s', "string");
+            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>('i', "string");
+            parser.Setup<int>(WellKnownOptionNames.LittleI, "string");
         }
 
         #endregion
@@ -1004,7 +1006,7 @@ namespace Fclp.Tests
             const string expected = "my expected value";
             string actual = null;
 
-            parser.Setup<string>('s')
+            parser.Setup<string>(WellKnownOptionNames.LittleS)
                 .Callback(s => actual = s)
                 .SetDefault(expected);
 
@@ -1022,7 +1024,7 @@ namespace Fclp.Tests
             const string expected = "my expected value";
             string actual = null;
 
-            parser.Setup<string>('s')
+            parser.Setup<string>(WellKnownOptionNames.LittleS)
                 .Callback(s => actual = s)
                 .SetDefault(expected);
 
@@ -1076,10 +1078,10 @@ namespace Fclp.Tests
             string actualString = null;
             bool actualBool = false;
 
-            parser.Setup<int>('i').Callback(i => actualInt = i).SetDefault(expectedInt);
-            parser.Setup<string>('s').Callback(s => actualString = s).SetDefault(expectedString);
-            parser.Setup<bool>('b').Callback(b => actualBool = b).SetDefault(expectedBool);
-            parser.Setup<double>('d').Callback(d => actualDouble = d).SetDefault(expectedDouble);
+            parser.Setup<int>(WellKnownOptionNames.LittleI).Callback(i => actualInt = i).SetDefault(expectedInt);
+            parser.Setup<string>(WellKnownOptionNames.LittleS).Callback(s => actualString = s).SetDefault(expectedString);
+            parser.Setup<bool>(WellKnownOptionNames.LittleB).Callback(b => actualBool = b).SetDefault(expectedBool);
+            parser.Setup<double>(WellKnownOptionNames.LittleD).Callback(d => actualDouble = d).SetDefault(expectedDouble);
 
             var result = parser.Parse(null);
 
@@ -1105,7 +1107,7 @@ namespace Fclp.Tests
             const bool expectedSwitchB = true;
             const bool expectedSwitchC = false;
 
-            var args = new[] { "-r", expectedRecordId.ToString(CultureInfo.InvariantCulture), "-v", "\"Mr. Smith\"", "--silent", "-ab", "-c-" };
+            var args = new[] { "-r", expectedRecordId.ToString(CultureInfo.InvariantCulture), "-v", "\"Mr. Smith\"", "--silent", "-a", "-b", "-c-" };
 
             var recordId = 0;
             string newValue = null;
@@ -1116,17 +1118,17 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool>('a')
+            parser.Setup<bool>(WellKnownOptionNames.LittleA)
                   .Callback(value => switchA = value);
 
-            parser.Setup<bool>('b')
+            parser.Setup<bool>(WellKnownOptionNames.LittleB)
                   .Callback(value => switchB = value);
 
-            parser.Setup<bool>('c')
+            parser.Setup<bool>(WellKnownOptionNames.LittleC)
                   .Callback(value => switchC = value);
 
             // create a new Option using a short and long name
-            parser.Setup<int>('r', "record")
+            parser.Setup<int>("r", "record")
                     .WithDescription("The record id to update (required)")
                     .Callback(record => recordId = record) // use callback to assign the record value to the local RecordID property
                     .Required(); // fail if this Option is not provided in the arguments
@@ -1137,7 +1139,7 @@ namespace Fclp.Tests
                   .SetDefault(false); // explicitly set the default value to use if this Option is not specified in the arguments
 
 
-            parser.Setup<string>('v', "value")
+            parser.Setup<string>("v", "value")
                     .WithDescription("The new value for the record (required)") // used when help is requested e.g -? or --help 
                     .Callback(value => newValue = value)
                     .Required();
@@ -1165,11 +1167,9 @@ namespace Fclp.Tests
         {
             var parser = new Fclp.FluentCommandLineParser();
 
-            parser.IsCaseSensitive = false;
-
             var formatter = new Mock<ICommandLineOptionFormatter>();
 
-            var args = new[] { "/help", "i", "s" };
+            var args = new[] { "/help", WellKnownOptionNames.LittleI, WellKnownOptionNames.LittleS };
             const string expectedCallbackResult = "blah";
             string callbackResult = null;
 
@@ -1177,8 +1177,8 @@ namespace Fclp.Tests
                     .Callback(s => callbackResult = s)
                     .WithCustomFormatter(formatter.Object);
 
-            parser.Setup<int>('i');
-            parser.Setup<string>('s');
+            parser.Setup<int>(WellKnownOptionNames.LittleI);
+            parser.Setup<string>(WellKnownOptionNames.LittleS);
 
             formatter.Setup(x => x.Format(parser.Options)).Returns(expectedCallbackResult);
 
@@ -1194,19 +1194,17 @@ namespace Fclp.Tests
         {
             var parser = new Fclp.FluentCommandLineParser();
 
-            parser.IsCaseSensitive = false;
-
             var formatter = new Mock<ICommandLineOptionFormatter>();
 
-            var args = new[] { "/help", "i", "s" };
+            var args = new[] { "/help", WellKnownOptionNames.LittleI, WellKnownOptionNames.LittleS };
             const string expectedCallbackResult = "blah";
             bool wasCalled = false;
 
             parser.SetupHelp("?", "HELP", "h")
                     .Callback(() => wasCalled = true);
 
-            parser.Setup<int>('i');
-            parser.Setup<string>('s');
+            parser.Setup<int>(WellKnownOptionNames.LittleI);
+            parser.Setup<string>(WellKnownOptionNames.LittleS);
 
             formatter.Setup(x => x.Format(parser.Options)).Returns(expectedCallbackResult);
 
@@ -1267,63 +1265,15 @@ namespace Fclp.Tests
         #region Case Sensitive
 
         [Test]
-        public void Ensure_Short_Options_Are_Case_Sensitive_When_Enabled()
-        {
-            var parser = CreateFluentParser();
-
-            parser.IsCaseSensitive = true;
-
-            const string expectedUpperCaseValue = "UPPERCASE VALUE";
-            const string expectedLowerCaseValue = "LOWERCASE VALUE";
-
-            string upperCaseValue = null;
-            string lowerCaseValue = null;
-
-            parser.Setup<string>('S').Callback(str => upperCaseValue = str).Required();
-            parser.Setup<string>('s').Callback(str => lowerCaseValue = str).Required();
-
-            var result = parser.Parse(new[] { "-S", expectedUpperCaseValue, "-s", expectedLowerCaseValue });
-
-            Assert.IsFalse(result.HasErrors);
-            Assert.AreEqual(expectedUpperCaseValue, upperCaseValue);
-            Assert.AreEqual(expectedLowerCaseValue, lowerCaseValue);
-        }
-
-        [Test]
-        public void Ensure_Long_Options_Are_Case_Sensitive_When_Enabled()
-        {
-            var parser = CreateFluentParser();
-
-            parser.IsCaseSensitive = true;
-
-            const string expectedUpperCaseValue = "UPPERCASE VALUE";
-            const string expectedLowerCaseValue = "LOWERCASE VALUE";
-
-            string upperCaseValue = null;
-            string lowerCaseValue = null;
-
-            parser.Setup<string>("LONGOPTION").Callback(str => upperCaseValue = str).Required();
-            parser.Setup<string>("longoption").Callback(str => lowerCaseValue = str).Required();
-
-            var result = parser.Parse(new[] { "--LONGOPTION", expectedUpperCaseValue, "--longoption", expectedLowerCaseValue });
-
-            Assert.IsFalse(result.HasErrors);
-            Assert.AreEqual(expectedUpperCaseValue, upperCaseValue);
-            Assert.AreEqual(expectedLowerCaseValue, lowerCaseValue);
-        }
-
-        [Test]
         public void Ensure_Short_Options_Ignore_Case_When_Disabled()
         {
             var parser = CreateFluentParser();
-
-            parser.IsCaseSensitive = false;
 
             const string expectedValue = "expected value";
 
             string actualValue = null;
 
-            parser.Setup<string>('s').Callback(str => actualValue = str).Required();
+            parser.Setup<string>(WellKnownOptionNames.LittleS).Callback(str => actualValue = str).Required();
 
             var result = parser.Parse(new[] { "--S", expectedValue });
 
@@ -1335,9 +1285,7 @@ namespace Fclp.Tests
         public void Ensure_Long_Options_Ignore_Case_When_Disabled()
         {
             var parser = CreateFluentParser();
-
-            parser.IsCaseSensitive = false;
-
+ 
             const string expectedValue = "expected value";
 
             string actualValue = null;
@@ -1358,9 +1306,9 @@ namespace Fclp.Tests
         public void Ensure_Obsolete_Setup_With_Only_Short_Option()
         {
             var parser = CreateFluentParser();
-            parser.Setup<string>("s", null);
+            parser.Setup<string>(WellKnownOptionNames.LittleS, null);
             var option = parser.Options.Single();
-            Assert.IsTrue(option.OptionNames.ContainsKey("s"));
+            Assert.IsTrue(option.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
             Assert.IsTrue(option.OptionNames.Count() == 1);
         }
 
@@ -1379,44 +1327,13 @@ namespace Fclp.Tests
         public void Ensure_Obsolete_Setup_With_Short_And_Long_Option()
         {
             var parser = CreateFluentParser();
-            parser.Setup<string>("s", "long");
+            parser.Setup<string>(WellKnownOptionNames.LittleS, "long");
             var option = parser.Options.Single();
             Assert.IsTrue(option.OptionNames.ContainsKey("long"));
-            Assert.IsTrue(option.OptionNames.ContainsKey("s"));
+            Assert.IsTrue(option.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
         }
 
-        [Test]
-        [ExpectedException(typeof(InvalidOptionNameException))]
-        public void Ensure_Obsolete_Setup_Does_Not_Allow_Null_Short_And_Long_Options()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(null, null);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOptionNameException))]
-        public void Ensure_Obsolete_Setup_Does_Not_Allow_Empty_Short_And_Long_Options()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(string.Empty, string.Empty);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOptionNameException))]
-        public void Ensure_Obsolete_Setup_Does_Not_Allow_Short_Option_With_More_Than_One_Char()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>("ab", null);
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOptionNameException))]
-        public void Ensure_Obsolete_Setup_Does_Not_Allow_Long_Option_With_One_Char()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(null, "s");
-        }
-
+       
         #endregion
 
         #region Addtional Arguments
@@ -1484,8 +1401,7 @@ namespace Fclp.Tests
         public void Ensure_Stable_When_Additional_Args_Are_Provided_But_Capture_Additional_Arguments_Has_Not_Been_Setup()
         {
             var parser = CreateFluentParser();
-
-            parser.Setup<string>("my-option");
+            parser.Setup<string>(new[] {"my-option"});
 
             var result = parser.Parse(new[] { "--my-option", "value", "--", "addArg1", "addArg2" });
 
@@ -1504,12 +1420,11 @@ namespace Fclp.Tests
 
             string option1Value = null;
             string option2Value = null;
-
-            parser.Setup<string>("option-one")
+            parser.Setup<string>(new[] {"option-one"})
                   .Callback(s => option1Value = s)
                   .CaptureAdditionalArguments(option1AddArgs.AddRange);
 
-            parser.Setup<string>("option-two")
+            parser.Setup<string>(new[] {"option-two"})
                   .Callback(s => option2Value = s)
                   .CaptureAdditionalArguments(option2AddArgs.AddRange);
 
@@ -1541,8 +1456,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             var actual = new List<int>();
-
-            parser.Setup<List<int>>("integers")
+            parser.Setup<List<int>>(new[] { "integers" })
                   .Callback(actual.AddRange);
 
             var result = parser.Parse(new[] { "--integers", "--", "123", "-123", "-321", "321" });
@@ -1570,7 +1484,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             int? number = 0;
-            parser.Setup<int>('n').Callback(n => number = n);
+            parser.Setup<int>("n").Callback(n => number = n);
 
             parser.Parse(new[] { "/n=1", "/n=2", "-n=3", "--n=4" });
 

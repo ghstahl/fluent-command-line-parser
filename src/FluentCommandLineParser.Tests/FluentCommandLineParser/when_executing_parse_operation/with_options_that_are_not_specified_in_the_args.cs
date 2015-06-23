@@ -23,6 +23,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Fclp.Internals;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
@@ -45,21 +46,23 @@ namespace Fclp.Tests.FluentCommandLineParser
 
 			Establish context = () =>
 				{
+                    var _dictMock = new Dictionary<string, string> { { "notRequiredAndHasNoDefaultValue", "" }, { "required", "" } };
+
 					// create item that won't be matched an has no default value
 					_notRequiredAndHasNoDefaultValue.SetupGet(x => x.HasDefault).Returns(false);
-					_notRequiredAndHasNoDefaultValue.SetupGet(x => x.ShortName).Returns("notRequiredAndHasNoDefaultValue");
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
 					_notRequiredAndHasNoDefaultValue.Setup(x => x.BindDefault()).Verifiable();
 					sut.Options.Add(_notRequiredAndHasNoDefaultValue.Object);
 					
 					// create item that won't be matched but is required
 					_required.SetupGet(x => x.IsRequired).Returns(true);
-					_required.SetupGet(x => x.ShortName).Returns("required");
-					sut.Options.Add(_required.Object);
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    sut.Options.Add(_required.Object);
 					
 					// create item that isn't required but has a default value
 					_notRequiredButHasDefaultValue.SetupGet(x => x.HasDefault).Returns(true);
-					_notRequiredButHasDefaultValue.SetupGet(x => x.ShortName).Returns("notRequiredButHasDefaultValue");
-					_notRequiredButHasDefaultValue.Setup(x => x.BindDefault()).Verifiable();
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    _notRequiredButHasDefaultValue.Setup(x => x.BindDefault()).Verifiable();
 					sut.Options.Add(_notRequiredButHasDefaultValue.Object);
 
 					// these will be unmatched

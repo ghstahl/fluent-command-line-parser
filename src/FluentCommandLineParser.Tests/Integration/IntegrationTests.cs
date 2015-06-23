@@ -42,10 +42,10 @@ namespace Fclp.Tests.Integration
 		[BoolInlineData("-b false", false)]
 		[BoolInlineData("-b=true", true)]
 		[BoolInlineData("-b=false", false)]
-        [BoolInlineData("-b on", true)]
-        [BoolInlineData("-b off", false)]
-        [BoolInlineData("-b ON", true)]
-        [BoolInlineData("-b OFF", false)]
+		[BoolInlineData("-b on", true)]
+		[BoolInlineData("-b off", false)]
+		[BoolInlineData("-b ON", true)]
+		[BoolInlineData("-b OFF", false)]
 		[BoolInlineData("-b:on", true)]
 		[BoolInlineData("-b:off", false)]
 		[BoolInlineData("-b=on", true)]
@@ -81,11 +81,11 @@ namespace Fclp.Tests.Integration
 			double? actualDouble = null;
 			TestEnum? actualEnum = null;
 
-			sut.Setup<bool>('b').Callback(b => actualBoolean = b);
-			sut.Setup<string>('s').Callback(s => actualString = s);
-			sut.Setup<int>('i').Callback(i => actualInt32 = i);
-			sut.Setup<double>('d').Callback(d => actualDouble = d);
-			sut.Setup<TestEnum>('e').Callback(d => actualEnum = d);
+			sut.Setup<bool>(WellKnownOptionNames.LittleB).Callback(b => actualBoolean = b);
+			sut.Setup<string>(WellKnownOptionNames.LittleS).Callback(s => actualString = s);
+			sut.Setup<int>(WellKnownOptionNames.LittleI).Callback(i => actualInt32 = i);
+			sut.Setup<double>(WellKnownOptionNames.LittleD).Callback(d => actualDouble = d);
+			sut.Setup<TestEnum>(WellKnownOptionNames.LittleE).Callback(d => actualEnum = d);
 
 			var args = ParseArguments(arguments);
 
@@ -112,9 +112,9 @@ namespace Fclp.Tests.Integration
 			bool? actualYValue = null;
 			bool? actualZValue = null;
 
-			sut.Setup<bool>('x').Callback(x => actualXValue = x);
-			sut.Setup<bool>('y').Callback(y => actualYValue = y);
-			sut.Setup<bool>('z').Callback(z => actualZValue = z);
+			sut.Setup<bool>("x").Callback(x => actualXValue = x);
+			sut.Setup<bool>("y").Callback(y => actualYValue = y);
+			sut.Setup<bool>("z").Callback(z => actualZValue = z);
 
 			var args = ParseArguments(arguments);
 
@@ -146,9 +146,9 @@ namespace Fclp.Tests.Integration
 			string actualYValue = null;
 			string actualZValue = null;
 
-			sut.Setup<string>('x').Callback(x => actualXValue = x);
-			sut.Setup<string>('y').Callback(y => actualYValue = y);
-			sut.Setup<string>('z').Callback(z => actualZValue = z);
+			sut.Setup<string>("x").Callback(x => actualXValue = x);
+			sut.Setup<string>("y").Callback(y => actualYValue = y);
+			sut.Setup<string>("z").Callback(z => actualZValue = z);
 
 			var args = ParseArguments(arguments);
 

@@ -38,8 +38,8 @@ namespace Fclp.Internals
 	public class CommandLineOption<T> : ICommandLineOptionResult<T>
 	{
 		#region Constructors
- 
-        private void InternalConstructor(string[] names, ICommandLineOptionParser<T> parser)
+
+        private void InternalConstructor(ICommandLineOptionParser<T> parser, params string[] names)
 	    {
 
             if (parser == null)
@@ -73,12 +73,12 @@ namespace Fclp.Internals
 	    /// <param name="names"></param>
 	    /// <param name="parser"></param>
 	    /// <exception cref="ArgumentNullException"></exception>
-	    public CommandLineOption(string[] names, ICommandLineOptionParser<T> parser)
+	    public CommandLineOption(ICommandLineOptionParser<T> parser, params string[] names)
 	    {
-	        InternalConstructor(names, parser);
+            InternalConstructor(parser,names);
 	    }
 
-		#endregion
+	    #endregion
 
 		#region Properties
 

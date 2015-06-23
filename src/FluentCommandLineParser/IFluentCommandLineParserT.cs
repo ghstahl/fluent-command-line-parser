@@ -59,11 +59,6 @@ namespace Fclp
 		/// <param name="helpArgs">The help arguments to register.</param>
 		IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs);
 
-		/// <summary>
-		/// Gets or sets whether values that differ by case are considered different. 
-		/// </summary>
-		bool IsCaseSensitive { get; set; }
-
         /// <summary>
         /// Returns the Options that have been setup for this parser.
         /// </summary>

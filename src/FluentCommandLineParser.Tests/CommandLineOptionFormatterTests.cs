@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Fclp.Internals;
+using Fclp.Tests;
 using Moq;
 using NUnit.Framework;
 
@@ -120,8 +121,8 @@ namespace FluentCommandLineParser.Tests
 			//  Short1          Description1
 			//  Short2:Long2    Description2 
 
-			var mockOptionA = CreateMockOption("a", "aaa", "a-description");
-			var mockOptionB = CreateMockOption("b", null, "b-description1");
+			var mockOptionA = CreateMockOption(WellKnownOptionNames.LittleA, "aaa", "a-description");
+			var mockOptionB = CreateMockOption(WellKnownOptionNames.LittleB, null, "b-description1");
 			var mockOptionC = CreateMockOption(null, "ccc", "c-description");
 
 			var expectedSb = new StringBuilder();
@@ -186,14 +187,14 @@ namespace FluentCommandLineParser.Tests
 		/// </summary>
 		static ICommandLineOption CreateMockOption(string shortName, string longName, string description)
 		{
-            var optionNames = new Dictionary<string, string>();
-            if(!string.IsNullOrWhiteSpace(shortName))
-                optionNames.Add(shortName,"");
-            if (!string.IsNullOrWhiteSpace(longName))
-                optionNames.Add(longName, "");
+			var optionNames = new Dictionary<string, string>();
+			if(!string.IsNullOrWhiteSpace(shortName))
+				optionNames.Add(shortName,"");
+			if (!string.IsNullOrWhiteSpace(longName))
+				optionNames.Add(longName, "");
 
 			var mockOption = new Mock<ICommandLineOption>();
-		    mockOption.SetupGet(x => x.OptionNames).Returns(optionNames);
+			mockOption.SetupGet(x => x.OptionNames).Returns(optionNames);
 			mockOption.SetupGet(x => x.Description).Returns(description);
 			return mockOption.Object;
 		}

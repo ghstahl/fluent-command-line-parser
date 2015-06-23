@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using Fclp.Internals;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
 using Machine.Specifications;
@@ -41,10 +42,11 @@ namespace Fclp.Tests.FluentCommandLineParser
 									{
 										AutoMockAll();
 
-										var option = new Mock<ICommandLineOption>();
-										option.SetupGet(x => x.ShortName).Returns("randomshortname");
-										option.SetupGet(x => x.LongName).Returns(existingLongName);
-										existingOption = option.Object;
+                                        var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
+
+                                        var option = new Mock<ICommandLineOption>();
+                                        option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                                        existingOption = option.Object;
 									};
 
 			Because of = () =>

@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using System.Globalization;
 using Fclp.Internals;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
@@ -35,15 +36,18 @@ namespace Fclp.Tests.FluentCommandLineParser
 	{
 		public class with_a_short_name_that_is_already_used : SettingUpAShortOptionTestContext
 		{
-			private const char existingShortName = 's';
+			private const string existingShortName = WellKnownOptionNames.LittleS;
 			private static ICommandLineOption existingOption;
 
 			Establish context = () =>
 									{
 										AutoMockAll();
 
+										var _dictMock = new Dictionary<string, string> { { existingShortName.ToString(CultureInfo.InvariantCulture), "" }  };
+
 										var option = new Mock<ICommandLineOption>();
-										option.SetupGet(x => x.ShortName).Returns(existingShortName.ToString(CultureInfo.InvariantCulture));
+										option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+
 										existingOption = option.Object;
 									};
 

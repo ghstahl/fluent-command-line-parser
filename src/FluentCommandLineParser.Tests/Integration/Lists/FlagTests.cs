@@ -69,7 +69,7 @@ namespace Fclp.Tests.Integration
 
             var actualEnum = TestEnumFlag.Value0;
 
-            sut.Setup<TestEnumFlag>('f', "flag").Callback(items => actualEnum = items).Required();
+            sut.Setup<TestEnumFlag>(WellKnownOptionNames.LittleF, "flag").Callback(items => actualEnum = items).Required();
 
             var args = ParseArguments(arguments);
 

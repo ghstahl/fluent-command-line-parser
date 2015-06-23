@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Globalization;
 using System.Linq;
 using Fclp.Internals;
 using Machine.Specifications;
@@ -33,15 +34,16 @@ namespace Fclp.Tests.FluentCommandLineParser
 		[Subject(Subjects.setup_new_option)]
 		public abstract class SettingUpAShortOptionTestContext : FluentCommandLineParserTestContext
 		{
-			protected const char invalid_short_name_that_is_whitespace = ' ';
-		    protected const char invalid_short_name_with_colon = ':';
-		    protected const char invalid_short_name_with_equality_sign = '=';
-		    protected const char invalid_short_name_that_is_a_control_char = (char) 7;
-			protected const char valid_short_name = 's';
+			protected const string invalid_short_name_that_is_whitespace = " ";
+			protected const string invalid_short_name_with_colon = ":";
+			protected const string invalid_short_name_with_equality_sign = "=";
+			const char _char7 = (char)7;
+			protected static readonly string invalid_short_name_that_is_a_control_char = _char7.ToString(CultureInfo.InvariantCulture);
+			protected const string valid_short_name = WellKnownOptionNames.LittleS;
 
 			protected static ICommandLineOption option;
 
-			protected static void SetupOptionWith(char shortName)
+			protected static void SetupOptionWith(string shortName)
 			{
 				CatchAnyError(() =>
 				{

@@ -27,6 +27,7 @@ using Fclp;
 using Fclp.Internals;
 using Fclp.Internals.Parsing;
 using Fclp.Internals.Parsing.OptionParsers;
+using Fclp.Tests;
 using Moq;
 using NUnit.Framework;
 
@@ -47,7 +48,7 @@ namespace FluentCommandLineParser.Tests.Internals
 	        const string expectedLongName = "My long name";
 	        var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-	        var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser,expectedShortName, expectedLongName);
 
 	        Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
 	        Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
@@ -60,7 +61,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedLongName = null;
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
@@ -73,7 +74,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedLongName = "";
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
@@ -86,7 +87,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedLongName = " ";
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
@@ -100,7 +101,7 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
@@ -113,7 +114,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedLongName = "My long name";
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
@@ -126,7 +127,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedLongName = "My long name";
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-			var cmdOption = new CommandLineOption<object>(expectedShortName, expectedLongName, mockParser);
+            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
 
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
@@ -140,8 +141,8 @@ namespace FluentCommandLineParser.Tests.Internals
 			
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-		    Assert.Throws<Exception>(
-		        delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
 		}
 
 		[Test]
@@ -152,8 +153,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -164,8 +165,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -176,8 +177,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -188,8 +189,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -200,8 +201,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -212,8 +213,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -224,8 +225,8 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
         }
 
 		[Test]
@@ -236,19 +237,18 @@ namespace FluentCommandLineParser.Tests.Internals
 
 			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(invalidShortName, invalidLongName, mockParser); });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { new CommandLineOption<object>(mockParser,invalidShortName, invalidLongName); });
         }
 		
 		[Test]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void Ensure_Cannot_Be_Constructed_With_Null_Parser()
 		{
 			const string expectedShortName = "My short name";
 			const string expectedLongName = "My long name";
 
-            Assert.Throws<Exception>(
-                delegate { new CommandLineOption<object>(expectedShortName, expectedLongName, null); });
+            Assert.Throws<ArgumentNullException>(
+                delegate { new CommandLineOption<object>(null,expectedShortName, expectedLongName); });
         }
 
 		#endregion Constructor Tests
@@ -258,32 +258,32 @@ namespace FluentCommandLineParser.Tests.Internals
 		[Test]
 		public void Ensure_Returns_False_If_Null_LongName_Provided()
 		{
-			ICommandLineOption cmdOption = new CommandLineOption<string>("s", null, Mock.Of<ICommandLineOptionParser<string>>());
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey("s"));
+            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, null);
+            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
 		}
 
 		[Test]
 		public void Ensure_Returns_False_If_WhiteSpace_LongName_Provided()
 		{
-			ICommandLineOption cmdOption = new CommandLineOption<string>("s", " ", Mock.Of<ICommandLineOptionParser<string>>());
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey("s"));
+            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, " ");
+            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
         }
 
 		[Test]
 		public void Ensure_Returns_False_If_Empty_LongName_Provided()
 		{
-			ICommandLineOption cmdOption = new CommandLineOption<string>("s", string.Empty, Mock.Of<ICommandLineOptionParser<string>>());
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey("s"));
+            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, string.Empty);
+            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
             Assert.IsTrue(cmdOption.OptionNames.Count == 1);
         }
 
 		[Test]
 		public void Ensure_Returns_True_If_LongName_Provided()
 		{
-			ICommandLineOption cmdOption = new CommandLineOption<string>("s", "long name", Mock.Of<ICommandLineOptionParser<string>>());
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey("s"));
+			ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(),WellKnownOptionNames.LittleS, "long name" );
+            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
             Assert.IsTrue(cmdOption.OptionNames.ContainsKey("long name"));
         }
 
@@ -300,7 +300,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			var mockParser = new Mock<ICommandLineOptionParser<string>>();
 			mockParser.Setup(x => x.CanParse(option)).Returns(false);
 
-			var target = new CommandLineOption<string>("s", "long name", mockParser.Object);
+            var target = new CommandLineOption<string>(mockParser.Object, WellKnownOptionNames.LittleS, "long name");
 
 			target.Bind(option);
 		}
@@ -315,7 +315,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			var mockParser = new Mock<ICommandLineOptionParser<string>>();
 			mockParser.Setup(x => x.CanParse(option)).Returns(false);
 
-			var target = new CommandLineOption<string>("s", "long name", mockParser.Object);
+			var target = new CommandLineOption<string>(mockParser.Object,WellKnownOptionNames.LittleS, "long name");
 
 			target.Bind(option);
 		}
@@ -330,7 +330,7 @@ namespace FluentCommandLineParser.Tests.Internals
 			var mockParser = new Mock<ICommandLineOptionParser<string>>();
 			mockParser.Setup(x => x.CanParse(option)).Returns(false);
 
-			var target = new CommandLineOption<string>("s", "long name", mockParser.Object);
+			var target = new CommandLineOption<string>(mockParser.Object,WellKnownOptionNames.LittleS, "long name" );
 
 			target.Bind(option);
 		}

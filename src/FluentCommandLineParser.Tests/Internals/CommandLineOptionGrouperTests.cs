@@ -53,7 +53,7 @@ namespace Fclp.Tests.Internals
 				args = new []
 				{
 					"-A", "1", "2", "3",
-					"-B", "a", "b", "c",
+					"-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC,
 					"-C", "--", "-a", "-1", "-b"
 				};
 			};
@@ -65,7 +65,7 @@ namespace Fclp.Tests.Internals
 				actualResult[0].ShouldContainOnly("-A", "1", "2", "3"); 
 
 			It should_group_the_B_elements = () =>
-				actualResult[1].ShouldContainOnly("-B", "a", "b", "c"); 
+				actualResult[1].ShouldContainOnly("-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC); 
 
 			It should_group_the_C_elements = () =>
 				actualResult[2].ShouldContainOnly("-C", "--", "-a", "-1", "-b"); 
@@ -77,7 +77,7 @@ namespace Fclp.Tests.Internals
 				args = new []
 				{
 					"--", "-A", "1", "2", "3",
-					"-B", "a", "b", "c",
+					"-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC,
 					"-C", "-a", "-1", "-b"
 				};
 
@@ -85,7 +85,7 @@ namespace Fclp.Tests.Internals
 				actualResult.Length.ShouldEqual(1);
 
 			It should_group_the_A_elements = () =>
-				actualResult[0].ShouldContainOnly("--", "-A", "1", "2", "3", "-B", "a", "b", "c", "-C", "-a", "-1", "-b"); 
+				actualResult[0].ShouldContainOnly("--", "-A", "1", "2", "3", "-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC, "-C", "-a", "-1", "-b"); 
 		}
 
 		class when_there_are_only_arguments_and_no_options : GroupByOptionTestContext
@@ -118,7 +118,7 @@ namespace Fclp.Tests.Internals
 				args = new[]
 				{
 					"-A", "1", "2", "3",
-					"-B", "a", "b", "c",
+					"-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC,
 					"-C", "a1", "b1", "c1", "--"
 				};
 
@@ -129,7 +129,7 @@ namespace Fclp.Tests.Internals
 				actualResult[0].ShouldContainOnly("-A", "1", "2", "3");
 
 			It should_group_the_B_elements = () =>
-				actualResult[1].ShouldContainOnly("-B", "a", "b", "c");
+				actualResult[1].ShouldContainOnly("-B", WellKnownOptionNames.LittleA, WellKnownOptionNames.LittleB, WellKnownOptionNames.LittleC);
 
 			It should_group_the_C_elements = () =>
 				actualResult[2].ShouldContainOnly("-C", "a1", "b1", "c1", "--"); 

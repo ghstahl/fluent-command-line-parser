@@ -41,6 +41,6 @@ namespace Fclp
         /// Data within array is not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
         /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
         /// </exception>
-        ICommandLineOptionFluent<TProperty> As(string[] optionNames);
+        ICommandLineOptionFluent<TProperty> As(params string[] optionNames);
 	}
 }

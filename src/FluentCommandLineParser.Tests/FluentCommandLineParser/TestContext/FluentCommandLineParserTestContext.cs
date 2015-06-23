@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using Fclp.Internals;
 using Fclp.Internals.Parsing;
 using Machine.Specifications;
@@ -56,8 +57,10 @@ namespace Fclp.Tests.FluentCommandLineParser
 					.Returns(mockOption.Object)
 					.Callback<string, string>((s, l) =>
 								{
-									mockOption.SetupGet(x => x.ShortName).Returns(s);
-									mockOption.SetupGet(x => x.LongName).Returns(l);
+									var _dictMock = new Dictionary<string, string> { { s, "" }, { l, "" } };
+
+									var option = new Mock<ICommandLineOption>();
+									option.SetupGet(x => x.OptionNames).Returns(_dictMock);
 								});
 
 
