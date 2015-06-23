@@ -201,7 +201,8 @@ namespace Fclp.Tests
 				        result.HasErrors.ShouldBeTrue();
 
                     It should_return_an_error_for_the_enum_option = () =>
-                        result.Errors.Single().Option.ShortName.ShouldEqual("e");
+                        result.Errors.Single().Option.OptionNames.ContainsKey("e").ShouldBeTrue();
+
 				}
 
                 class when_enum_is_specified_as_invalid_int32 : ParseEnumTestContext
@@ -213,8 +214,8 @@ namespace Fclp.Tests
 				        result.HasErrors.ShouldBeTrue();
 
                     It should_return_an_error_for_the_enum_option = () =>
-                        result.Errors.Single().Option.ShortName.ShouldEqual("e");
-				}
+                        result.Errors.Single().Option.OptionNames.ContainsKey("e").ShouldBeTrue();
+                }
 			}
 		}
 	}

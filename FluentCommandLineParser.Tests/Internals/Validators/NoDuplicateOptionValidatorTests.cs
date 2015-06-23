@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System.Collections.Generic;
 using Fclp.Internals;
 using Fclp.Internals.Validators;
 using Machine.Specifications;
@@ -54,12 +55,8 @@ namespace Fclp.Tests.Internals.Validators
 				Establish context = () =>
 				{
 					CreateMock(out option);
-
-					option.SetupGet(it => it.HasShortName).Returns(true);
-					option.SetupGet(it => it.HasLongName).Returns(true);
-
-					option.SetupGet(it => it.ShortName).Returns(Create<string>());
-					option.SetupGet(it => it.LongName).Returns(Create<string>());
+                    var optionNames = new Dictionary<string, string>();
+                    option.SetupGet(it => it.OptionNames).Returns(optionNames);
 				};
 
 				Because of = () =>
@@ -73,12 +70,15 @@ namespace Fclp.Tests.Internals.Validators
 
 				protected static ICommandLineOption CreateOptionWith(string shortName = null, string longName = null)
 				{
-					var existingOption = CreateMock<ICommandLineOption>();
+                    var optionNames = new Dictionary<string, string>();
+                    if(!string.IsNullOrWhiteSpace(shortName))
+                        optionNames.Add(shortName,"");
+                    if (!string.IsNullOrWhiteSpace(longName))
+                        optionNames.Add(longName, "");
 
-					existingOption.SetupGet(it => it.HasLongName).Returns(longName != null);
-					existingOption.SetupGet(it => it.HasShortName).Returns(shortName != null);
-					existingOption.SetupGet(it => it.ShortName).Returns(shortName);
-					existingOption.SetupGet(it => it.LongName).Returns(longName);
+                    var existingOption = CreateMock<ICommandLineOption>();
+
+                    existingOption.SetupGet(it => it.OptionNames).Returns(optionNames);
 
 					return existingOption.Object;
 				}

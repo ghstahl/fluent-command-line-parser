@@ -1360,8 +1360,8 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             parser.Setup<string>("s", null);
             var option = parser.Options.Single();
-            Assert.IsNull(option.LongName);
-            Assert.AreEqual("s", option.ShortName);
+            Assert.IsTrue(option.OptionNames.ContainsKey("s"));
+            Assert.IsTrue(option.OptionNames.Count() == 1);
         }
 
         [Test]
@@ -1370,8 +1370,9 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             parser.Setup<string>(null, "long");
             var option = parser.Options.Single();
-            Assert.AreEqual("long", option.LongName);
-            Assert.IsNull(option.ShortName);
+            Assert.IsTrue(option.OptionNames.ContainsKey("long"));
+            Assert.IsTrue(option.OptionNames.Count()==1);
+
         }
 
         [Test]
@@ -1380,8 +1381,8 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             parser.Setup<string>("s", "long");
             var option = parser.Options.Single();
-            Assert.AreEqual("long", option.LongName);
-            Assert.AreEqual("s", option.ShortName);
+            Assert.IsTrue(option.OptionNames.ContainsKey("long"));
+            Assert.IsTrue(option.OptionNames.ContainsKey("s"));
         }
 
         [Test]

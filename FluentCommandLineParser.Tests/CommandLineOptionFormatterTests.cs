@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Fclp.Internals;
@@ -185,9 +186,14 @@ namespace FluentCommandLineParser.Tests
 		/// </summary>
 		static ICommandLineOption CreateMockOption(string shortName, string longName, string description)
 		{
+            var optionNames = new Dictionary<string, string>();
+            if(!string.IsNullOrWhiteSpace(shortName))
+                optionNames.Add(shortName,"");
+            if (!string.IsNullOrWhiteSpace(longName))
+                optionNames.Add(longName, "");
+
 			var mockOption = new Mock<ICommandLineOption>();
-			mockOption.SetupGet(x => x.ShortName).Returns(shortName);
-			mockOption.SetupGet(x => x.LongName).Returns(longName);
+		    mockOption.SetupGet(x => x.OptionNames).Returns(optionNames);
 			mockOption.SetupGet(x => x.Description).Returns(description);
 			return mockOption.Object;
 		}

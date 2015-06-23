@@ -57,8 +57,9 @@ namespace FluentCommandLineParser.Tests.Internals
 			var actual = factory.CreateOption<string>(expectedShortName, expectedLongName);
 
 			Assert.IsInstanceOf<CommandLineOption<string>>(actual, "Factory returned unexpected object");
-			Assert.AreEqual(expectedShortName, actual.ShortName, "Factory returned Option with unexpected ShortName");
-			Assert.AreEqual(expectedShortName, actual.ShortName, "Factory returned Option with unexpected LongName");
+            Assert.IsTrue(actual.OptionNames.ContainsKey(expectedShortName), "Factory returned Option with unexpected ShortName");
+            Assert.IsTrue(actual.OptionNames.ContainsKey(expectedLongName), "Factory returned Option with unexpected LongName");
+
 		}
 	}
 }
