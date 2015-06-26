@@ -45,16 +45,36 @@ namespace Fclp.Internals.Validators
 		public void Validate(ICommandLineOption commandLineOption)
 		{
 			if (commandLineOption == null) 
-                throw new ArgumentNullException("commandLineOption");
-            if (commandLineOption.OptionNames == null) 
-                throw new NullReferenceException("commandLineOption.OptionNames");
- 		}
+				throw new ArgumentNullException("commandLineOption");
+			if (commandLineOption.CaseInsensitiveOptionNames == null)
+				throw new NullReferenceException("commandLineOption.CaseInsensitiveOptionNames");
+			if (commandLineOption.CaseSensitiveOptionNames == null)
+				throw new NullReferenceException("commandLineOption.CaseSensitiveOptionNames");
+		}
+
+		/// <summary>
+		/// Validates that an option name can be added to the system
+		/// </summary>
+		/// <param name="optionNames"></param>
+		public void WhatIfAddOption(params string[] optionNames)
+		{
+			if (optionNames == null)
+			{
+				throw new ArgumentNullException();
+			}
+			foreach (var optionName in optionNames)
+			{
+				if (string.IsNullOrWhiteSpace(optionName))
+				{
+					ThrowInvalid(optionName, "is Null or WhiteApace");
+				} 
+				VerifyDoesNotContainsReservedChar(optionName);
+			}
+		}
 
 
 		private static void VerifyDoesNotContainsReservedChar(string value)
 		{
-			if (string.IsNullOrEmpty(value)) return;
-
 			foreach (char reservedChar in ReservedChars)
 			{
 				if (value.Contains(reservedChar))

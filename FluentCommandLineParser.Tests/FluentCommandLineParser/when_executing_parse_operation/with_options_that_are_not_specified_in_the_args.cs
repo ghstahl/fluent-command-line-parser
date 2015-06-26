@@ -50,18 +50,18 @@ namespace Fclp.Tests.FluentCommandLineParser
 
 					// create item that won't be matched an has no default value
 					_notRequiredAndHasNoDefaultValue.SetupGet(x => x.HasDefault).Returns(false);
-                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 					_notRequiredAndHasNoDefaultValue.Setup(x => x.BindDefault()).Verifiable();
 					sut.Options.Add(_notRequiredAndHasNoDefaultValue.Object);
 					
 					// create item that won't be matched but is required
 					_required.SetupGet(x => x.IsRequired).Returns(true);
-                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
                     sut.Options.Add(_required.Object);
 					
 					// create item that isn't required but has a default value
 					_notRequiredButHasDefaultValue.SetupGet(x => x.HasDefault).Returns(true);
-                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    _notRequiredAndHasNoDefaultValue.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
                     _notRequiredButHasDefaultValue.Setup(x => x.BindDefault()).Verifiable();
 					sut.Options.Add(_notRequiredButHasDefaultValue.Object);
 

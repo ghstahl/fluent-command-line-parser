@@ -35,10 +35,8 @@ namespace Fclp.Internals
 		/// Creates a new <see cref="ICommandLineOptionFluent{T}"/>.
 		/// </summary>
 		/// <typeparam name="T">The type of <see cref="ICommandLineOptionResult{T}"/> to create.</typeparam>
-        /// <param name="optionNames">The name for this Option. This must not be <c>null</c>, <c>empty</c> or contain only <c>whitespace</c>.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="optionNames"/> is <c>null</c>, <c>empty</c> or contains only <c>whitespace</c>.</exception>
 		/// <returns>A <see cref="ICommandLineOptionResult{T}"/>.</returns>
-        ICommandLineOptionResult<T> CreateOption<T>(params string[] optionNames);
+        ICommandLineOptionResult<T> CreateOption<T>();
 
 		/// <summary>
 		/// Create a new <see cref="IHelpCommandLineOptionResult"/> using the specified args.

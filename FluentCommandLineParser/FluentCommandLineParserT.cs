@@ -29,11 +29,11 @@ using Fclp.Internals;
 
 namespace Fclp
 {
-    /// <summary>
-    /// A command line parser which provides methods and properties 
-    /// to easily and fluently parse command line arguments into
-    /// a predefined arguments object.
-    /// </summary>
+	/// <summary>
+	/// A command line parser which provides methods and properties 
+	/// to easily and fluently parse command line arguments into
+	/// a predefined arguments object.
+	/// </summary>
 	/// <typeparam name="TBuildType">The object type containing the argument properties to populate from parsed command line arguments.</typeparam>
 	public class FluentCommandLineParser<TBuildType> : IFluentCommandLineParser<TBuildType> where TBuildType : new()
 	{
@@ -83,21 +83,21 @@ namespace Fclp
 			return Parser.SetupHelp(helpArgs);
 		}
 
-        /// <summary>
-        /// Gets or sets the option used for when help is detected in the command line args.
-        /// </summary>
-        public IHelpCommandLineOption HelpOption
-        {
-            get { return Parser.HelpOption; }
-            set { Parser.HelpOption = value; }
-        }
+		/// <summary>
+		/// Gets or sets the option used for when help is detected in the command line args.
+		/// </summary>
+		public IHelpCommandLineOption HelpOption
+		{
+			get { return Parser.HelpOption; }
+			set { Parser.HelpOption = value; }
+		}
 
-        /// <summary>
-        /// Returns the Options that have been setup for this parser.
-        /// </summary>
-        public IEnumerable<ICommandLineOption> Options
-        {
-            get { return Parser.Options; }
-        }
+		/// <summary>
+		/// Returns the Options that have been setup for this parser.
+		/// </summary>
+		public IEnumerable<ICommandLineOption> Options
+		{
+			get { return Parser.Options; }
+		}
 	}
 }

@@ -54,11 +54,16 @@ namespace Fclp.Internals
 		/// </summary>
 		void BindDefault();
 
-        /// <summary>
-        /// All the option names that are associated with this option
-        /// </summary>
-        IDictionary<string,string> OptionNames { get; }
+		/// <summary>
+		/// All the option names that are associated with this option
+		/// </summary>
+		IDictionary<string,string> CaseInsensitiveOptionNames { get; }
 
+		/// <summary>
+		/// All the case sensitive option names that are associated with this option
+		/// </summary>
+		IDictionary<string, string> CaseSensitiveOptionNames { get; }
+		
 		/// <summary>
 		/// Gets whether this <see cred="ICommandLineOption"/> has a callback setup.
 		/// </summary>

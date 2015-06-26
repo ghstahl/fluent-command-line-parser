@@ -32,15 +32,7 @@ namespace Fclp
         /// <summary>
         /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified data in optionNames.
         /// </summary>
-        /// <param name="optionNames"></param>
         /// <returns></returns>
-        /// <exception cref="OptionAlreadyExistsException">
-        /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
-        /// </exception>
-        /// <exception cref="InvalidOptionNameException">
-        /// Data within array is not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
-        /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-        /// </exception>
-        ICommandLineOptionFluent<TProperty> As(params string[] optionNames);
+        ICommandLineOptionFluent<TProperty> As();
 	}
 }

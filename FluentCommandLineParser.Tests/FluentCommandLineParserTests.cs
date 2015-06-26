@@ -82,7 +82,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             T actual = default(T);
 
-            parser.Setup<T>(WellKnownOptionNames.LittleS, "long")
+            parser.Setup<T>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "long")
                 .Callback(val =>
                 {
                     actual = val;
@@ -111,7 +111,7 @@ namespace Fclp.Tests
 
             const string expected = "my description";
 
-            var cmdOption = parser.Setup<string>(WellKnownOptionNames.LittleS).WithDescription(expected);
+            var cmdOption = parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS).WithDescription(expected);
 
             var actual = ((ICommandLineOption)cmdOption).Description;
 
@@ -141,7 +141,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<string>(WellKnownOptionNames.LittleS, key)
+                .Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, key)
                 .Callback(val => actual = val);
 
             CallParserWithAllKeyVariations(parser, key, expected, (args, result) =>
@@ -191,7 +191,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<int>(shortKey, longKey)
+                .Setup<int>().AddCaseInsensitiveOption(shortKey, longKey)
                 .Callback(val => actual = val);
 
             CallParserWithAllKeyVariations(parser, longKey, expected.ToString(CultureInfo.InvariantCulture), (args, result) =>
@@ -210,7 +210,7 @@ namespace Fclp.Tests
 
             int actual = 0;
 
-            parser.Setup<int>("integer")
+            parser.Setup<int>().AddCaseInsensitiveOption("integer")
                   .Callback(i => actual = i);
 
             var result = parser.Parse(new[] { "--integer", "--", "-123" });
@@ -259,7 +259,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<double>(shortKey, longKey)
+                .Setup<double>().AddCaseInsensitiveOption(shortKey, longKey)
                 .Callback(val => actual = val);
 
             CallParserWithAllKeyVariations(parser, longKey, expected.ToString(CultureInfo.InvariantCulture), (args, result) =>
@@ -277,7 +277,7 @@ namespace Fclp.Tests
 
             double actual = 0;
 
-            parser.Setup<double>("double")
+            parser.Setup<double>().AddCaseInsensitiveOption("double")
                   .Callback(i => actual = i);
 
             var result = parser.Parse(new[] { "--double", "--", "-123.456" });
@@ -303,7 +303,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString() });
@@ -321,7 +321,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString() });
@@ -339,7 +339,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", ((int)expected).ToString(CultureInfo.InvariantCulture) });
@@ -357,7 +357,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", ((int)expected).ToString(CultureInfo.InvariantCulture) });
@@ -375,7 +375,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString().ToLowerInvariant() });
@@ -393,7 +393,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString().ToLowerInvariant() });
@@ -411,7 +411,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString().ToUpperInvariant() });
@@ -429,7 +429,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnum>(WellKnownOptionNames.LittleE, "enum")
+                .Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum")
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "--enum", expected.ToString().ToUpperInvariant() });
@@ -449,7 +449,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnumFlag>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", expected.ToString() });
@@ -465,7 +465,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnumFlag>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", TestEnumFlag.Value1.ToString(), TestEnumFlag.Value2.ToString() });
@@ -484,7 +484,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<TestEnumFlag>(WellKnownOptionNames.LittleE)
+                .Setup<TestEnumFlag>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE)
                 .Callback(val => actual = val);
 
             parser.Parse(new[] { "-e", TestEnumFlag.Value1.ToString(), TestEnumFlag.Value2.ToString(), TestEnumFlag.Value0.ToString(), TestEnumFlag.Value64.ToString() });
@@ -507,7 +507,7 @@ namespace Fclp.Tests
 
             var p = CreateFluentParser();
 
-            p.Setup<Direction>("direction")
+            p.Setup<Direction>().AddCaseInsensitiveOption("direction")
              .Callback(d => actual = d);
 
             p.Parse(args);
@@ -563,7 +563,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime>(WellKnownOptionNames.LittleD, "datetime")
+                .Setup<DateTime>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", expected.ToString("yyyy-MM-ddThh:mm:ss", CultureInfo.CurrentCulture) });
@@ -585,7 +585,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
+            parser.Setup<int?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer", "1"});
@@ -603,7 +603,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
+            parser.Setup<int?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer", "abc"});
@@ -621,7 +621,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<int?>(WellKnownOptionNames.LittleI, "integer")
+            parser.Setup<int?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI, "integer")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] {"--integer"} );
@@ -643,7 +643,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
+            parser.Setup<double?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double", expected.Value.ToString(CultureInfo.InvariantCulture) });
@@ -661,7 +661,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
+            parser.Setup<double?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double", "not-a-double" });
@@ -679,7 +679,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<double?>(WellKnownOptionNames.LittleD, "double")
+            parser.Setup<double?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "double")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--double" });
@@ -702,7 +702,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
+                .Setup<DateTime?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", expected.Value.ToString("yyyy-MM-ddThh:mm:ss", CultureInfo.CurrentCulture) });
@@ -721,7 +721,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
+                .Setup<DateTime?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime", "not-a-date-time" });
@@ -740,7 +740,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             parser
-                .Setup<DateTime?>(WellKnownOptionNames.LittleD, "datetime")
+                .Setup<DateTime?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD, "datetime")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--datetime" });
@@ -762,7 +762,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
+            parser.Setup<bool?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool", "true" });
@@ -780,7 +780,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
+            parser.Setup<bool?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool", "not-a-bool" });
@@ -798,7 +798,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool?>(WellKnownOptionNames.LittleB, "bool")
+            parser.Setup<bool?>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB, "bool")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--bool" });
@@ -820,7 +820,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>("u", "uri")
+            parser.Setup<Uri>().AddCaseInsensitiveOption("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri", expected });
@@ -837,7 +837,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>("u", "uri")
+            parser.Setup<Uri>().AddCaseInsensitiveOption("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri", "not-a-uri" });
@@ -854,7 +854,7 @@ namespace Fclp.Tests
 
             var parser = CreateFluentParser();
 
-            parser.Setup<Uri>("u", "uri")
+            parser.Setup<Uri>().AddCaseInsensitiveOption("u", "uri")
                 .Callback(val => actual = val);
 
             var result = parser.Parse(new[] { "--uri" });
@@ -874,7 +874,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
             var s = "";
 
-            parser.Setup<string>("my-feature")
+            parser.Setup<string>().AddCaseInsensitiveOption("my-feature")
                   .Callback(val => s = val);
 
             var result = parser.Parse(new[] { "--my-feature", "somevalue" });
@@ -890,7 +890,7 @@ namespace Fclp.Tests
         public void Can_have_single_character_long_option()
         {
             var parser = CreateFluentParser();
-            parser.Setup<string>(WellKnownOptionNames.LittleS);
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS);
         }
 
         #endregion
@@ -902,7 +902,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS)
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(null);
@@ -919,7 +919,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS)
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(new string[0]);
@@ -936,7 +936,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS)
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS)
                 .Required();
 
             var result = parser.Parse(new[] { "-d" });
@@ -953,7 +953,7 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS);
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS);
 
             var result = parser.Parse(new[] { "-d" });
 
@@ -967,9 +967,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>(WellKnownOptionNames.LittleS, "int32");
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "int32");
         }
 
         [Test]
@@ -978,9 +978,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>(WellKnownOptionNames.LittleS, "string");
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "string");
         }
 
         [Test]
@@ -989,9 +989,9 @@ namespace Fclp.Tests
         {
             var parser = CreateFluentParser();
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS, "string");
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "string");
 
-            parser.Setup<int>(WellKnownOptionNames.LittleI, "string");
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI, "string");
         }
 
         #endregion
@@ -1006,7 +1006,7 @@ namespace Fclp.Tests
             const string expected = "my expected value";
             string actual = null;
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS)
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS)
                 .Callback(s => actual = s)
                 .SetDefault(expected);
 
@@ -1024,7 +1024,7 @@ namespace Fclp.Tests
             const string expected = "my expected value";
             string actual = null;
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS)
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS)
                 .Callback(s => actual = s)
                 .SetDefault(expected);
 
@@ -1078,10 +1078,10 @@ namespace Fclp.Tests
             string actualString = null;
             bool actualBool = false;
 
-            parser.Setup<int>(WellKnownOptionNames.LittleI).Callback(i => actualInt = i).SetDefault(expectedInt);
-            parser.Setup<string>(WellKnownOptionNames.LittleS).Callback(s => actualString = s).SetDefault(expectedString);
-            parser.Setup<bool>(WellKnownOptionNames.LittleB).Callback(b => actualBool = b).SetDefault(expectedBool);
-            parser.Setup<double>(WellKnownOptionNames.LittleD).Callback(d => actualDouble = d).SetDefault(expectedDouble);
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI).Callback(i => actualInt = i).SetDefault(expectedInt);
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS).Callback(s => actualString = s).SetDefault(expectedString);
+            parser.Setup<bool>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB).Callback(b => actualBool = b).SetDefault(expectedBool);
+            parser.Setup<double>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD).Callback(d => actualDouble = d).SetDefault(expectedDouble);
 
             var result = parser.Parse(null);
 
@@ -1106,8 +1106,11 @@ namespace Fclp.Tests
             const bool expectedSwitchA = true;
             const bool expectedSwitchB = true;
             const bool expectedSwitchC = false;
+            const bool expectedSwitchLittleD = true;
+            const bool expectedSwitchBigD = true;
 
-            var args = new[] { "-r", expectedRecordId.ToString(CultureInfo.InvariantCulture), "-v", "\"Mr. Smith\"", "--silent", "-a", "-b", "-c-" };
+            var args = new[] { "-r", expectedRecordId.ToString(CultureInfo.InvariantCulture)
+                , "-v", "\"Mr. Smith\"", "--silent", "-a", "-b", "-c-", "-d", "-D" };
 
             var recordId = 0;
             string newValue = null;
@@ -1115,34 +1118,49 @@ namespace Fclp.Tests
             var switchA = false;
             var switchB = false;
             var switchC = true;
+            var switchLittleD = false;
+            var switchBigD = false;
 
             var parser = CreateFluentParser();
 
-            parser.Setup<bool>(WellKnownOptionNames.LittleA)
+            parser.Setup<bool>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleA)
                   .Callback(value => switchA = value);
 
-            parser.Setup<bool>(WellKnownOptionNames.LittleB)
+            parser.Setup<bool>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB)
                   .Callback(value => switchB = value);
 
-            parser.Setup<bool>(WellKnownOptionNames.LittleC)
+            parser.Setup<bool>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleC)
                   .Callback(value => switchC = value);
 
             // create a new Option using a short and long name
-            parser.Setup<int>("r", "record")
+            parser.Setup<int>().AddCaseInsensitiveOption("r", "record")
                     .WithDescription("The record id to update (required)")
                     .Callback(record => recordId = record) // use callback to assign the record value to the local RecordID property
                     .Required(); // fail if this Option is not provided in the arguments
 
-            parser.Setup<bool>("silent")
+            parser.Setup<bool>().AddCaseInsensitiveOption("silent")
                   .WithDescription("Execute the update in silent mode without feedback (default is false)")
                   .Callback(silent => inSilentMode = silent)
                   .SetDefault(false); // explicitly set the default value to use if this Option is not specified in the arguments
 
 
-            parser.Setup<string>("v", "value")
+            parser.Setup<string>().AddCaseInsensitiveOption("v", "value")
                     .WithDescription("The new value for the record (required)") // used when help is requested e.g -? or --help 
                     .Callback(value => newValue = value)
                     .Required();
+
+            parser.Setup<bool>().AddCaseSensitiveOption("d", "dvalue")
+                .WithDescription("The new value for the record (required)")
+                // used when help is requested e.g -? or --help 
+                .Callback(value => switchLittleD = value)
+                .SetDefault(false);
+
+            parser.Setup<bool>().AddCaseSensitiveOption("D", "DVALUE")
+                .WithDescription("The new value for the record (required)")
+                // used when help is requested e.g -? or --help 
+                .Callback(value => switchBigD = value)
+                .SetDefault(false);
+
 
             // do the work
             ICommandLineParserResult result = parser.Parse(args);
@@ -1156,6 +1174,8 @@ namespace Fclp.Tests
             Assert.AreEqual(expectedSwitchA, switchA);
             Assert.AreEqual(expectedSwitchB, switchB);
             Assert.AreEqual(expectedSwitchC, switchC);
+            Assert.AreEqual(expectedSwitchBigD, switchBigD);
+            Assert.AreEqual(expectedSwitchLittleD, switchLittleD);
         }
 
         #endregion
@@ -1177,8 +1197,8 @@ namespace Fclp.Tests
                     .Callback(s => callbackResult = s)
                     .WithCustomFormatter(formatter.Object);
 
-            parser.Setup<int>(WellKnownOptionNames.LittleI);
-            parser.Setup<string>(WellKnownOptionNames.LittleS);
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI);
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS);
 
             formatter.Setup(x => x.Format(parser.Options)).Returns(expectedCallbackResult);
 
@@ -1203,8 +1223,8 @@ namespace Fclp.Tests
             parser.SetupHelp("?", "HELP", "h")
                     .Callback(() => wasCalled = true);
 
-            parser.Setup<int>(WellKnownOptionNames.LittleI);
-            parser.Setup<string>(WellKnownOptionNames.LittleS);
+            parser.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI);
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS);
 
             formatter.Setup(x => x.Format(parser.Options)).Returns(expectedCallbackResult);
 
@@ -1273,7 +1293,7 @@ namespace Fclp.Tests
 
             string actualValue = null;
 
-            parser.Setup<string>(WellKnownOptionNames.LittleS).Callback(str => actualValue = str).Required();
+            parser.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS).Callback(str => actualValue = str).Required();
 
             var result = parser.Parse(new[] { "--S", expectedValue });
 
@@ -1290,7 +1310,7 @@ namespace Fclp.Tests
 
             string actualValue = null;
 
-            parser.Setup<string>("longoption").Callback(str => actualValue = str).Required();
+            parser.Setup<string>().AddCaseInsensitiveOption("longoption").Callback(str => actualValue = str).Required();
 
             var result = parser.Parse(new[] { "--LONGOPTION", expectedValue });
 
@@ -1300,41 +1320,6 @@ namespace Fclp.Tests
 
         #endregion
 
-        #region Obsolete
-
-        [Test]
-        public void Ensure_Obsolete_Setup_With_Only_Short_Option()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(WellKnownOptionNames.LittleS, null);
-            var option = parser.Options.Single();
-            Assert.IsTrue(option.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-            Assert.IsTrue(option.OptionNames.Count() == 1);
-        }
-
-        [Test]
-        public void Ensure_Obsolete_Setup_With_Only_Long_Option()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(null, "long");
-            var option = parser.Options.Single();
-            Assert.IsTrue(option.OptionNames.ContainsKey("long"));
-            Assert.IsTrue(option.OptionNames.Count()==1);
-
-        }
-
-        [Test]
-        public void Ensure_Obsolete_Setup_With_Short_And_Long_Option()
-        {
-            var parser = CreateFluentParser();
-            parser.Setup<string>(WellKnownOptionNames.LittleS, "long");
-            var option = parser.Options.Single();
-            Assert.IsTrue(option.OptionNames.ContainsKey("long"));
-            Assert.IsTrue(option.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-        }
-
-       
-        #endregion
 
         #region Addtional Arguments
 
@@ -1345,7 +1330,7 @@ namespace Fclp.Tests
 
             var capturedAdditionalArgs = new List<string>();
 
-            parser.Setup<string>("my-option")
+            parser.Setup<string>().AddCaseInsensitiveOption("my-option")
                   .CaptureAdditionalArguments(capturedAdditionalArgs.AddRange);
 
             var result = parser.Parse(new[] { "--my-option", "value", "--", "addArg1", "addArg2" });
@@ -1366,7 +1351,7 @@ namespace Fclp.Tests
 
             bool wasCalled = false;
 
-            parser.Setup<string>("my-option")
+            parser.Setup<string>().AddCaseInsensitiveOption("my-option")
                   .CaptureAdditionalArguments(addArgs => wasCalled = true);
 
             var result = parser.Parse(new[] { "--my-option", "value" });
@@ -1385,7 +1370,7 @@ namespace Fclp.Tests
 
             bool wasCalled = false;
 
-            parser.Setup<string>("my-option")
+            parser.Setup<string>().AddCaseInsensitiveOption("my-option")
                   .CaptureAdditionalArguments(addArgs => wasCalled = true);
 
             var result = parser.Parse(new[] { "--my-option", "value", "--" });
@@ -1401,7 +1386,7 @@ namespace Fclp.Tests
         public void Ensure_Stable_When_Additional_Args_Are_Provided_But_Capture_Additional_Arguments_Has_Not_Been_Setup()
         {
             var parser = CreateFluentParser();
-            parser.Setup<string>(new[] {"my-option"});
+            parser.Setup<string>().AddCaseInsensitiveOption(new[] { "my-option" });
 
             var result = parser.Parse(new[] { "--my-option", "value", "--", "addArg1", "addArg2" });
 
@@ -1420,11 +1405,11 @@ namespace Fclp.Tests
 
             string option1Value = null;
             string option2Value = null;
-            parser.Setup<string>(new[] {"option-one"})
+            parser.Setup<string>().AddCaseInsensitiveOption(new[] { "option-one" })
                   .Callback(s => option1Value = s)
                   .CaptureAdditionalArguments(option1AddArgs.AddRange);
 
-            parser.Setup<string>(new[] {"option-two"})
+            parser.Setup<string>().AddCaseInsensitiveOption(new[] { "option-two" })
                   .Callback(s => option2Value = s)
                   .CaptureAdditionalArguments(option2AddArgs.AddRange);
 
@@ -1456,7 +1441,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             var actual = new List<int>();
-            parser.Setup<List<int>>(new[] { "integers" })
+            parser.Setup<List<int>>().AddCaseInsensitiveOption(new[] { "integers" })
                   .Callback(actual.AddRange);
 
             var result = parser.Parse(new[] { "--integers", "--", "123", "-123", "-321", "321" });
@@ -1484,7 +1469,7 @@ namespace Fclp.Tests
             var parser = CreateFluentParser();
 
             int? number = 0;
-            parser.Setup<int>("n").Callback(n => number = n);
+            parser.Setup<int>().AddCaseInsensitiveOption("n").Callback(n => number = n);
 
             parser.Parse(new[] { "/n=1", "/n=2", "-n=3", "--n=4" });
 

@@ -21,25 +21,31 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
+
+using Fclp.Internals.Validators;
+
 namespace Fclp.Internals.Parsing.OptionParsers
 {
-	/// <summary>
-	/// Represents a parser for a Option that can convert a value into the required type.
-	/// </summary>
-	public interface ICommandLineOptionParser<T>
-	{
-		/// <summary>
-		/// Parses the specified <see cref="System.String"/> into the return type.
-		/// </summary>
-		/// <param name="parsedOption"></param>
-		/// <returns>The parsed value.</returns>
-		T Parse(ParsedOption parsedOption);
+    /// <summary>
+    /// Represents a parser for a Option that can convert a value into the required type.
+    /// </summary>
+    public interface ICommandLineOptionParser<T>
+    {
+        /// <summary>
+        /// Parses the specified <see cref="System.String"/> into the return type.
+        /// </summary>
+        /// <param name="parsedOption"></param>
+        /// <returns>The parsed value.</returns>
+        T Parse(ParsedOption parsedOption);
 
-		/// <summary>
-		/// Determines whether the specified <see cref="System.String"/> can be parsed by this <see cref="ICommandLineOptionParser{T}"/>.
-		/// </summary>
-		/// <param name="parsedOption"></param>
-		/// <returns><c>true</c> if the specified <see cref="System.String"/> can be parsed by this <see cref="ICommandLineOptionParser{T}"/>; otherwise <c>false</c>.</returns>
-		bool CanParse(ParsedOption parsedOption);
-	}
+        /// <summary>
+        /// Determines whether the specified <see cref="System.String"/> can be parsed by this <see cref="ICommandLineOptionParser{T}"/>.
+        /// </summary>
+        /// <param name="parsedOption"></param>
+        /// <returns><c>true</c> if the specified <see cref="System.String"/> can be parsed by this <see cref="ICommandLineOptionParser{T}"/>; otherwise <c>false</c>.</returns>
+        bool CanParse(ParsedOption parsedOption);
+
+
+
+    }
 }

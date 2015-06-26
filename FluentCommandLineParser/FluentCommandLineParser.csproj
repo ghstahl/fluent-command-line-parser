@@ -61,6 +61,9 @@
     <Compile Include="FluentCommandLineParserT.cs" />
     <Compile Include="FluentCommandLineBuilderT.cs" />
     <Compile Include="ICommandLineOptionBuilderFluent.cs" />
+    <Compile Include="ICommandLineOptionInitialization.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ICommandLineParserErrorFormatter.cs" />
     <Compile Include="IFluentCommandLineParserT.cs" />
     <Compile Include="IHelpCommandLineOptionFluent.cs" />

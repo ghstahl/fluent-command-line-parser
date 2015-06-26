@@ -56,7 +56,7 @@ namespace Fclp.Tests.Internals.Validators
 				{
 					CreateMock(out option);
 					var optionNames = new Dictionary<string, string>();
-					option.SetupGet(it => it.OptionNames).Returns(optionNames);
+                    option.SetupGet(it => it.CaseInsensitiveOptionNames).Returns(optionNames);
 				};
 
 				Because of = () =>
@@ -78,7 +78,7 @@ namespace Fclp.Tests.Internals.Validators
 
 					var existingOption = CreateMock<ICommandLineOption>();
 
-					existingOption.SetupGet(it => it.OptionNames).Returns(optionNames);
+                    existingOption.SetupGet(it => it.CaseInsensitiveOptionNames).Returns(optionNames);
 
 					return existingOption.Object;
 				}

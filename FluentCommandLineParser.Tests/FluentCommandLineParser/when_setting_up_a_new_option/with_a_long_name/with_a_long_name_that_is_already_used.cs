@@ -45,7 +45,7 @@ namespace Fclp.Tests.FluentCommandLineParser
                                         var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
 
                                         var option = new Mock<ICommandLineOption>();
-                                        option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                                        option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
                                         existingOption = option.Object;
 									};
 

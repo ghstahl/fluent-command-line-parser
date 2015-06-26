@@ -9,6 +9,7 @@ namespace Fclp.Tests
     public static class WellKnownOptionNames
     {
         public const string LittleA = "a";
+        public const string BigA = "A";
         public const string LittleB = "b";
         public const string LittleC = "c";
         public const string LittleD = "d";
@@ -22,5 +23,14 @@ namespace Fclp.Tests
         public const string LittleU = "u";
         public const string LittleV = "v";
         public const string BigS = "S";
+        public const string EmptyString = "";
+        public const string WhiteSpaceString = "        ";
+        public const string OptionNameOne = "One";
+        public const string OptionNameOneMixedCase = "OnE";
+        public const string OptionNameTwo = "Two";
+        public const string OptionNameTwoMixedCase = "TwO";
+        public const string NullOptionName = null;
+
+
     }
 }

@@ -64,11 +64,11 @@ namespace Fclp.Tests.FluentCommandLineParser
 				};
 
 				var option = new Mock<ICommandLineOption>();
-				option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 
 				// create item that has a callback - the bind value should be executed
 				_parsedOptionThatHasCallback = new ParsedOption { Value = _optionThatHasCallbackValue, Key = _optionThatHasCallbackName };
-				_optionThatHasCallback.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 				_optionThatHasCallback.Setup(x => x.BindDefault()).Verifiable();
 				_optionThatHasCallback.Setup(x => x.Bind(_parsedOptionThatHasCallback)).Verifiable();
 				sut.Options.Add(_optionThatHasCallback.Object);
@@ -76,13 +76,13 @@ namespace Fclp.Tests.FluentCommandLineParser
 				// create option that has a callback and is required - the bind value should be executed like normal
 				_parsedOptionThatIsRequired = new ParsedOption { Value = _optionThatIsRequiredValue, Key = _optionThatIsRequiredName };
 				_optionThatIsRequired.SetupGet(x => x.IsRequired).Returns(true);
-				_optionThatHasCallback.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 				_optionThatIsRequired.Setup(x => x.Bind(_parsedOptionThatIsRequired)).Verifiable();
 				sut.Options.Add(_optionThatIsRequired.Object);
 
 				// create blank option
 				_parsedBlankOption = new ParsedOption { Value = _blankOptionValue, Key = _blankOptionName };
-				_optionThatHasCallback.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 				_blankOption.Setup(x => x.Bind(_parsedBlankOption)).Verifiable();
 				sut.Options.Add(_blankOption.Object);
 

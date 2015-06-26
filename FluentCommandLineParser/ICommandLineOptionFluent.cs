@@ -27,46 +27,76 @@ using System.Collections.Generic;
 
 namespace Fclp
 {
-	/// <summary>
-	/// Provides the fluent interface for a <see cref="ICommandLineOptionFluent{T}"/> object.
-	/// </summary>
-	public interface ICommandLineOptionFluent<T>
-	{
-		/// <summary>
-		/// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> WithDescription(string description);
+    /// <summary>
+    /// Provides the fluent interface for a <see cref="ICommandLineOptionFluent{T}"/> object.
+    /// </summary>
+    public interface ICommandLineOptionFluent<T>
+    {
+        /// <summary>
+        /// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> WithDescription(string description);
 
-		/// <summary>
-		/// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required.
-		/// </summary>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> Required();
+        /// <summary>
+        /// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required.
+        /// </summary>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> Required();
 
-		/// <summary>
-		/// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>. 
-		/// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
-		/// Do no use this if you are using the Fluent Command Line Builder.
-		/// </summary>
-		/// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> Callback(Action<T> callback);
+        /// <summary>
+        /// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>. 
+        /// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
+        /// Do no use this if you are using the Fluent Command Line Builder.
+        /// </summary>
+        /// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> Callback(Action<T> callback);
 
-		/// <summary>
-		/// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="value">The value to use.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> SetDefault(T value);
+        /// <summary>
+        /// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="value">The value to use.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> SetDefault(T value);
 
-		/// <summary>
-		/// Specified the method to invoke with any addition arguments parsed with the Option.
-		/// If additional arguments are not required either do not call it, or specify <c>null</c>.
-		/// </summary>
-		/// <param name="callback">The return callback to execute with the parsed addition arguments found for this Option.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> CaptureAdditionalArguments(Action<IEnumerable<string>> callback);
-	}
+        /// <summary>
+        /// Specified the method to invoke with any addition arguments parsed with the Option.
+        /// If additional arguments are not required either do not call it, or specify <c>null</c>.
+        /// </summary>
+        /// <param name="callback">The return callback to execute with the parsed addition arguments found for this Option.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> CaptureAdditionalArguments(Action<IEnumerable<string>> callback);
+        
+        /// <summary>
+        /// Adds case sensitive option names
+        /// </summary>
+        /// <param name="optionNames"></param>
+        /// <returns></returns>
+        /// <exception cref="OptionAlreadyExistsException">
+        /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
+        /// </exception>
+        /// <exception cref="InvalidOptionNameException">
+        /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
+        /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
+        /// </exception>
+        ICommandLineOptionFluent<T> AddCaseSensitiveOption(params string[] optionNames);
+
+        /// <summary>
+        /// Adds case insensitive option names
+        /// </summary>
+        /// <param name="optionNames"></param>
+        /// <returns></returns>
+        /// <exception cref="OptionAlreadyExistsException">
+        /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
+        /// </exception>
+        /// <exception cref="InvalidOptionNameException">
+        /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
+        /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
+        /// </exception>
+        ICommandLineOptionFluent<T> AddCaseInsensitiveOption(params string[] optionNames);
+
+
+    }
 }

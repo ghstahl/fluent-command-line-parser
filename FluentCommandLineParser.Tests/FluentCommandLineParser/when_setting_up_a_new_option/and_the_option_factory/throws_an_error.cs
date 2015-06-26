@@ -41,7 +41,7 @@ namespace Fclp.Tests.FluentCommandLineParser.when_setting_up_a_new_option
 
 				var mockOptionFactoryThatReturnsNull = new Mock<ICommandLineOptionFactory>();
 				mockOptionFactoryThatReturnsNull
-					.Setup(x => x.CreateOption<TestType>(valid_short_name.ToString(CultureInfo.InvariantCulture), valid_long_name))
+                    .Setup(x => x.CreateOption<TestType>().AddCaseInsensitiveOption(valid_short_name.ToString(CultureInfo.InvariantCulture), valid_long_name))
 					.Throws<TestException>();
 
 				sut.OptionFactory = mockOptionFactoryThatReturnsNull.Object;

@@ -65,7 +65,7 @@ namespace Fclp.Tests.Internals.Validators
 						_dictMock.Add(longName, "");
 
 					var option = new Mock<ICommandLineOption>();
-					option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+                    option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 				}
 			}
 

@@ -27,314 +27,307 @@ using Fclp;
 using Fclp.Internals;
 using Fclp.Internals.Parsing;
 using Fclp.Internals.Parsing.OptionParsers;
+using Fclp.Internals.Validators;
 using Fclp.Tests;
 using Moq;
 using NUnit.Framework;
 
 namespace FluentCommandLineParser.Tests.Internals
 {
-	/// <summary>
-	/// Contains unit tests for the <see cref="CommandLineOption{T}"/> class.
-	/// </summary>
-	[TestFixture]
-	class CommandLineOptionTests
-	{
-		#region Constructor Tests
+    /// <summary>
+    /// Contains unit tests for the <see cref="CommandLineOption{T}"/> class.
+    /// </summary>
+    [TestFixture]
+    class CommandLineOptionTests
+    {
 
-	    [Test]
-	    public void Ensure_Can_Be_Constructed()
-	    {
-	        const string expectedShortName = "My short name";
-	        const string expectedLongName = "My long name";
-	        var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            var cmdOption = new CommandLineOption<object>(mockParser,expectedShortName, expectedLongName);
-
-	        Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
-	        Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
-	    }
-
-	    [Test]
-		public void Ensure_Can_Be_Constructed_With_Null_LongName()
-		{
-			const string expectedShortName = "My short name";
-			const string expectedLongName = null;
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
-
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
-		}
-
-		[Test]
-		public void Ensure_Can_Be_Constructed_With_Empty_LongName()
-		{
-			const string expectedShortName = "My short name";
-			const string expectedLongName = "";
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
-
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
-		}
-
-		[Test]
-		public void Ensure_Can_Be_Constructed_With_Whitespace_Only_LongName()
-		{
-			const string expectedShortName = "My short name";
-			const string expectedLongName = " ";
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
-
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedShortName), "Specified ShortName was not as expected");
+        static CommandLineOption<T> NewCommandLineOption<T>()
+        {
+            var mockParser = Mock.Of<ICommandLineOptionParser<T>>();
+            var cmdOption = new CommandLineOption<T>(mockParser);
+            return cmdOption;
         }
 
-		[Test]
-		public void Ensure_Can_Be_Constructed_With_Null_ShortName_And_Valid_LongName()
-		{
-			const string expectedShortName = null;
-			const string expectedLongName = "My long name";
+        #region Constructor Tests
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        public void Ensure_Can_Be_Constructed()
+        {
+            var cmdOption = NewCommandLineOption<object>();
+        }
+        
+        #endregion Constructor Tests
 
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
+        [Test]
+        public void Ensure_Can_Add_CaseSensitiveOptions()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
 
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
+            var cmdOptionFluent = parser.Setup<string>();
+            cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+
+
+            var cmdOptionResult = cmdOptionFluent as ICommandLineOptionResult<string>;
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.Count == 0);
+            Assert.IsTrue(cmdOptionResult.CaseSensitiveOptionNames.Count == 2);
+
+            Assert.IsTrue(cmdOptionResult.CaseSensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameOne), "Specified WellKnownOptionNames.OptionNameOne was not as expected");
+            Assert.IsTrue(cmdOptionResult.CaseSensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameTwo), "Specified WellKnownOptionNames.OptionNameTwo was not as expected");
+
+            Assert.IsFalse(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameOneMixedCase), "Specified WellKnownOptionNames.OptionNameOneMixedCase was not as expected");
+            Assert.IsFalse(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameTwoMixedCase), "Specified WellKnownOptionNames.OptionNameTwoMixedCase was not as expected");
         }
 
-		[Test]
-		public void Ensure_Can_Be_Constructed_With_Empty_ShortName_And_Valid_LongName()
-		{
-			const string expectedShortName = "";
-			const string expectedLongName = "My long name";
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        public void Ensure_Can_Have_CaseSensitiveOptions()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
 
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
+            var cmdOptionFluentLittleA = parser.Setup<string>()
+                .AddCaseSensitiveOption(WellKnownOptionNames.LittleA);
 
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
+            var cmdOptionFluentBigA = parser.Setup<string>()
+                .AddCaseSensitiveOption(WellKnownOptionNames.BigA);
+
+
+
+            var cmdOptionResultLittleA = cmdOptionFluentLittleA as ICommandLineOptionResult<string>;
+            Assert.IsTrue(cmdOptionResultLittleA.CaseInsensitiveOptionNames.Count == 0);
+            Assert.IsTrue(cmdOptionResultLittleA.CaseSensitiveOptionNames.Count == 1);
+            Assert.IsTrue(cmdOptionResultLittleA.CaseSensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleA),
+                "Specified WellKnownOptionNames.LittleA was not as expected");
+
+
+            var cmdOptionResultBigA = cmdOptionFluentBigA as ICommandLineOptionResult<string>;
+            Assert.IsTrue(cmdOptionResultBigA.CaseInsensitiveOptionNames.Count == 0);
+            Assert.IsTrue(cmdOptionResultBigA.CaseSensitiveOptionNames.Count == 1);
+            Assert.IsTrue(cmdOptionResultBigA.CaseSensitiveOptionNames.ContainsKey(WellKnownOptionNames.BigA),
+                "Specified WellKnownOptionNames.BigA was not as expected");
+
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                var cmdOptionFluentBigA2 = parser.Setup<string>()
+                    .AddCaseSensitiveOption(WellKnownOptionNames.BigA);
+
+            });
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                var cmdOptionFluentBigA2 = parser.Setup<string>()
+                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+
+            });
+
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                var cmdOptionFluentBigA2 = parser.Setup<string>()
+                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+            });
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                var cmdOptionFluentBigA2 = parser.Setup<string>()
+                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+            });
         }
 
-		[Test]
-		public void Ensure_Can_Be_Constructed_With_Whitespace_Only_ShortName_And_Valid_LongName()
-		{
-			const string expectedShortName = " ";
-			const string expectedLongName = "My long name";
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        public void Ensure_Can_Add_CaseInsensitiveOptions()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
+            var cmdOptionFluent = parser.Setup<string>();
 
-            var cmdOption = new CommandLineOption<object>(mockParser, expectedShortName, expectedLongName);
+            cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(expectedLongName), "Specified LongName was not as expected");
+
+            var cmdOptionResult = cmdOptionFluent as ICommandLineOptionResult<string>;
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.Count == 2);
+
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameOne), "Specified WellKnownOptionNames.OptionNameOne was not as expected");
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameTwo), "Specified WellKnownOptionNames.OptionNameTwo was not as expected");
+
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameOneMixedCase), "Specified WellKnownOptionNames.OptionNameOneMixedCase was not as expected");
+            Assert.IsTrue(cmdOptionResult.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.OptionNameTwoMixedCase), "Specified WellKnownOptionNames.OptionNameTwoMixedCase was not as expected");
         }
 
-		[Test]
-		public void Ensure_Throws_Constructed_With_Null_ShortName_And_Null_LongName()
-		{
-			const string invalidShortName = null;
-			const string invalidLongName = null;
-			
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        public void Ensure_Throws_Adding_CaseInsensitive_Invalid_Options()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
+            var cmdOptionFluent = parser.Setup<string>();
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
-		}
-
-		[Test]
-        public void Ensure_Throws_Constructed_With_Empty_ShortName_And_Null_LongName()
-		{
-			const string invalidShortName = "";
-			const string invalidLongName = null;
-
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            Assert.Throws<InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.NullOptionName);
+            });
+            Assert.Throws<InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.EmptyString);
+            });
+            Assert.Throws<InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.WhiteSpaceString);
+            });
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_WhiteSpaceOnly_ShortName_And_Null_LongName()
-		{
-			const string invalidShortName = " ";
-			const string invalidLongName = null;
+        [Test]
+        public void Ensure_Throws_Adding_CaseSensitive_Invalid_Options()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
+            var cmdOptionFluent = parser.Setup<string>();
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            Assert.Throws<Fclp.InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.NullOptionName);
+            });
+            Assert.Throws<Fclp.InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.EmptyString);
+            });
+            Assert.Throws<Fclp.InvalidOptionNameException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.WhiteSpaceString);
+            });
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_Null_ShortName_And_Empty_LongName()
-		{
-			const string invalidShortName = null;
-			const string invalidLongName = "";
+        [Test]
+        public void Ensure_Throws_Adding_CaseInsensitive_Duplicates_Option()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
+            var cmdOptionFluent = parser.Setup<string>();
+            cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne);
+            });
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne);
+            });
+            Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameTwo);
+            });
+
+
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_Empty_ShortName_And_Empty_LongName()
-		{
-			const string invalidShortName = "";
-			const string invalidLongName = "";
+        [Test]
+        public void Ensure_Throws_Adding_CaseSensitive_Duplicates_Option()
+        {
+            var parser = new Fclp.FluentCommandLineParser();
+            var cmdOptionFluent = parser.Setup<string>();
+            cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne);
+            });
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            });
+
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne);
+            });
+            Assert.Throws<OptionAlreadyExistsException>(() =>
+            {
+                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameTwo);
+            });
+
+
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_WhiteSpaceOnly_ShortName_And_Empty_LongName()
-		{
-			const string invalidShortName = " ";
-			const string invalidLongName = "";
+     
+        #region Bind Tests
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        [ExpectedException(typeof (OptionSyntaxException))]
+        public void Ensure_That_If_Value_Is_Null_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
+        {
+            var option = new ParsedOption();
+            const string value = null;
+            var mockParser = new Mock<ICommandLineOptionParser<string>>();
+            mockParser.Setup(x => x.CanParse(option)).Returns(false);
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            var mockValidator = new Mock<ICommandLineOptionValidator>();
+            mockValidator.Setup(x => x.WhatIfAddOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne));
+
+            var target = new CommandLineOption<string>(mockParser.Object);
+            target.SetOptionValidator(mockValidator.Object);
+            target.AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne);
+
+            target.Bind(option);
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_Null_ShortName_And_WhiteSpaceOnly_LongName()
-		{
-			const string invalidShortName = null;
-			const string invalidLongName = " ";
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        [ExpectedException(typeof(OptionSyntaxException))]
+        public void Ensure_That_If_Value_Is_Empty_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
+        {
+            var option = new ParsedOption();
+            const string value = "";
+            var mockParser = new Mock<ICommandLineOptionParser<string>>();
+            mockParser.Setup(x => x.CanParse(option)).Returns(false);
+            var mockValidator = new Mock<ICommandLineOptionValidator>();
+            mockValidator.Setup(x => x.WhatIfAddOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne));
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            var target = new CommandLineOption<string>(mockParser.Object);
+            target.SetOptionValidator(mockValidator.Object);
+            target.AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne);
+            
+            target.Bind(option);
         }
 
-		[Test]
-        public void Ensure_Throws_Constructed_With_Empty_ShortName_And_WhiteSpaceOnly_LongName()
-		{
-			const string invalidShortName = "";
-			const string invalidLongName = " ";
 
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
+        [Test]
+        [ExpectedException(typeof(OptionSyntaxException))]
+        public void Ensure_That_If_Value_Is_Whitespace_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
+        {
+            var option = new ParsedOption();
+            const string value = " ";
+            var mockParser = new Mock<ICommandLineOptionParser<string>>();
+            mockParser.Setup(x => x.CanParse(option)).Returns(false);
 
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser, invalidShortName, invalidLongName); });
+            var mockValidator = new Mock<ICommandLineOptionValidator>();
+            mockValidator.Setup(x => x.WhatIfAddOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne));
+
+            var target = new CommandLineOption<string>(mockParser.Object);
+            target.SetOptionValidator(mockValidator.Object);
+            target.AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, WellKnownOptionNames.OptionNameOne);
+
+            target.Bind(option);
         }
-
-		[Test]
-        public void Ensure_Throws_Constructed_With_WhiteSpaceOnly_ShortName_And_WhiteSpaceOnly_LongName()
-		{
-			const string invalidShortName = " ";
-			const string invalidLongName = " ";
-
-			var mockParser = Mock.Of<ICommandLineOptionParser<object>>();
-
-            Assert.Throws<ArgumentOutOfRangeException>(
-                delegate { new CommandLineOption<object>(mockParser,invalidShortName, invalidLongName); });
-        }
-		
-		[Test]
-		public void Ensure_Cannot_Be_Constructed_With_Null_Parser()
-		{
-			const string expectedShortName = "My short name";
-			const string expectedLongName = "My long name";
-
-            Assert.Throws<ArgumentNullException>(
-                delegate { new CommandLineOption<object>(null,expectedShortName, expectedLongName); });
-        }
-
-		#endregion Constructor Tests
-
-		#region HasLongName Tests
-
-		[Test]
-		public void Ensure_Returns_False_If_Null_LongName_Provided()
-		{
-            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, null);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-		}
-
-		[Test]
-		public void Ensure_Returns_False_If_WhiteSpace_LongName_Provided()
-		{
-            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, " ");
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-        }
-
-		[Test]
-		public void Ensure_Returns_False_If_Empty_LongName_Provided()
-		{
-            ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(), WellKnownOptionNames.LittleS, string.Empty);
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-            Assert.IsTrue(cmdOption.OptionNames.Count == 1);
-        }
-
-		[Test]
-		public void Ensure_Returns_True_If_LongName_Provided()
-		{
-			ICommandLineOption cmdOption = new CommandLineOption<string>(Mock.Of<ICommandLineOptionParser<string>>(),WellKnownOptionNames.LittleS, "long name" );
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey(WellKnownOptionNames.LittleS));
-            Assert.IsTrue(cmdOption.OptionNames.ContainsKey("long name"));
-        }
-
-		#endregion HasLongName Tests
-
-		#region Bind Tests
-
-		[Test]
-		[ExpectedException(typeof(OptionSyntaxException))]
-		public void Ensure_That_If_Value_Is_Null_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
-		{
-			var option = new ParsedOption();
-			const string value = null;
-			var mockParser = new Mock<ICommandLineOptionParser<string>>();
-			mockParser.Setup(x => x.CanParse(option)).Returns(false);
-
-            var target = new CommandLineOption<string>(mockParser.Object, WellKnownOptionNames.LittleS, "long name");
-
-			target.Bind(option);
-		}
-
-
-		[Test]
-		[ExpectedException(typeof(OptionSyntaxException))]
-		public void Ensure_That_If_Value_Is_Empty_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
-		{
-			var option = new ParsedOption();
-			const string value = "";
-			var mockParser = new Mock<ICommandLineOptionParser<string>>();
-			mockParser.Setup(x => x.CanParse(option)).Returns(false);
-
-			var target = new CommandLineOption<string>(mockParser.Object,WellKnownOptionNames.LittleS, "long name");
-
-			target.Bind(option);
-		}
-
-
-		[Test]
-		[ExpectedException(typeof(OptionSyntaxException))]
-		public void Ensure_That_If_Value_Is_Whitespace_Cannot_Be_Parsed_And_No_Default_Set_Then_optionSyntaxException_Is_Thrown()
-		{
-			var option = new ParsedOption();
-			const string value = " ";
-			var mockParser = new Mock<ICommandLineOptionParser<string>>();
-			mockParser.Setup(x => x.CanParse(option)).Returns(false);
-
-			var target = new CommandLineOption<string>(mockParser.Object,WellKnownOptionNames.LittleS, "long name" );
-
-			target.Bind(option);
-		}
-		#endregion
-	}
+        #endregion
+    }
 }
 

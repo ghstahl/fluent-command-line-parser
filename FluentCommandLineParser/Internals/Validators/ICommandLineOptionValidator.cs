@@ -33,5 +33,11 @@ namespace Fclp.Internals.Validators
 		/// </summary>
 		/// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate. This must not be null.</param>
 		void Validate(ICommandLineOption commandLineOption);
+	
+		/// <summary>
+		/// Verifies that the proposed new option name can be added to the system.
+		/// </summary>
+        /// <param name="optionNames"></param>
+        void WhatIfAddOption(params string[] optionNames);
 	}
 }

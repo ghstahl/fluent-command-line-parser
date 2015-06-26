@@ -22,9 +22,12 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
+using System.Runtime.InteropServices;
 using Fclp.Internals;
 using Fclp.Internals.Parsing;
 using Fclp.Internals.Parsing.OptionParsers;
+using Fclp.Internals.Validators;
 using Moq;
 using NUnit.Framework;
 
@@ -50,15 +53,19 @@ namespace FluentCommandLineParser.Tests.Internals
 			const string expectedShortName = "my short name";
 			const string expectedLongName = "my long name";
 
+            var mockOptionValidator = new Mock<ICommandLineOptionValidator>();
+		    mockOptionValidator.Setup(x => x.WhatIfAddOption(It.IsAny<string>()));
 			var mockParserFactory = new Mock<ICommandLineOptionParserFactory>();
 			mockParserFactory.Setup(x => x.CreateParser<string>()).Returns(Mock.Of<ICommandLineOptionParser<string>>);
 			factory.ParserFactory = mockParserFactory.Object;
 
-			var actual = factory.CreateOption<string>(expectedShortName, expectedLongName);
-
-			Assert.IsInstanceOf<CommandLineOption<string>>(actual, "Factory returned unexpected object");
-            Assert.IsTrue(actual.OptionNames.ContainsKey(expectedShortName), "Factory returned Option with unexpected ShortName");
-            Assert.IsTrue(actual.OptionNames.ContainsKey(expectedLongName), "Factory returned Option with unexpected LongName");
+			ICommandLineOptionResult<string> actualResult = factory.CreateOption<string>();
+            actualResult.SetOptionValidator(mockOptionValidator.Object);
+			actualResult.AddCaseInsensitiveOption(expectedShortName, expectedLongName);
+			Assert.IsInstanceOf<CommandLineOption<string>>(actualResult, "Factory returned unexpected object");
+			ICommandLineOption actual = actualResult;
+			Assert.IsTrue(actual.CaseInsensitiveOptionNames.ContainsKey(expectedShortName), "Factory returned Option with unexpected ShortName");
+			Assert.IsTrue(actual.CaseInsensitiveOptionNames.ContainsKey(expectedLongName), "Factory returned Option with unexpected LongName");
 
 		}
 	}

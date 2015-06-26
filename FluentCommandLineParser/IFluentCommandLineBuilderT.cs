@@ -29,7 +29,7 @@ namespace Fclp
 	/// <summary>
 	/// Parser that constructs and populates the specified type of object from command line arguments.
 	/// </summary>
-    [Obsolete("IFluentCommandLineBuilder<TBuildType> has been renamed to IFluentCommandLineParser<TBuildType>", false)]
+	[Obsolete("IFluentCommandLineBuilder<TBuildType> has been renamed to IFluentCommandLineParser<TBuildType>", false)]
 	public interface IFluentCommandLineBuilder<TBuildType> : IFluentCommandLineParser<TBuildType> where TBuildType : new()
 	{
 		 

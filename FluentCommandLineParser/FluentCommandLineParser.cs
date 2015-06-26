@@ -40,15 +40,15 @@ namespace Fclp
 	/// </summary>
 	public class FluentCommandLineParser : IFluentCommandLineParser
 	{
-	    private StringComparer StringComparer
-	    {
-	        get { return StringComparer.InvariantCultureIgnoreCase; }
-	    }
+		private StringComparer StringComparer
+		{
+			get { return StringComparer.InvariantCultureIgnoreCase; }
+		}
 
 		/// <summary>
 		/// Initialises a new instance of the <see cref="FluentCommandLineParser"/> class.
 		/// </summary>
-        public FluentCommandLineParser()
+		public FluentCommandLineParser()
 		{
 		}
 
@@ -109,17 +109,28 @@ namespace Fclp
 			set { _errorFormatter = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the <see cref="ICommandLineOptionFactory"/> to use for creating <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <remarks>If this property is set to <c>null</c> then the default <see cref="OptionFactory"/> is returned.</remarks>
-		public ICommandLineOptionFactory OptionFactory
-		{
-			get { return _optionFactory ?? (_optionFactory = new CommandLineOptionFactory()); }
-			set { _optionFactory = value; }
-		}
+	    /// <summary>
+	    /// Gets or sets the <see cref="ICommandLineOptionFactory"/> to use for creating <see cref="ICommandLineOptionFluent{T}"/>.
+	    /// </summary>
+	    /// <remarks>If this property is set to <c>null</c> then the default <see cref="OptionFactory"/> is returned.</remarks>
+	    public ICommandLineOptionFactory OptionFactory
+	    {
+	        get
+	        {
+	            if (_optionFactory == null)
+	            {
+	                _optionFactory = new CommandLineOptionFactory();
+	                var commandLineOptionInitialization = _optionFactory as ICommandLineOptionInitialization;
+	                commandLineOptionInitialization.SetOptionValidator(OptionValidator);
+	            }
+	            return _optionFactory;
 
-		/// <summary>
+	        } 
+
+	        set { _optionFactory = value; }
+	    }
+
+	    /// <summary>
 		/// Gets or sets the <see cref="ICommandLineOptionValidator"/> used to validate each setup Option.
 		/// </summary>
 		public ICommandLineOptionValidator OptionValidator
@@ -137,33 +148,24 @@ namespace Fclp
 			set { _parserEngine = value; }
 		}
 
-        /// <summary>
-        /// Gets or sets the option used for when help is detected in the command line args.
-        /// </summary>
-        public IHelpCommandLineOption HelpOption
+		/// <summary>
+		/// Gets or sets the option used for when help is detected in the command line args.
+		/// </summary>
+		public IHelpCommandLineOption HelpOption
 		{
 			get { return _helpOption ?? (_helpOption = new EmptyHelpCommandLineOption()); }
 			set { _helpOption = value; }
 		}
 
 
-        /// <summary>
-        /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="optionNames"></param>
-        /// <returns></returns>
-        /// <exception cref="OptionAlreadyExistsException">
-        /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
-        /// </exception>
-        /// <exception cref="InvalidOptionNameException">
-        /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
-        /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-        /// </exception>
-        private ICommandLineOptionFluent<T> SetupInternal<T>(string [] optionNames)
+		/// <summary>
+		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		private ICommandLineOptionFluent<T> SetupInternal<T>()
 		{
-            var argOption = this.OptionFactory.CreateOption<T>(optionNames);
-
+			var argOption = this.OptionFactory.CreateOption<T>();
 			if (argOption == null)
 				throw new InvalidOperationException("OptionFactory is producing unexpected results.");
 
@@ -175,25 +177,17 @@ namespace Fclp
 		}
 
 
-        /// <summary>
-        /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="optionNames"></param>
-        /// <returns></returns>
-        /// <exception cref="OptionAlreadyExistsException">
-        /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
-        /// </exception>
-        /// <exception cref="InvalidOptionNameException">
-        /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
-        /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-        /// </exception>
-        public ICommandLineOptionFluent<T> Setup<T>(params string[] optionNames)
+		/// <summary>
+		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public ICommandLineOptionFluent<T> Setup<T>()
 		{
-            return SetupInternal<T>(optionNames);
+			return SetupInternal<T>();
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Parses the specified <see><cref>T:System.String[]</cref></see> using the setup Options.
 		/// </summary>
 		/// <param name="args">The <see><cref>T:System.String[]</cref></see> to parse.</param>
@@ -224,8 +218,14 @@ namespace Fclp
 				// Step 1
 				ICommandLineOption option = setupOption;
 
-                var match = parsedOptions.FirstOrDefault(pair => setupOption.OptionNames.ContainsKey(pair.Key));
-/*
+				var match = parsedOptions.FirstOrDefault(pair => setupOption.CaseInsensitiveOptionNames.ContainsKey(pair.Key));
+				if (match == null)
+				{
+					// perhaps in the case sensitive dictionary
+					match = parsedOptions.FirstOrDefault(pair => setupOption.CaseSensitiveOptionNames.ContainsKey(pair.Key));
+				}
+				
+				/*
 				var matchd = parsedOptions.FirstOrDefault(pair =>
 					pair.Key.Equals(option.ShortName, this.StringComparison) // tries to match the short name
 					|| pair.Key.Equals(option.LongName, this.StringComparison)); // or else the long name

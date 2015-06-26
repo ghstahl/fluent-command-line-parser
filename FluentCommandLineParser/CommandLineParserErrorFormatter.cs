@@ -74,9 +74,9 @@ namespace Fclp
 		private static string FormatOptionSyntaxParseError(OptionSyntaxParseError error)
 		{
 			return string.Format("Option '{0}' parse error: could not parse '{1}' to '{2}'.",
-			                     error.ParsedOption.RawKey,
+								 error.ParsedOption.RawKey,
 								 error.ParsedOption.Value.RemoveAnyWrappingDoubleQuotes(),
-			                     error.Option.SetupType);
+								 error.Option.SetupType);
 		}
 
 		private static string FormatExpectedOptionNotFoundError(ExpectedOptionNotFoundParseError error)
@@ -87,12 +87,18 @@ namespace Fclp
 
 		private static string GetOptionText(ICommandLineParserError error)
 		{
-            var optionText = "";
-            foreach (var name in error.Option.OptionNames)
-            {
-                optionText += name + ":";
-            }
-            optionText = optionText.TrimEnd(':');
+			var optionText = "";
+			foreach (var name in error.Option.CaseInsensitiveOptionNames)
+			{
+				optionText += name + ":";
+			}
+			optionText = optionText.TrimEnd(':');
+
+			foreach (var name in error.Option.CaseSensitiveOptionNames)
+			{
+				optionText += name + ":";
+			}
+			optionText = optionText.TrimEnd(':');
 
 			return optionText;
 		}

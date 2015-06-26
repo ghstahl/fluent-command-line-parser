@@ -28,238 +28,288 @@ using System.Linq;
 using Fclp.Internals.Extensions;
 using Fclp.Internals.Parsing;
 using Fclp.Internals.Parsing.OptionParsers;
+using Fclp.Internals.Validators;
 
 namespace Fclp.Internals
 {
-	/// <summary>
-	/// A command line Option
-	/// </summary>
-	/// <typeparam name="T">The type of value this Option requires.</typeparam>
-	public class CommandLineOption<T> : ICommandLineOptionResult<T>
-	{
-		#region Constructors
+    /// <summary>
+    /// A command line Option
+    /// </summary>
+    /// <typeparam name="T">The type of value this Option requires.</typeparam>
+    public class CommandLineOption<T> : ICommandLineOptionResult<T>
+    {
+        #region Constructors
 
-        private void InternalConstructor(ICommandLineOptionParser<T> parser, params string[] names)
-	    {
+        private void InternalConstructor(ICommandLineOptionParser<T> parser)
+        {
 
             if (parser == null)
                 throw new ArgumentNullException("parser");
-
-            if (names == null)
-                throw new ArgumentNullException("names");
-
-            if (!names.Any())
-            {
-                throw new ArgumentOutOfRangeException("names", "names is empty");
-            }
-
-            foreach (var name in names)
-            {
-                if (!string.IsNullOrWhiteSpace(name))
-                {
-                    OptionsDictionary.Add(name, "");
-                }
-            }
-            if (OptionsDictionary.Count == 0)
-            {
-                throw new ArgumentOutOfRangeException("names", "names contained nothing that could be used");
-            }
             this.Parser = parser;
-	    }
+        }
 
-	    /// <summary>
-	    /// Construct with string array of names
-	    /// </summary>
-	    /// <param name="names"></param>
-	    /// <param name="parser"></param>
-	    /// <exception cref="ArgumentNullException"></exception>
-	    public CommandLineOption(ICommandLineOptionParser<T> parser, params string[] names)
-	    {
-            InternalConstructor(parser,names);
-	    }
+        /// <summary>
+        /// Construct with string array of names
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CommandLineOption(ICommandLineOptionParser<T> parser)
+        {
+            InternalConstructor(parser);
+        }
 
-	    #endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-	    private Dictionary<string, string> _caseInsensitiveOptionsDictionary;
+        private Dictionary<string, string> _caseInsensitiveOptionsDictionary;
 
-	    private Dictionary<string, string> OptionsDictionary
-	    {
-	        get
-	        {
-	            return _caseInsensitiveOptionsDictionary
-	                   ??
-	                   (_caseInsensitiveOptionsDictionary =
-	                       new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase));
-	        }
-	    }
+        private Dictionary<string, string> CaseInsensitiveOptionsDictionary
+        {
+            get
+            {
+                return _caseInsensitiveOptionsDictionary
+                       ??
+                       (_caseInsensitiveOptionsDictionary =
+                           new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase));
+            }
+        }
+        private Dictionary<string, string> _caseSensitiveOptionsDictionary;
 
-	    /// <inheritdoc/>
-		/// <summary>
-		/// Gets or sets the parser to use for this <see cref="CommandLineOption{T}"/>.
-		/// </summary>
-		ICommandLineOptionParser<T> Parser { get; set; }
+        private Dictionary<string, string> CaseSensitiveOptionsDictionary
+        {
+            get
+            {
+                return _caseSensitiveOptionsDictionary
+                       ??
+                       (_caseSensitiveOptionsDictionary =
+                           new Dictionary<string, string>(StringComparer.InvariantCulture));
+            }
+        }
 
-		/// <summary>
-		/// Gets the description set for this <see cref="CommandLineOption{T}"/>.
-		/// </summary>
-		public string Description { get; set; }
+        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the parser to use for this <see cref="CommandLineOption{T}"/>.
+        /// </summary>
+        ICommandLineOptionParser<T> Parser { get; set; }
 
-		internal Action<T> ReturnCallback { get; set; }
+        /// <summary>
+        /// Gets the description set for this <see cref="CommandLineOption{T}"/>.
+        /// </summary>
+        public string Description { get; set; }
 
-		internal Action<IEnumerable<string>> AdditionalArgumentsCallback { get; set; }
+        internal Action<T> ReturnCallback { get; set; }
 
-		internal T Default { get; set; }
+        internal Action<IEnumerable<string>> AdditionalArgumentsCallback { get; set; }
 
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> is required.
-		/// </summary>
-		public bool IsRequired { get; set; }
+        internal T Default { get; set; }
+
+        /// <summary>
+        /// Gets whether this <see cref="ICommandLineOption"/> is required.
+        /// </summary>
+        public bool IsRequired { get; set; }
 
 
 
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> has a default value setup.
-		/// </summary>
-		public bool HasDefault { get; set; }
+        /// <summary>
+        /// Gets whether this <see cref="ICommandLineOption"/> has a default value setup.
+        /// </summary>
+        public bool HasDefault { get; set; }
 
-		/// <summary>
-		/// Gets the setup <see cref="System.Type"/> for this option.
-		/// </summary>
-		public Type SetupType
-		{
-			get
-			{
-				var type = typeof (T);
-				var genericArgs = type.GetGenericArguments();
-				return genericArgs.Any() ? genericArgs.First() : type;
-			}
-		}
+        /// <summary>
+        /// Gets the setup <see cref="System.Type"/> for this option.
+        /// </summary>
+        public Type SetupType
+        {
+            get
+            {
+                var type = typeof (T);
+                var genericArgs = type.GetGenericArguments();
+                return genericArgs.Any() ? genericArgs.First() : type;
+            }
+        }
 
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> has a callback setup.
-		/// </summary>
-		public bool HasCallback
-		{
-			get { return this.ReturnCallback != null; }
-		}
+        /// <summary>
+        /// Returns the case sensitive options
+        /// </summary>
+        public IDictionary<string, string> CaseSensitiveOptionNames
+        {
+            get { return CaseSensitiveOptionsDictionary; }
+        }
 
-		/// <summary>
-		/// Gets whether this <see cref="ICommandLineOption"/> has an additional arguments callback setup.
-		/// </summary>
-		public bool HasAdditionalArgumentsCallback
-		{
-			get { return this.AdditionalArgumentsCallback != null; }
-		}
+        /// <summary>
+        /// Returns a Dictionary of option names
+        /// </summary>
+        public IDictionary<string, string> CaseInsensitiveOptionNames
+        {
+            get { return CaseInsensitiveOptionsDictionary; }
+        }
 
-		#endregion Properties
+        /// <summary>
+        /// Gets whether this <see cref="ICommandLineOption"/> has a callback setup.
+        /// </summary>
+        public bool HasCallback
+        {
+            get { return this.ReturnCallback != null; }
+        }
 
-		#region Methods
+        /// <summary>
+        /// Gets whether this <see cref="ICommandLineOption"/> has an additional arguments callback setup.
+        /// </summary>
+        public bool HasAdditionalArgumentsCallback
+        {
+            get { return this.AdditionalArgumentsCallback != null; }
+        }
 
-		/// <summary>
-		/// Binds the specified <see cref="System.String"/> to the Option.
-		/// </summary>
-		/// <param name="value">The <see cref="System.String"/> to bind.</param>
-		public void Bind(ParsedOption value)
-		{
-			if (this.Parser.CanParse(value) == false) throw new OptionSyntaxException();
+        #endregion Properties
 
-			this.Bind(this.Parser.Parse(value));
+        #region Methods
 
-			this.BindAnyAdditionalArgs(value);
-		}
+        /// <summary>
+        /// Binds the specified <see cref="System.String"/> to the Option.
+        /// </summary>
+        /// <param name="value">The <see cref="System.String"/> to bind.</param>
+        public void Bind(ParsedOption value)
+        {
+            if (this.Parser.CanParse(value) == false) throw new OptionSyntaxException();
 
-		/// <summary>
-		/// Binds the default value for this <see cref="ICommandLineOption"/> if available.
-		/// </summary>
-		public void BindDefault()
-		{
-			if (this.HasDefault)
-				this.Bind(this.Default);
-		}
+            this.Bind(this.Parser.Parse(value));
 
-	    /// <summary>
-	    /// Returns a Dictionary of option names
-	    /// </summary>
-        public IDictionary<string, string> OptionNames
-	    {
-	        get { return OptionsDictionary; }
-	    }
+            this.BindAnyAdditionalArgs(value);
+        }
 
-	    void Bind(T value)
-		{
-			if (this.HasCallback)
-				this.ReturnCallback(value);
-		}
+        /// <summary>
+        /// Binds the default value for this <see cref="ICommandLineOption"/> if available.
+        /// </summary>
+        public void BindDefault()
+        {
+            if (this.HasDefault)
+                this.Bind(this.Default);
+        }
 
-		void BindAnyAdditionalArgs(ParsedOption option)
-		{
-			if (!this.HasAdditionalArgumentsCallback) return;
 
-			if (option.AdditionalValues.Any())
-			{
-				this.AdditionalArgumentsCallback(option.AdditionalValues);
-			}
-		}
+        void Bind(T value)
+        {
+            if (this.HasCallback)
+                this.ReturnCallback(value);
+        }
 
-		/// <summary>
-		/// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		public ICommandLineOptionFluent<T> WithDescription(string description)
-		{
-			this.Description = description;
-			return this;
-		}
+        void BindAnyAdditionalArgs(ParsedOption option)
+        {
+            if (!this.HasAdditionalArgumentsCallback) return;
 
-		/// <summary>
-		/// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required and a value must be specified to fulfil it.
-		/// </summary>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		public ICommandLineOptionFluent<T> Required()
-		{
-			this.IsRequired = true;
-			return this;
-		}
+            if (option.AdditionalValues.Any())
+            {
+                this.AdditionalArgumentsCallback(option.AdditionalValues);
+            }
+        }
 
-		/// <summary>
-		/// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>. 
-		/// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
-		/// </summary>
-		/// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		public ICommandLineOptionFluent<T> Callback(Action<T> callback)
-		{
-			this.ReturnCallback = callback;
-			return this;
-		}
+        /// <summary>
+        /// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> WithDescription(string description)
+        {
+            this.Description = description;
+            return this;
+        }
 
-		/// <summary>
-		/// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="value">The value to use.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		public ICommandLineOptionFluent<T> SetDefault(T value)
-		{
-			this.Default = value;
-			this.HasDefault = true;
-			return this;
-		}
+        /// <summary>
+        /// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required and a value must be specified to fulfil it.
+        /// </summary>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> Required()
+        {
+            this.IsRequired = true;
+            return this;
+        }
 
-		/// <summary>
-		/// Specified the method to invoke with any addition arguments parsed with the Option.
-		/// If additional arguments are not required either do not call it, or specify <c>null</c>.
-		/// </summary>
-		/// <param name="callback">The return callback to execute with the parsed addition arguments found for this Option.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		public ICommandLineOptionFluent<T> CaptureAdditionalArguments(Action<IEnumerable<string>> callback)
-		{
-			this.AdditionalArgumentsCallback = callback;
-			return this;
-		}
+        /// <summary>
+        /// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>. 
+        /// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
+        /// </summary>
+        /// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> Callback(Action<T> callback)
+        {
+            this.ReturnCallback = callback;
+            return this;
+        }
 
-		#endregion Methods
-	}
+        /// <summary>
+        /// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="value">The value to use.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> SetDefault(T value)
+        {
+            this.Default = value;
+            this.HasDefault = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Specified the method to invoke with any addition arguments parsed with the Option.
+        /// If additional arguments are not required either do not call it, or specify <c>null</c>.
+        /// </summary>
+        /// <param name="callback">The return callback to execute with the parsed addition arguments found for this Option.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> CaptureAdditionalArguments(Action<IEnumerable<string>> callback)
+        {
+            this.AdditionalArgumentsCallback = callback;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds case sensitive option only if it doesn't exist in the case sensitive or case insensitive dictionary
+        /// </summary>
+        /// <param name="optionNames"></param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> AddCaseSensitiveOption(params string[] optionNames)
+        {
+            if (optionNames == null)
+                throw new ArgumentNullException("optionNames");
+
+            _optionValidator.WhatIfAddOption(optionNames);
+
+            foreach (var name in optionNames)
+            {
+                CaseSensitiveOptionsDictionary.Add(name, "");
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Adds case sensitive option only if it doesn't exist in the case sensitive or case insensitive dictionary
+        /// </summary>
+        /// <param name="optionNames"></param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        public ICommandLineOptionFluent<T> AddCaseInsensitiveOption(params string[] optionNames)
+        {
+            if (optionNames == null)
+                throw new ArgumentNullException("optionNames");
+            
+            _optionValidator.WhatIfAddOption(optionNames);
+
+            foreach (var name in optionNames)
+            {
+                CaseInsensitiveOptionsDictionary.Add(name, "");
+            }
+            return this;
+        }
+
+        #endregion Methods
+
+        ICommandLineOptionValidator _optionValidator;
+
+        /// <summary>
+        /// Sets the option validator so that prior to accepting any option name it gets checked
+        /// </summary>
+        /// <param name="optionValidator"></param>
+        public void SetOptionValidator(ICommandLineOptionValidator optionValidator)
+        {
+            _optionValidator = optionValidator;
+        }
+    }
 }

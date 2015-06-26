@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using Fclp.Internals;
+using Fclp.Internals.Validators;
 
 namespace Fclp
 {
@@ -35,20 +36,12 @@ namespace Fclp
 	public interface IFluentCommandLineParser
 	{
 
-	    /// <summary>
-	    /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
-	    /// </summary>
-	    /// <typeparam name="T"></typeparam>
-	    /// <param name="optionNames"></param>
-	    /// <returns></returns>
-	    /// <exception cref="OptionAlreadyExistsException">
-	    /// A Option with the same name already exists in the <see cref="IFluentCommandLineParser"/>.
-	    /// </exception>
-	    /// <exception cref="InvalidOptionNameException">
-	    /// Contants in the array are not valid. <paramref name="optionNames"/> must not be <c>whitespace</c>
-	    /// or a control character. <paramref name="optionNames"/> must not be <c>null</c>, <c>empty</c> or only <c>whitespace</c>.
-	    /// </exception>
-	    ICommandLineOptionFluent<T> Setup<T>(params string[] optionNames);
+		/// <summary>
+		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns>An <see cref="ICommandLineOptionFluent{T}"/> representing the results of the parse operation.</returns>
+		ICommandLineOptionFluent<T> Setup<T>();
 
 		/// <summary>
 		/// Setup the help args.
@@ -56,7 +49,7 @@ namespace Fclp
 		/// <param name="helpArgs">The help arguments to register.</param>
 		IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs);
 
-        /// <summary>
+		/// <summary>
 		/// Parses the specified <see><cref>T:System.String[]</cref></see> using the setup Options.
 		/// </summary>
 		/// <param name="args">The <see><cref>T:System.String[]</cref></see> to parse.</param>
@@ -68,10 +61,9 @@ namespace Fclp
 		/// </summary>
 		IEnumerable<ICommandLineOption> Options { get; }
 
-        /// <summary>
-        /// Gets or sets the help option for this parser.
-        /// </summary>
-        IHelpCommandLineOption HelpOption { get; set; }
-
+		/// <summary>
+		/// Gets or sets the help option for this parser.
+		/// </summary>
+		IHelpCommandLineOption HelpOption { get; set; }
 	}
 }

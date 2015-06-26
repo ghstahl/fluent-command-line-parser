@@ -25,45 +25,65 @@
 using System;
 using Fclp.Internals.Parsing;
 using Fclp.Internals.Parsing.OptionParsers;
+using Fclp.Internals.Validators;
 
 namespace Fclp.Internals
 {
-	/// <summary>
-	/// Factory used to create command line Options
-	/// </summary>
-	public class CommandLineOptionFactory : ICommandLineOptionFactory
-	{
+    /// <summary>
+    /// Factory used to create command line Options
+    /// </summary>
+    public class CommandLineOptionFactory : ICommandLineOptionFactory, ICommandLineOptionInitialization
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public CommandLineOptionFactory()
+        {
+            
+        }
 
-		ICommandLineOptionParserFactory _parserFactory;
+        ICommandLineOptionParserFactory _parserFactory;
 
-		/// <summary>
-		/// Gets or sets the <see cref="ICommandLineOptionParserFactory"/> to use.
-		/// </summary>
-		/// <remarks>If <c>null</c> a new instance of the <see cref="ParserFactory"/> will be returned.</remarks>
-		public ICommandLineOptionParserFactory ParserFactory
-		{
-			get { return _parserFactory ?? (_parserFactory = new CommandLineOptionParserFactory()); }
-			set { _parserFactory = value; }
-		}
+        /// <summary>
+        /// Gets or sets the <see cref="ICommandLineOptionParserFactory"/> to use.
+        /// </summary>
+        /// <remarks>If <c>null</c> a new instance of the <see cref="ParserFactory"/> will be returned.</remarks>
+        public ICommandLineOptionParserFactory ParserFactory
+        {
+            get { return _parserFactory ?? (_parserFactory = new CommandLineOptionParserFactory()); }
+            set { _parserFactory = value; }
+        }
 
         /// <summary>
         /// Creates a new <see cref="ICommandLineOptionFluent{T}"/>.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="ICommandLineOptionResult{T}"/> to create.</typeparam>
-        /// <param name="optionNames">An array of option names. Must not be null, empty, or contain nonsense</param>
         /// <returns></returns>
-	    public ICommandLineOptionResult<T> CreateOption<T>(params string[] optionNames)
-	    {
-            return new CommandLineOption<T>( this.ParserFactory.CreateParser<T>(),optionNames);
-	    }
+        public ICommandLineOptionResult<T> CreateOption<T>()
+        {
+            var parser = this.ParserFactory.CreateParser<T>();
+            var option = new CommandLineOption<T>(parser);
+            option.SetOptionValidator(_optionValidator);
+            return option;
+        }
 
-	    /// <summary>
-		/// Create a new <see cref="IHelpCommandLineOptionResult"/> using the specified args.
-		/// </summary>
-		/// <param name="helpArgs">The args used to display the help option.</param>
-		public IHelpCommandLineOptionResult CreateHelpOption(string[] helpArgs)
-		{
-			return new HelpCommandLineOption(helpArgs);
-		}
-	}
+        /// <summary>
+        /// Create a new <see cref="IHelpCommandLineOptionResult"/> using the specified args.
+        /// </summary>
+        /// <param name="helpArgs">The args used to display the help option.</param>
+        public IHelpCommandLineOptionResult CreateHelpOption(string[] helpArgs)
+        {
+            return new HelpCommandLineOption(helpArgs);
+        }
+
+        private ICommandLineOptionValidator _optionValidator;
+       /// <summary>
+       /// Sets the OptionValidator for the parser
+       /// </summary>
+       /// <param name="optionValidator"></param>
+        public void SetOptionValidator(ICommandLineOptionValidator optionValidator)
+       {
+           _optionValidator = optionValidator;
+       }
+    }
 }

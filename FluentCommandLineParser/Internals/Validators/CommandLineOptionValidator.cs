@@ -56,5 +56,17 @@ namespace Fclp.Internals.Validators
 				rule.Validate(commandLineOption);
 			}
 		}
+
+		/// <summary>
+		/// Validates that an option name can be added to the system
+		/// </summary>
+		/// <param name="optionNames"></param>
+		public void WhatIfAddOption(params string[] optionNames)
+		{
+			foreach (var rule in _rules)
+			{
+				rule.WhatIfAddOption(optionNames);
+			}
+		}
 	}
 }

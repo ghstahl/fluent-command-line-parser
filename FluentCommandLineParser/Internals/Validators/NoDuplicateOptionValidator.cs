@@ -27,52 +27,79 @@ using System.Linq;
 
 namespace Fclp.Internals.Validators
 {
-	/// <summary>
-	/// Validator used to ensure no there are duplicate Options setup.
-	/// </summary>
-	public class NoDuplicateOptionValidator : ICommandLineOptionValidator
-	{
-		private readonly IFluentCommandLineParser _parser;
+    /// <summary>
+    /// Validator used to ensure no there are duplicate Options setup.
+    /// </summary>
+    public class NoDuplicateOptionValidator : ICommandLineOptionValidator
+    {
+        private readonly IFluentCommandLineParser _parser;
 
-		
+        /// <summary>
+        /// Initialises a new instance of the <see cref="NoDuplicateOptionValidator"/> class.
+        /// </summary>
+        /// <param name="parser">The <see cref="IFluentCommandLineParser"/> containing the setup options. This must not be null.</param>
+        public NoDuplicateOptionValidator(IFluentCommandLineParser parser)
+        {
+            if (parser == null) throw new ArgumentNullException("parser");
+            _parser = parser;
+        }
 
-		/// <summary>
-		/// Initialises a new instance of the <see cref="NoDuplicateOptionValidator"/> class.
-		/// </summary>
-		/// <param name="parser">The <see cref="IFluentCommandLineParser"/> containing the setup options. This must not be null.</param>
-		public NoDuplicateOptionValidator(IFluentCommandLineParser parser)
-		{
-			if (parser == null) throw new ArgumentNullException("parser");
-			_parser = parser;
-		}
+        /// <summary>
+        /// Gets the <see cref="StringComparison"/> type used for duplicates.
+        /// </summary>
+        private StringComparison ComparisonType
+        {
+            get { return StringComparison.CurrentCultureIgnoreCase; }
+        }
 
-		/// <summary>
-		/// Gets the <see cref="StringComparison"/> type used for duplicates.
-		/// </summary>
-		private StringComparison ComparisonType
-		{
-			get { return StringComparison.CurrentCultureIgnoreCase; }
-		}
+        /// <summary>
+        /// Verifies that the specified <see cref="ICommandLineOption"/> will not cause any duplication.
+        /// </summary>
+        /// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate.</param>
+        public void Validate(ICommandLineOption commandLineOption)
+        {
+            foreach (var optionName in commandLineOption.CaseInsensitiveOptionNames)
+            {
+                WhatIfAddOption(optionName.Key);
+            }
+            foreach (var optionName in commandLineOption.CaseSensitiveOptionNames)
+            {
+                WhatIfAddOption(optionName.Key);
+            }
 
-	    /// <summary>
-	    /// Verifies that the specified <see cref="ICommandLineOption"/> will not cause any duplication.
-	    /// </summary>
-	    /// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate.</param>
-	    public void Validate(ICommandLineOption commandLineOption)
-	    {
-	        foreach (var option in _parser.Options)
-	        {
-	            foreach (var targetOption in commandLineOption.OptionNames)
-	            {
-	                var key = targetOption.Key;
-	                if (option.OptionNames.ContainsKey(key))
-	                {
-	                    throw new OptionAlreadyExistsException(key.ToString());
-	                }
+        }
 
-	            }
-	        }
-	    }
+        /// <summary>
+        /// Validates that an option name can be added to the system
+        /// </summary>
+        /// <param name="optionNames"></param>
+        public void WhatIfAddOption(params string[] optionNames)
+        {
+            if (optionNames == null)
+            {
+                throw new ArgumentNullException("optionNames");
+            }
+            if (!optionNames.Any())
+            {
+                throw new ArgumentOutOfRangeException("optionNames");
+            }
 
-	}
+            foreach (var optionName in optionNames)
+            {
+                if (string.IsNullOrWhiteSpace(optionName))
+                    throw new InvalidOptionNameException(string.Format("Option:'(0)' is invalid"));
+                foreach (var option in _parser.Options)
+                {
+                    if (option.CaseInsensitiveOptionNames.ContainsKey(optionName))
+                    {
+                        throw new OptionAlreadyExistsException(optionName);
+                    }
+                    if (option.CaseSensitiveOptionNames.ContainsKey(optionName))
+                    {
+                        throw new OptionAlreadyExistsException(optionName);
+                    }
+                }
+            }
+        }
+    }
 }

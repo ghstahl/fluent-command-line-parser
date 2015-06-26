@@ -53,14 +53,14 @@ namespace Fclp.Tests.FluentCommandLineParser
 				var mock = new Mock<ICommandLineOptionFactory>();
 				var mockOption = new Mock<ICommandLineOptionResult<TestType>>();
 
-				mock.Setup(x => x.CreateOption<TestType>(Moq.It.IsAny<string>(), Moq.It.IsAny<string>()))
+				mock.Setup(x => x.CreateOption<TestType>().AddCaseInsensitiveOption(Moq.It.IsAny<string>(), Moq.It.IsAny<string>()))
 					.Returns(mockOption.Object)
 					.Callback<string, string>((s, l) =>
 								{
 									var _dictMock = new Dictionary<string, string> { { s, "" }, { l, "" } };
 
 									var option = new Mock<ICommandLineOption>();
-									option.SetupGet(x => x.OptionNames).Returns(_dictMock);
+									option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 								});
 
 

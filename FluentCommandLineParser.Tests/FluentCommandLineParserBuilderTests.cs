@@ -69,13 +69,13 @@ namespace Fclp.Tests
 				Establish context = () =>
 				{
 					sut.Setup(x => x.NewValue)
-					   .As(WellKnownOptionNames.LittleV, "value");
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value");
 
 					sut.Setup(x => x.RecordId)
-					   .As(WellKnownOptionNames.LittleR, "recordId");
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleR, "recordId");
 
 					sut.Setup(x => x.Silent)
-					   .As(WellKnownOptionNames.LittleS, "silent");
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "silent");
 
 					args = new[] { "-r", "10", "-v", "Mr. Smith", "--silent" };
 				};
@@ -95,7 +95,7 @@ namespace Fclp.Tests
 				Establish context = () =>
 				{
 					sut.Setup(x => x.NewValue)
-					   .As(WellKnownOptionNames.LittleV, "value")
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value")
 					   .Required();
 
 					args = new[] { "-r", "10", "--silent" };
@@ -114,13 +114,13 @@ namespace Fclp.Tests
 					Create(out expectedDefaultValue);
 
 					sut.Setup(x => x.RecordId)
-					   .As(WellKnownOptionNames.LittleR, "recordId");
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleR, "recordId");
 
 					sut.Setup(x => x.Silent)
-					   .As(WellKnownOptionNames.LittleS, "silent");
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "silent");
 
 					sut.Setup(x => x.NewValue)
-					   .As(WellKnownOptionNames.LittleV, "value")
+					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value")
 					   .SetDefault(expectedDefaultValue);
 
 					args = new[] { "-r", "10", "--silent" };
@@ -143,7 +143,7 @@ namespace Fclp.Tests
 						expectedTestEnum = TestEnum.Value1;
 
 						sut.Setup(x => x.Enum)
-							.As(WellKnownOptionNames.LittleE, "enum");
+							.As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum");
 					};
 				}
 
@@ -174,7 +174,7 @@ namespace Fclp.Tests
 						result.HasErrors.ShouldBeTrue();
 
 					It should_return_an_error_for_the_enum_option = () =>
-						result.Errors.Single().Option.OptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
+                        result.Errors.Single().Option.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
 
 				}
 
@@ -187,7 +187,7 @@ namespace Fclp.Tests
 						result.HasErrors.ShouldBeTrue();
 
 					It should_return_an_error_for_the_enum_option = () =>
-						result.Errors.Single().Option.OptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
+						result.Errors.Single().Option.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
 				}
 			}
 		}
