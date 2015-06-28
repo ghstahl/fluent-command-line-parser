@@ -31,67 +31,67 @@ using It = Machine.Specifications.It;
 
 namespace Fclp.Tests.Internals.Validators
 {
-	class NoDuplicateOptionValidatorTests
-	{
-		[Subject(typeof(NoDuplicateOptionValidator))]
-		abstract class NoDuplicateOptionValidatorTestContext : TestContextBase<NoDuplicateOptionValidator>
-		{
-			protected static Mock<IFluentCommandLineParser> parser;
+    class NoDuplicateOptionValidatorTests
+    {
+        [Subject(typeof(NoDuplicateOptionValidator))]
+        abstract class NoDuplicateOptionValidatorTestContext : TestContextBase<NoDuplicateOptionValidator>
+        {
+            protected static Mock<IFluentCommandLineParser> parser;
 
-			Establish context = () =>
-			{
-				FreezeMock(out parser);
-				CreateSut();
-			};
-		}
+            Establish context = () =>
+            {
+                FreezeMock(out parser);
+                CreateSut();
+            };
+        }
 
-		sealed class Validate
-		{
-			[Subject("Validate")]
-			abstract class ValidateTestContext : NoDuplicateOptionValidatorTestContext
-			{
-				protected static Mock<ICommandLineOption> option;
+        sealed class Validate
+        {
+            [Subject("Validate")]
+            abstract class ValidateTestContext : NoDuplicateOptionValidatorTestContext
+            {
+                protected static Mock<ICommandLineOption> option;
 
-				Establish context = () =>
-				{
-					CreateMock(out option);
-					var optionNames = new Dictionary<string, string>();
+                Establish context = () =>
+                {
+                    CreateMock(out option);
+                    var optionNames = new Dictionary<string, string>();
                     option.SetupGet(it => it.CaseInsensitiveOptionNames).Returns(optionNames);
-				};
+                };
 
-				Because of = () =>
-					error = Catch.Exception(() =>
-						sut.Validate(option.Object));
+                Because of = () =>
+                    error = Catch.Exception(() =>
+                        sut.Validate(option.Object));
 
-				protected static void SetupExistingParserOptions(params ICommandLineOption[] options)
-				{
-					parser.SetupGet(it => it.Options).Returns(CreateManyAsList(options));
-				}
+                protected static void SetupExistingParserOptions(params ICommandLineOption[] options)
+                {
+                    parser.SetupGet(it => it.Options).Returns(CreateManyAsList(options));
+                }
 
-				protected static ICommandLineOption CreateOptionWith(string shortName = null, string longName = null)
-				{
-					var optionNames = new Dictionary<string, string>();
-					if(!string.IsNullOrWhiteSpace(shortName))
-						optionNames.Add(shortName,"");
-					if (!string.IsNullOrWhiteSpace(longName))
-						optionNames.Add(longName, "");
+                protected static ICommandLineOption CreateOptionWith(string shortName = null, string longName = null)
+                {
+                    var optionNames = new Dictionary<string, string>();
+                    if(!string.IsNullOrWhiteSpace(shortName))
+                        optionNames.Add(shortName,"");
+                    if (!string.IsNullOrWhiteSpace(longName))
+                        optionNames.Add(longName, "");
 
-					var existingOption = CreateMock<ICommandLineOption>();
+                    var existingOption = CreateMock<ICommandLineOption>();
 
                     existingOption.SetupGet(it => it.CaseInsensitiveOptionNames).Returns(optionNames);
 
-					return existingOption.Object;
-				}
-			}
+                    return existingOption.Object;
+                }
+            }
 
-			class when_there_have_been_no_options_setup_thus_far : ValidateTestContext
-			{
-				Establish context = () =>
-					parser.SetupGet(it => it.Options).Returns(CreateEmptyList<ICommandLineOption>());
+            class when_there_have_been_no_options_setup_thus_far : ValidateTestContext
+            {
+                Establish context = () =>
+                    parser.SetupGet(it => it.Options).Returns(CreateEmptyList<ICommandLineOption>());
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
  
-		}
-	}
+        }
+    }
 }

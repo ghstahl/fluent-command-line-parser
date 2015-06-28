@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Fclp.Internals;
 using Fclp.Internals.Validators;
 using Machine.Specifications;
@@ -32,186 +33,182 @@ using It = Machine.Specifications.It;
 
 namespace Fclp.Tests.Internals.Validators
 {
-	class OptionNameValidatorTests
-	{
-		[Subject(typeof(OptionNameValidator))]
-		abstract class CommandLineOptionNameValidatorTestContext : TestContextBase<OptionNameValidator>
-		{
-			Establish context = () => CreateSut();
-		}
+    class OptionNameValidatorTests
+    {
+        [Subject(typeof(OptionNameValidator))]
+        abstract class CommandLineOptionNameValidatorTestContext : TestContextBase<OptionNameValidator>
+        {
+            Establish context = () => CreateSut();
+        }
 
-		sealed class Validate
-		{
-			abstract class ValidateTestContext : CommandLineOptionNameValidatorTestContext
-			{
-				protected const string ValidShortName = WellKnownOptionNames.LittleS;
-				protected const string ValidLongName = "long";
+        sealed class Validate
+        {
+            abstract class ValidateTestContext : CommandLineOptionNameValidatorTestContext
+            {
+                protected const string ValidShortName = WellKnownOptionNames.LittleS;
+                protected const string ValidLongName = "long";
 
-				protected static Mock<ICommandLineOption> option;
+//                protected static Mock<ICommandLineOption> option;
+               protected static ICommandLineOption option;
+                /*
+                Establish context = () =>
+                    CreateMock(out option);
 
-				Establish context = () =>
-					CreateMock(out option);
+                Because of = () =>
+                    error = Catch.Exception(() =>
+                        sut.Validate(option.Object));
+*/
+                protected static void SetupOptionWith(string shortName = ValidShortName, string longName = ValidLongName)
+                {
+                    var parser = new Fclp.FluentCommandLineParser();
+                    parser.Setup<string>().AddCaseInsensitiveOption(shortName, longName);
+                    option = parser.Options.First();
+                }
+            }
 
-				Because of = () =>
-					error = Catch.Exception(() =>
-						sut.Validate(option.Object));
+            class when_the_short_name_is_null : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: null);
 
-				protected static void SetupOptionWith(string shortName = ValidShortName, string longName = ValidLongName)
-				{
-					var _dictMock = new Dictionary<string, string>();
-					if(!string.IsNullOrWhiteSpace(shortName))
-						_dictMock.Add(shortName,"");
-					if (!string.IsNullOrWhiteSpace(longName))
-						_dictMock.Add(longName, "");
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-					var option = new Mock<ICommandLineOption>();
-                    option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-				}
-			}
+            class when_the_short_name_is_whitespace : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: " ");
 
-			class when_the_short_name_is_null : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: null);
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_short_name_contains_a_colon : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: ":");
 
-			class when_the_short_name_is_whitespace : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: " ");
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_short_name_contains_an_equality_sign : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: "=");
 
-			class when_the_short_name_contains_a_colon : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: ":");
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_short_name_is_empty : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: string.Empty);
 
-			class when_the_short_name_contains_an_equality_sign : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: "=");
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_short_name_is_a_control_char : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: ((char)7).ToString(CultureInfo.InvariantCulture));
 
-			class when_the_short_name_is_empty : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: string.Empty);
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_short_name_is_longer_than_one_char : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: CreateStringOfLength(2));
 
-			class when_the_short_name_is_a_control_char : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: ((char)7).ToString(CultureInfo.InvariantCulture));
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_short_name_is_one_char : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: CreateStringOfLength(1));
 
-			class when_the_short_name_is_longer_than_one_char : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: CreateStringOfLength(2));
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_is_null : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: null);
 
-			class when_the_short_name_is_one_char : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: CreateStringOfLength(1));
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_long_name_is_whitespace : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: " ");
 
-			class when_the_long_name_is_null : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: null);
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_long_name_contains_a_colon : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: ValidLongName + ":");
 
-			class when_the_long_name_is_whitespace : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: " ");
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_contains_an_equality_sign : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: ValidLongName + "=");
 
-			class when_the_long_name_contains_a_colon : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: ValidLongName + ":");
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_is_empty : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: string.Empty);
 
-			class when_the_long_name_contains_an_equality_sign : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: ValidLongName + "=");
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_is_longer_than_one_char : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: CreateStringOfLength(2));
 
-			class when_the_long_name_is_empty : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: string.Empty);
+                It should_not_throw_an_error = () => error.ShouldBeNull();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_long_name_is_one_char : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: CreateStringOfLength(1));
 
-			class when_the_long_name_is_longer_than_one_char : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: CreateStringOfLength(2));
+                It should_throw_a_too_long_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_not_throw_an_error = () => error.ShouldBeNull();
-			}
+            class when_the_long_name_contains_whitespace: ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(longName: ValidLongName + " " + ValidLongName);
 
-			class when_the_long_name_is_one_char : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: CreateStringOfLength(1));
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_a_too_long_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_is_null_and_the_short_name_is_null : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: null, longName: null);
 
-			class when_the_long_name_contains_whitespace: ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(longName: ValidLongName + " " + ValidLongName);
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
 
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
+            class when_the_long_name_is_empty_and_the_short_name_is_empty : ValidateTestContext
+            {
+                Establish context = () =>
+                    SetupOptionWith(shortName: string.Empty, longName: string.Empty);
 
-			class when_the_long_name_is_null_and_the_short_name_is_null : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: null, longName: null);
-
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
-
-			class when_the_long_name_is_empty_and_the_short_name_is_empty : ValidateTestContext
-			{
-				Establish context = () =>
-					SetupOptionWith(shortName: string.Empty, longName: string.Empty);
-
-				It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
-			}
-		}
-	}
+                It should_throw_an_error = () => error.ShouldBeOfType<InvalidOptionNameException>();
+            }
+        }
+    }
 }

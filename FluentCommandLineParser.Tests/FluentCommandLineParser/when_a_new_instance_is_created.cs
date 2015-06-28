@@ -35,7 +35,6 @@ namespace Fclp.Tests
 		{
 			It should_create_a_default_parser_engine = () => sut.ParserEngine.ShouldBeOfType(typeof(CommandLineParserEngineMark2));
 			It should_create_a_default_option_factory = () => sut.OptionFactory.ShouldBeOfType(typeof(CommandLineOptionFactory));
-			It should_set_the_string_comparison_to_current_culture = () => sut.StringComparison.ShouldEqual(System.StringComparison.CurrentCulture);
 			It should_have_setup_no_options_internally = () => sut.Options.ShouldBeEmpty();
 			It should_have_a_default_option_formatter = () => sut.OptionFormatter.ShouldBeOfType(typeof(CommandLineOptionFormatter));
 		}

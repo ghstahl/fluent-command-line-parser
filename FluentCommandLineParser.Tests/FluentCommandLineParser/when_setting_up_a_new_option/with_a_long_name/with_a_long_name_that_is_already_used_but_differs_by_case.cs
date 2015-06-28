@@ -41,11 +41,13 @@ namespace Fclp.Tests.FluentCommandLineParser
 			Establish context = () =>
 			{
 				AutoMockAll();
-				var _dictMock = new Dictionary<string, string> {{existingLongName, ""}};
+                var _dictMockCaseSensitive = new Dictionary<string, string> { };
+                var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
 
 				var option = new Mock<ICommandLineOption>();
                 option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-				existingOption = option.Object;
+                option.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
+                existingOption = option.Object;
 			};
 
 			Because of = () =>

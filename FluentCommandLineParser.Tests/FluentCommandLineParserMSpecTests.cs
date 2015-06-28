@@ -39,9 +39,6 @@ namespace Fclp.Tests
 		{
 			class when_initialised : FluentCommandLineParserTestContext
 			{
-				It should_enable_case_sensitive = () =>
-					sut.IsCaseSensitive.ShouldBeTrue();
-
 				It should_have_an_error_formatter = () => 
 					sut.ErrorFormatter.ShouldNotBeNull();
 

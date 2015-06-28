@@ -40,27 +40,12 @@ namespace Fclp
 	/// </summary>
 	public class FluentCommandLineParser : IFluentCommandLineParser
 	{
-		private StringComparer StringComparer
-		{
-			get { return StringComparer.InvariantCultureIgnoreCase; }
-		}
-
 		/// <summary>
 		/// Initialises a new instance of the <see cref="FluentCommandLineParser"/> class.
 		/// </summary>
 		public FluentCommandLineParser()
 		{
 		}
-
-		/// <summary>
-		/// The <see cref="StringComparison"/> type used for case sensitive comparisons.
-		/// </summary>
-		public const StringComparison CaseSensitiveComparison = StringComparison.CurrentCulture;
-
-		/// <summary>
-		/// The <see cref="StringComparison"/> type used for case in-sensitive comparisons.
-		/// </summary>
-		public const StringComparison IgnoreCaseComparison = StringComparison.CurrentCultureIgnoreCase;
 
 		List<ICommandLineOption> _options;
 		ICommandLineOptionFactory _optionFactory;
@@ -70,18 +55,6 @@ namespace Fclp
 		ICommandLineParserErrorFormatter _errorFormatter;
 		ICommandLineOptionValidator _optionValidator;
 
-		/// <summary>
-		/// Gets or sets whether values that differ by case are considered different. 
-		/// </summary>
-		public bool IsCaseSensitive
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// Gets the <see cref="StringComparison"/> to use when matching values.
-		/// </summary>
-		internal StringComparison StringComparison { get { return IgnoreCaseComparison; } }
 
 		/// <summary>
 		/// Gets the list of Options
@@ -199,7 +172,7 @@ namespace Fclp
 
 			var result = new CommandLineParserResult { EmptyArgs = parsedOptions.IsNullOrEmpty() };
 
-			if (this.HelpOption.ShouldShowHelp(parsedOptions, StringComparison))
+			if (this.HelpOption.ShouldShowHelp(parsedOptions, StringComparison.CurrentCultureIgnoreCase))
 			{
 				result.HelpCalled = true;
 				this.HelpOption.ShowHelp(this.Options);

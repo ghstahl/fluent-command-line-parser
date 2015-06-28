@@ -31,32 +31,33 @@ using It = Machine.Specifications.It;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace when_setting_up_a_new_option
-	{
-		public class with_a_long_name_that_is_already_used : SettingUpALongOptionTestContext
-		{
-			private const string existingLongName = "longName";
-			private static ICommandLineOption existingOption;
+    namespace when_setting_up_a_new_option
+    {
+        public class with_a_long_name_that_is_already_used : SettingUpALongOptionTestContext
+        {
+            private const string existingLongName = "longName";
+            private static ICommandLineOption existingOption;
 
-			Establish context = () =>
-									{
-										AutoMockAll();
-
+            Establish context = () =>
+                                    {
+                                        AutoMockAll();
+                                        var _dictMockCaseSensitive = new Dictionary<string, string> { };
                                         var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
 
                                         var option = new Mock<ICommandLineOption>();
                                         option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
+                                        option.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
                                         existingOption = option.Object;
-									};
+                                    };
 
-			Because of = () =>
-								{
-									sut.Options.Add(existingOption);
-									SetupOptionWith(valid_short_name, existingLongName);
-								};
+            Because of = () =>
+                                {
+                                    sut.Options.Add(existingOption);
+                                    SetupOptionWith(valid_short_name, existingLongName);
+                                };
 
-			It should_throw_an_error = () => error.ShouldBeOfType(typeof(OptionAlreadyExistsException));
-			It should_not_have_setup_an_option = () => sut.Options.ShouldContainOnly(existingOption);
-		}
-	}
+            It should_throw_an_error = () => error.ShouldBeOfType(typeof(OptionAlreadyExistsException));
+            It should_not_have_setup_an_option = () => sut.Options.ShouldContainOnly(existingOption);
+        }
+    }
 }

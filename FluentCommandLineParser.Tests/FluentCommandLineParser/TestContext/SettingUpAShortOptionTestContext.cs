@@ -29,28 +29,28 @@ using Machine.Specifications;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace TestContext
-	{
-		[Subject(Subjects.setup_new_option)]
-		public abstract class SettingUpAShortOptionTestContext : FluentCommandLineParserTestContext
-		{
-			protected const string invalid_short_name_that_is_whitespace = " ";
-			protected const string invalid_short_name_with_colon = ":";
-			protected const string invalid_short_name_with_equality_sign = "=";
-			const char _char7 = (char)7;
-			protected static readonly string invalid_short_name_that_is_a_control_char = _char7.ToString(CultureInfo.InvariantCulture);
-			protected const string valid_short_name = WellKnownOptionNames.LittleS;
+    namespace TestContext
+    {
+        [Subject(Subjects.setup_new_option)]
+        public abstract class SettingUpAShortOptionTestContext : FluentCommandLineParserTestContext
+        {
+            protected const string invalid_short_name_that_is_whitespace = " ";
+            protected const string invalid_short_name_with_colon = ":";
+            protected const string invalid_short_name_with_equality_sign = "=";
+            const char _char7 = (char)7;
+            protected static readonly string invalid_short_name_that_is_a_control_char = _char7.ToString(CultureInfo.InvariantCulture);
+            protected const string valid_short_name = WellKnownOptionNames.LittleS;
 
-			protected static ICommandLineOption option;
+            protected static ICommandLineOption option;
 
-			protected static void SetupOptionWith(string shortName)
-			{
-				CatchAnyError(() =>
-				{
+            protected static void SetupOptionWith(string shortName)
+            {
+                CatchAnyError(() =>
+                {
                     var ret = sut.Setup<TestType>().AddCaseInsensitiveOption(shortName);
-					option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
-				});
-			}
-		}
-	}
+                    option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
+                });
+            }
+        }
+    }
 }

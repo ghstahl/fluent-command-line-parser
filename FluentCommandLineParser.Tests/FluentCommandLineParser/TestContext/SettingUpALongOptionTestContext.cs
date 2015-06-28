@@ -37,11 +37,11 @@ namespace Fclp.Tests.FluentCommandLineParser
 			protected const string invalid_long_name_with_equality_sign = "long=name";
 			protected const string valid_long_name = "long";
 
-			protected static void SetupOptionWith(string shortName, string longName)
+			protected static void SetupOptionWith(params string[] optionNames)
 			{
 				CatchAnyError(() =>
 											{
-												var ret = sut.Setup<TestType>().AddCaseInsensitiveOption(shortName, longName);
+                                                var ret = sut.Setup<TestType>().AddCaseInsensitiveOption(optionNames);
 												option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
 											});
 			}

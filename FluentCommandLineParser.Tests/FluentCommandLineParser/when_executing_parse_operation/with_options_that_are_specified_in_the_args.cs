@@ -56,7 +56,10 @@ namespace Fclp.Tests.FluentCommandLineParser
 
 			Establish context = () =>
 			{
-				var _dictMock = new Dictionary<string, string>
+                var _dictMockCaseSensitive = new Dictionary<string, string> { };
+
+                // create item that won't be matched an has no default value
+                var _dictMock = new Dictionary<string, string>
 				{
 					{_optionThatHasCallbackName, ""},
 					{_blankOptionName, ""},
@@ -69,21 +72,24 @@ namespace Fclp.Tests.FluentCommandLineParser
 				// create item that has a callback - the bind value should be executed
 				_parsedOptionThatHasCallback = new ParsedOption { Value = _optionThatHasCallbackValue, Key = _optionThatHasCallbackName };
                 _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-				_optionThatHasCallback.Setup(x => x.BindDefault()).Verifiable();
+                _optionThatHasCallback.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
+                _optionThatHasCallback.Setup(x => x.BindDefault()).Verifiable();
 				_optionThatHasCallback.Setup(x => x.Bind(_parsedOptionThatHasCallback)).Verifiable();
 				sut.Options.Add(_optionThatHasCallback.Object);
 
 				// create option that has a callback and is required - the bind value should be executed like normal
 				_parsedOptionThatIsRequired = new ParsedOption { Value = _optionThatIsRequiredValue, Key = _optionThatIsRequiredName };
 				_optionThatIsRequired.SetupGet(x => x.IsRequired).Returns(true);
-                _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
+                _optionThatIsRequired.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
+                _optionThatIsRequired.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
 				_optionThatIsRequired.Setup(x => x.Bind(_parsedOptionThatIsRequired)).Verifiable();
 				sut.Options.Add(_optionThatIsRequired.Object);
 
 				// create blank option
 				_parsedBlankOption = new ParsedOption { Value = _blankOptionValue, Key = _blankOptionName };
-                _optionThatHasCallback.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-				_blankOption.Setup(x => x.Bind(_parsedBlankOption)).Verifiable();
+                _blankOption.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
+                _blankOption.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
+                _blankOption.Setup(x => x.Bind(_parsedBlankOption)).Verifiable();
 				sut.Options.Add(_blankOption.Object);
 
 				var parsedOptions = new List<ParsedOption>
