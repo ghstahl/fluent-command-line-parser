@@ -7,9 +7,9 @@ $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
 Write-Host "Setting .nuspec version tag to $versionStr"
 
-$content = (Get-Content $root\NuGet\Pingo.FluentCommandLineParser.nuspec) 
+$content = (Get-Content $root\.NuGet\Pingo.FluentCommandLineParser.nuspec) 
 $content = $content -replace '\$version\$',$versionStr
 
-$content | Out-File $root\nuget\Pingo.FluentCommandLineParser.compiled.nuspec
+$content | Out-File $root\.nuget\Pingo.FluentCommandLineParser.compiled.nuspec
 
-& $root\NuGet\NuGet.exe pack $root\nuget\Pingo.FluentCommandLineParser.compiled.nuspec
+& $root\NuGet\NuGet.exe pack $root\.nuget\Pingo.FluentCommandLineParser.compiled.nuspec
