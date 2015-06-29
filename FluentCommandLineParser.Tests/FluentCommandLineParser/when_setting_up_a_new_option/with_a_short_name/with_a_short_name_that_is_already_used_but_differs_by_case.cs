@@ -32,33 +32,33 @@ using It = Machine.Specifications.It;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace when_setting_up_a_new_option
-	{
-		public class with_a_short_name_that_is_already_used_but_differs_by_case : SettingUpAShortOptionTestContext
-		{
-			private const string existingShortName = WellKnownOptionNames.BigS;
-			private const string existingShortNameLower = WellKnownOptionNames.LittleS;
-			private static ICommandLineOption existingOption;
+    namespace when_setting_up_a_new_option
+    {
+        public class with_a_short_name_that_is_already_used_but_differs_by_case : SettingUpAShortOptionTestContext
+        {
+            private const string existingShortName = WellKnownOptionNames.BigS;
+            private const string existingShortNameLower = WellKnownOptionNames.LittleS;
+            private static ICommandLineOption existingOption;
 
-			Establish context = () =>
-			{
-				AutoMockAll();
-				var _dictMock = new Dictionary<string, string> { { existingShortName.ToString(CultureInfo.InvariantCulture), "" } };
+            Establish context = () =>
+            {
+                AutoMockAll();
+                var _dictMock = new Dictionary<string, string> { { existingShortName.ToString(CultureInfo.InvariantCulture), "" } };
 
-				var option = new Mock<ICommandLineOption>();
+                var option = new Mock<ICommandLineOption>();
                 option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
 
-				existingOption = option.Object;
-			};
+                existingOption = option.Object;
+            };
 
-			Because of = () =>
-			{
-				sut.Options.Add(existingOption);
-				SetupOptionWith(existingShortNameLower);
-			};
+            Because of = () =>
+            {
+                sut.Options.Add(existingOption);
+                SetupOptionWith(existingShortNameLower);
+            };
 
-			It should_not_throw_an_error = () => error.ShouldBeNull();
-			It should_have_setup_an_option = () => sut.Options.ShouldContainOnly(new[] { existingOption, option });
-		}
-	}
+            It should_not_throw_an_error = () => error.ShouldBeNull();
+            It should_have_setup_an_option = () => sut.Options.ShouldContainOnly(new[] { existingOption, option });
+        }
+    }
 }

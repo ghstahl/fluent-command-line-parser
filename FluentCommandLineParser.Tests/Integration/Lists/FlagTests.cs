@@ -69,7 +69,7 @@ namespace Fclp.Tests.Integration
 
             var actualEnum = TestEnumFlag.Value0;
 
-            sut.Setup<TestEnumFlag>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleF, "flag").Callback(items => actualEnum = items).Required();
+            sut.Setup<TestEnumFlag>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleF, "flag").Callback(items => actualEnum = items).Required();
 
             var args = ParseArguments(arguments);
 

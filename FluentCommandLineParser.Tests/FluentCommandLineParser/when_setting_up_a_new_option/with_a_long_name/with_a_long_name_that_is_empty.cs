@@ -22,27 +22,32 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using System.Globalization;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
 using Machine.Specifications;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace when_setting_up_a_new_option
-	{
-		public class with_a_long_name_that_is_empty : SettingUpALongOptionTestContext
-		{
-			Establish context = AutoMockAll;
+    namespace when_setting_up_a_new_option
+    {
+        public class with_a_long_name_that_is_empty : SettingUpALongOptionTestContext
+        {
+            Establish context = AutoMockAll;
 
-			Because of = () => SetupOptionWith(valid_short_name, valid_long_name_that_is_empty);
 
-			It should_return_a_new_option = () => option.ShouldNotBeNull();
-			It should_have_the_given_short_name = () => option.CaseInsensitiveOptionNames.Count.ShouldEqual(1);
-			It should_not_be_a_required_option = () => option.IsRequired.ShouldBeFalse();
-			It should_have_no_callback = () => option.HasCallback.ShouldBeFalse();
-			It should_have_no_additional_args_callback = () => option.HasAdditionalArgumentsCallback.ShouldBeFalse();
-			It should_have_no_description = () => option.Description.ShouldBeNull();
-			It should_have_no_default_value = () => option.HasDefault.ShouldBeFalse();
-		}
-	}
+            private static Exception exception;
+
+            private Because of = () =>
+                exception = Catch.Exception(() => SetupOptionWith(valid_short_name, valid_long_name_that_is_empty));
+
+            private It should_have_thrown_an_exception = () =>
+                exception.ShouldNotBeNull();
+
+            private It and_should_be_an_ArgumentException = () =>
+                exception.ShouldBeOfType<InvalidOptionNameException>();
+
+
+        }
+    }
 }

@@ -32,7 +32,7 @@ namespace Fclp.Tests
                 var fclp = new FluentCommandLineParser<ExampleArgsContainer>();
 
                 fclp.Setup(args => args.UriAsString)
-                    .As().AddCaseInsensitiveOption(shortKey, longKey);
+                    .As(CaseType.CaseInsensitive,shortKey, longKey);
 
                 var result = fclp.Parse(combination.Args);
 
@@ -55,7 +55,7 @@ namespace Fclp.Tests
             {
                 var fclp = new Fclp.FluentCommandLineParser();
 
-                fclp.Setup<string>().AddCaseInsensitiveOption(shortKey, longKey).Callback(val => uriAsString = val);
+                fclp.Setup<string>(CaseType.CaseInsensitive, shortKey, longKey).Callback(val => uriAsString = val);
 
                 var result = fclp.Parse(combination.Args);
 
@@ -79,7 +79,7 @@ namespace Fclp.Tests
                 var fclp = new FluentCommandLineParser<ExampleArgsContainer>();
 
                 fclp.Setup(args => args.Uri)
-                    .As().AddCaseInsensitiveOption(shortKey, longKey);
+                    .As(CaseType.CaseInsensitive,shortKey, longKey);
 
                 var result = fclp.Parse(combination.Args);
 
@@ -102,7 +102,7 @@ namespace Fclp.Tests
             {
                 var fclp = new Fclp.FluentCommandLineParser();
 
-                fclp.Setup<Uri>().AddCaseInsensitiveOption(shortKey, longKey).Callback(val => actualUri = val);
+                fclp.Setup<Uri>(CaseType.CaseInsensitive, shortKey, longKey).Callback(val => actualUri = val);
 
                 var result = fclp.Parse(combination.Args);
 

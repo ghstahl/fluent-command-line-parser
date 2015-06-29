@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Fclp.Internals;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
@@ -31,33 +32,41 @@ using It = Machine.Specifications.It;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace when_setting_up_a_new_option
-	{
-		public class with_a_long_name_that_is_already_used_but_differs_by_case : SettingUpALongOptionTestContext
-		{
-			private const string existingLongName = "LONGNAME";
-			private static ICommandLineOption existingOption;
+    namespace when_setting_up_a_new_option
+    {
+        public class with_a_long_name_that_is_already_used_but_differs_by_case : SettingUpALongOptionTestContext
+        {
+            private const string existingLongName = "LONGNAME";
+            private static ICommandLineOption existingOption;
 
-			Establish context = () =>
-			{
-				AutoMockAll();
+            private static Exception exception;
+            Establish context = () =>
+            {
+                AutoMockAll();
                 var _dictMockCaseSensitive = new Dictionary<string, string> { };
                 var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
 
-				var option = new Mock<ICommandLineOption>();
+                var option = new Mock<ICommandLineOption>();
                 option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
                 option.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
                 existingOption = option.Object;
-			};
+            };
 
-			Because of = () =>
-			{
-				sut.Options.Add(existingOption);
-				SetupOptionWith(valid_short_name, existingLongName.ToLower());
-			};
+            private Because of = () =>
+            {
+                sut.Options.Add(existingOption);
+                exception = Catch.Exception(() =>
+                    SetupOptionWith(valid_short_name, existingLongName.ToLower()));
 
-			It should_not_throw_an_error = () => error.ShouldBeNull();
-			It should_not_have_setup_an_option = () => sut.Options.ShouldContainOnly(new[] { existingOption, option });
-		}
-	}
+
+            };
+
+            private It should_have_thrown_an_exception = () =>
+                exception.ShouldNotBeNull();
+
+            private It and_should_be_an_ArgumentException = () =>
+                exception.ShouldBeOfType<InvalidOptionNameException>();
+              
+        }
+    }
 }

@@ -26,68 +26,86 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Fclp.Internals.Extensions;
 
 namespace Fclp.Internals.Validators
 {
-	/// <summary>
-	/// Validator to ensure a new Option has a valid long name.
-	/// </summary>
-	public class OptionNameValidator : ICommandLineOptionValidator
-	{
-		private static readonly char[] ReservedChars =
-			SpecialCharacters.ValueAssignments.Union(new[] { SpecialCharacters.Whitespace }).ToArray();
-
-		/// <summary>
-		/// Verifies that the specified <see cref="ICommandLineOption"/> has a valid short/long name combination.
-		/// </summary>
-		/// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate. This must not be null.</param>
-		/// <exception cref="ArgumentNullException">if <paramref name="commandLineOption"/> is null.</exception>
-		public void Validate(ICommandLineOption commandLineOption)
-		{
-			if (commandLineOption == null) 
-				throw new ArgumentNullException("commandLineOption");
-			if (commandLineOption.CaseInsensitiveOptionNames == null)
-				throw new NullReferenceException("commandLineOption.CaseInsensitiveOptionNames");
-			if (commandLineOption.CaseSensitiveOptionNames == null)
-				throw new NullReferenceException("commandLineOption.CaseSensitiveOptionNames");
-		}
-
-		/// <summary>
-		/// Validates that an option name can be added to the system
-		/// </summary>
-		/// <param name="optionNames"></param>
-		public void WhatIfAddOption(params string[] optionNames)
-		{
-			if (optionNames == null)
-			{
-				throw new ArgumentNullException();
-			}
-			foreach (var optionName in optionNames)
-			{
-				if (string.IsNullOrWhiteSpace(optionName))
-				{
-					ThrowInvalid(optionName, "is Null or WhiteApace");
-				} 
-				VerifyDoesNotContainsReservedChar(optionName);
-			}
-		}
 
 
-		private static void VerifyDoesNotContainsReservedChar(string value)
-		{
-			foreach (char reservedChar in ReservedChars)
-			{
-				if (value.Contains(reservedChar))
-				{
-					ThrowInvalid(value, "The character '" + reservedChar + "' is not valid within a short or long name.");
-				}
-			}
-		}
+    /// <summary>
+    /// Validator to ensure a new Option has a valid long name.
+    /// </summary>
+    public class OptionNameValidator : ICommandLineOptionValidator
+    {
+        /// <summary>
+        /// checks if a string contains stuff based upon a predicate
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        private static bool Contains(string str, Func<char, bool> predicate)
+        {
+            return str.Any(predicate);
+        }
 
-		private static void ThrowInvalid(string value, string message)
-		{
-			throw new InvalidOptionNameException(
-				string.Format(CultureInfo.InvariantCulture, "Invalid option name '{0}'. {1}", value, message));
-		}
-	}
+        private static readonly char[] ReservedChars =
+            SpecialCharacters.ValueAssignments.Union(new[] { SpecialCharacters.Whitespace }).ToArray();
+
+        /// <summary>
+        /// Verifies that the specified <see cref="ICommandLineOption"/> has a valid short/long name combination.
+        /// </summary>
+        /// <param name="commandLineOption">The <see cref="ICommandLineOption"/> to validate. This must not be null.</param>
+        /// <exception cref="ArgumentNullException">if <paramref name="commandLineOption"/> is null.</exception>
+        public void Validate(ICommandLineOption commandLineOption)
+        {
+            if (commandLineOption == null) 
+                throw new ArgumentNullException("commandLineOption");
+            if (commandLineOption.CaseInsensitiveOptionNames == null)
+                throw new NullReferenceException("commandLineOption.CaseInsensitiveOptionNames");
+            if (commandLineOption.CaseSensitiveOptionNames == null)
+                throw new NullReferenceException("commandLineOption.CaseSensitiveOptionNames");
+        }
+
+        /// <summary>
+        /// Validates that an option name can be added to the system
+        /// </summary>
+        /// <param name="optionNames"></param>
+        public void WhatIfAddOption(params string[] optionNames)
+        {
+            if (optionNames == null)
+            {
+                throw new ArgumentNullException();
+            }
+            foreach (var optionName in optionNames)
+            {
+                if (string.IsNullOrWhiteSpace(optionName))
+                {
+                    ThrowInvalid(optionName, "is Null or WhiteApace");
+                }
+                if (Contains(optionName, char.IsControl))
+                {
+                    ThrowInvalid(optionName, "The option name contains control characters.");
+                }
+                VerifyDoesNotContainsReservedChar(optionName);
+            }
+        }
+
+
+        private static void VerifyDoesNotContainsReservedChar(string value)
+        {
+            foreach (char reservedChar in ReservedChars)
+            {
+                if (value.Contains(reservedChar))
+                {
+                    ThrowInvalid(value, "The character '" + reservedChar + "' is not valid within a short or long name.");
+                }
+            }
+        }
+
+        private static void ThrowInvalid(string value, string message)
+        {
+            throw new InvalidOptionNameException(
+                string.Format(CultureInfo.InvariantCulture, "Invalid option name '{0}'. {1}", value, message));
+        }
+    }
 }

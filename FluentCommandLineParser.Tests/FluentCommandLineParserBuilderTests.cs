@@ -30,166 +30,166 @@ using Machine.Specifications;
 
 namespace Fclp.Tests
 {
-	public class FluentCommandLineParserBuilderTests
-	{
-		[Subject(typeof(FluentCommandLineParser<>))]
-		abstract class FluentCommandLineParserBuilderTestContext : TestContextBase<FluentCommandLineParser<TestApplicationArgs>>
-		{
-			Establish context = () => CreateSut();
-		}
+    public class FluentCommandLineParserBuilderTests
+    {
+        [Subject(typeof(FluentCommandLineParser<>))]
+        abstract class FluentCommandLineParserBuilderTestContext : TestContextBase<FluentCommandLineParser<TestApplicationArgs>>
+        {
+            Establish context = () => CreateSut();
+        }
 
-		sealed class Constructor
-		{
-			class when_initialised : FluentCommandLineParserBuilderTestContext
-			{
+        sealed class Constructor
+        {
+            class when_initialised : FluentCommandLineParserBuilderTestContext
+            {
  
-				It should_have_the_fluent_parser_by_default = () =>
-					sut.Parser.ShouldBeOfType<IFluentCommandLineParser>();
+                It should_have_the_fluent_parser_by_default = () =>
+                    sut.Parser.ShouldBeOfType<IFluentCommandLineParser>();
 
-				It should_have_initialised_the_object = () =>
-					sut.Object.ShouldNotBeNull();
-			}
-		}
+                It should_have_initialised_the_object = () =>
+                    sut.Object.ShouldNotBeNull();
+            }
+        }
 
-		 
+         
 
-		sealed class Parse
-		{
-			abstract class ParseTestContext : FluentCommandLineParserBuilderTestContext
-			{
-				protected static string[] args;
-				protected static ICommandLineParserResult result;
+        sealed class Parse
+        {
+            abstract class ParseTestContext : FluentCommandLineParserBuilderTestContext
+            {
+                protected static string[] args;
+                protected static ICommandLineParserResult result;
 
-				Because of = () =>
-					result = sut.Parse(args);
-			}
+                Because of = () =>
+                    result = sut.Parse(args);
+            }
 
-			class when_invoked_with_example : ParseTestContext
-			{
-				Establish context = () =>
-				{
-					sut.Setup(x => x.NewValue)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value");
+            class when_invoked_with_example : ParseTestContext
+            {
+                Establish context = () =>
+                {
+                    sut.Setup(x => x.NewValue)
+                       .As(CaseType.CaseInsensitive,WellKnownOptionNames.LittleV, "value");
 
-					sut.Setup(x => x.RecordId)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleR, "recordId");
+                    sut.Setup(x => x.RecordId)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleR, "recordId");
 
-					sut.Setup(x => x.Silent)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "silent");
+                    sut.Setup(x => x.Silent)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleS, "silent");
 
-					args = new[] { "-r", "10", "-v", "Mr. Smith", "--silent" };
-				};
+                    args = new[] { "-r", "10", "-v", "Mr. Smith", "--silent" };
+                };
 
-				It should_enable_silent = () =>
-					sut.Object.Silent.ShouldBeTrue();
+                It should_enable_silent = () =>
+                    sut.Object.Silent.ShouldBeTrue();
 
-				It should_assign_the_record_id = () =>
-					sut.Object.RecordId.ShouldEqual(10);
+                It should_assign_the_record_id = () =>
+                    sut.Object.RecordId.ShouldEqual(10);
 
-				It should_assign_the_new_value = () =>
-					sut.Object.NewValue.ShouldEqual("Mr. Smith");
-			}
+                It should_assign_the_new_value = () =>
+                    sut.Object.NewValue.ShouldEqual("Mr. Smith");
+            }
 
-			class when_required_option_is_not_provided : ParseTestContext
-			{
-				Establish context = () =>
-				{
-					sut.Setup(x => x.NewValue)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value")
-					   .Required();
+            class when_required_option_is_not_provided : ParseTestContext
+            {
+                Establish context = () =>
+                {
+                    sut.Setup(x => x.NewValue)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleV, "value")
+                       .Required();
 
-					args = new[] { "-r", "10", "--silent" };
-				};
+                    args = new[] { "-r", "10", "--silent" };
+                };
 
-				It should_report_an_error = () =>
-					result.HasErrors.ShouldBeTrue();
-			}
+                It should_report_an_error = () =>
+                    result.HasErrors.ShouldBeTrue();
+            }
 
-			class when_default_is_specified_on_an_option_that_is_not_specified : ParseTestContext
-			{
-				static string expectedDefaultValue;
+            class when_default_is_specified_on_an_option_that_is_not_specified : ParseTestContext
+            {
+                static string expectedDefaultValue;
 
-				Establish context = () =>
-				{
-					Create(out expectedDefaultValue);
+                Establish context = () =>
+                {
+                    Create(out expectedDefaultValue);
 
-					sut.Setup(x => x.RecordId)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleR, "recordId");
+                    sut.Setup(x => x.RecordId)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleR, "recordId");
 
-					sut.Setup(x => x.Silent)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS, "silent");
+                    sut.Setup(x => x.Silent)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleS, "silent");
 
-					sut.Setup(x => x.NewValue)
-					   .As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleV, "value")
-					   .SetDefault(expectedDefaultValue);
+                    sut.Setup(x => x.NewValue)
+                       .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleV, "value")
+                       .SetDefault(expectedDefaultValue);
 
-					args = new[] { "-r", "10", "--silent" };
-				};
+                    args = new[] { "-r", "10", "--silent" };
+                };
 
-				It should_assign_the_specified_default_as_the_new_value = () =>
-					sut.Object.NewValue.ShouldEqual(expectedDefaultValue);
+                It should_assign_the_specified_default_as_the_new_value = () =>
+                    sut.Object.NewValue.ShouldEqual(expectedDefaultValue);
 
-			}
+            }
 
 
-			class ParseEnum
-			{
-				abstract class ParseEnumTestContext : ParseTestContext
-				{
-					protected static TestEnum expectedTestEnum;
+            class ParseEnum
+            {
+                abstract class ParseEnumTestContext : ParseTestContext
+                {
+                    protected static TestEnum expectedTestEnum;
 
-					Establish context = () =>
-					{
-						expectedTestEnum = TestEnum.Value1;
+                    Establish context = () =>
+                    {
+                        expectedTestEnum = TestEnum.Value1;
 
-						sut.Setup(x => x.Enum)
-							.As().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE, "enum");
-					};
-				}
+                        sut.Setup(x => x.Enum)
+                            .As(CaseType.CaseInsensitive, WellKnownOptionNames.LittleE, "enum");
+                    };
+                }
 
-				class when_enum_is_specified_as_valid_string : ParseEnumTestContext
-				{
-					Establish context = () =>
-						args = new[] { "-e", expectedTestEnum.ToString() };
+                class when_enum_is_specified_as_valid_string : ParseEnumTestContext
+                {
+                    Establish context = () =>
+                        args = new[] { "-e", expectedTestEnum.ToString() };
 
-					It should_assign_the_expected_enum_value_to_the_args = () =>
-						sut.Object.Enum.ShouldEqual(expectedTestEnum);
-				}
+                    It should_assign_the_expected_enum_value_to_the_args = () =>
+                        sut.Object.Enum.ShouldEqual(expectedTestEnum);
+                }
 
-				class when_enum_is_specified_as_valid_int32 : ParseEnumTestContext
-				{
-					Establish context = () =>
-						args = new[] { "-e", ((int)expectedTestEnum).ToString(CultureInfo.InvariantCulture) };
+                class when_enum_is_specified_as_valid_int32 : ParseEnumTestContext
+                {
+                    Establish context = () =>
+                        args = new[] { "-e", ((int)expectedTestEnum).ToString(CultureInfo.InvariantCulture) };
 
-					It should_assign_the_expected_enum_value_to_the_args = () =>
-						sut.Object.Enum.ShouldEqual(expectedTestEnum);
-				}
+                    It should_assign_the_expected_enum_value_to_the_args = () =>
+                        sut.Object.Enum.ShouldEqual(expectedTestEnum);
+                }
 
-				class when_enum_is_specified_as_invalid_string : ParseEnumTestContext
-				{
-					Establish context = () =>
-						args = new[] { "-e", "not-a-valid-enum" };
+                class when_enum_is_specified_as_invalid_string : ParseEnumTestContext
+                {
+                    Establish context = () =>
+                        args = new[] { "-e", "not-a-valid-enum" };
 
-					It should_return_an_error_as_part_of_the_result = () =>
-						result.HasErrors.ShouldBeTrue();
+                    It should_return_an_error_as_part_of_the_result = () =>
+                        result.HasErrors.ShouldBeTrue();
 
-					It should_return_an_error_for_the_enum_option = () =>
+                    It should_return_an_error_for_the_enum_option = () =>
                         result.Errors.Single().Option.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
 
-				}
+                }
 
-				class when_enum_is_specified_as_invalid_int32 : ParseEnumTestContext
-				{
-					Establish context = () =>
-						args = new[] { "-e", "123456" };
+                class when_enum_is_specified_as_invalid_int32 : ParseEnumTestContext
+                {
+                    Establish context = () =>
+                        args = new[] { "-e", "123456" };
 
-					It should_return_an_error_as_part_of_the_result = () =>
-						result.HasErrors.ShouldBeTrue();
+                    It should_return_an_error_as_part_of_the_result = () =>
+                        result.HasErrors.ShouldBeTrue();
 
-					It should_return_an_error_for_the_enum_option = () =>
-						result.Errors.Single().Option.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
-				}
-			}
-		}
-	}
+                    It should_return_an_error_for_the_enum_option = () =>
+                        result.Errors.Single().Option.CaseInsensitiveOptionNames.ContainsKey(WellKnownOptionNames.LittleE).ShouldBeTrue();
+                }
+            }
+        }
+    }
 }

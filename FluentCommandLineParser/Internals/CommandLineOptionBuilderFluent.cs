@@ -28,47 +28,48 @@ using System.Reflection;
 
 namespace Fclp.Internals
 {
-	/// <summary>
-	/// Wraps the Setup call of the fluent command line parser and defines the callback to setup the property parsed value.
-	/// </summary>
-	/// <typeparam name="TBuildType">The type of object being populated.</typeparam>
-	/// <typeparam name="TProperty">The type of the property the value will be assigned too.</typeparam>
-	public class CommandLineOptionBuilderFluent<TBuildType, TProperty> : ICommandLineOptionBuilderFluent<TProperty>
-	{
-		private readonly IFluentCommandLineParser _parser;
-		private readonly TBuildType _buildObject;
-		private readonly Expression<Func<TBuildType, TProperty>> _propertyPicker;
+    /// <summary>
+    /// Wraps the Setup call of the fluent command line parser and defines the callback to setup the property parsed value.
+    /// </summary>
+    /// <typeparam name="TBuildType">The type of object being populated.</typeparam>
+    /// <typeparam name="TProperty">The type of the property the value will be assigned too.</typeparam>
+    public class CommandLineOptionBuilderFluent<TBuildType, TProperty> : ICommandLineOptionBuilderFluent<TProperty>
+    {
+        private readonly IFluentCommandLineParser _parser;
+        private readonly TBuildType _buildObject;
+        private readonly Expression<Func<TBuildType, TProperty>> _propertyPicker;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CommandLineOptionBuilderFluent{TBuildType, TProperty}" /> class.
-		/// </summary>
-		/// <param name="parser">The parser.</param>
-		/// <param name="buildObject">The build object.</param>
-		/// <param name="propertyPicker">The property picker.</param>
-		public CommandLineOptionBuilderFluent(
-			IFluentCommandLineParser parser, 
-			TBuildType buildObject,
-			Expression<Func<TBuildType, TProperty>> propertyPicker)
-		{
-			_parser = parser;
-			_buildObject = buildObject;
-			_propertyPicker = propertyPicker;
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandLineOptionBuilderFluent{TBuildType, TProperty}" /> class.
+        /// </summary>
+        /// <param name="parser">The parser.</param>
+        /// <param name="buildObject">The build object.</param>
+        /// <param name="propertyPicker">The property picker.</param>
+        public CommandLineOptionBuilderFluent(
+            IFluentCommandLineParser parser, 
+            TBuildType buildObject,
+            Expression<Func<TBuildType, TProperty>> propertyPicker)
+        {
+            _parser = parser;
+            _buildObject = buildObject;
+            _propertyPicker = propertyPicker;
+        }
 
-		private void AssignValueToPropertyCallback(TProperty value)
-		{
-			var prop = (PropertyInfo)((MemberExpression)_propertyPicker.Body).Member;
-			prop.SetValue(_buildObject, value, null);
-		}
+        private void AssignValueToPropertyCallback(TProperty value)
+        {
+            var prop = (PropertyInfo)((MemberExpression)_propertyPicker.Body).Member;
+            prop.SetValue(_buildObject, value, null);
+        }
 
-	    /// <summary>
-	    /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified data in optionNames.
-	    /// </summary>
-	    /// <returns></returns>
-	    public ICommandLineOptionFluent<TProperty> As()
-	    {
-	        return _parser.Setup<TProperty>()
-	            .Callback(AssignValueToPropertyCallback);
-	    }
-	}
+        /// <summary>
+        /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified data in optionNames.
+        /// </summary>
+        /// <returns></returns>
+        public ICommandLineOptionFluent<TProperty> As(CaseType caseType, params string[] optionNames)
+        {
+            return _parser.Setup<TProperty>(caseType,optionNames)
+                .Callback(AssignValueToPropertyCallback);
+        }
+
+    }
 }

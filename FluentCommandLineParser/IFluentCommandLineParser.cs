@@ -29,41 +29,57 @@ using Fclp.Internals.Validators;
 
 namespace Fclp
 {
-	/// <summary>
-	/// Represents a command line parser which provides methods and properties 
-	/// to easily and fluently parse command line arguments. 
-	/// </summary>
-	public interface IFluentCommandLineParser
-	{
+    /// <summary>
+    /// The type of options names these are
+    /// </summary>
+    public enum CaseType
+    {
+        /// <summary>
+        /// CaseSensitive 
+        /// </summary>
+        CaseSensitive,
+        /// <summary>
+        /// Case Insensitive
+        /// </summary>
+        CaseInsensitive
+    }
 
-		/// <summary>
-		/// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <returns>An <see cref="ICommandLineOptionFluent{T}"/> representing the results of the parse operation.</returns>
-		ICommandLineOptionFluent<T> Setup<T>();
 
-		/// <summary>
-		/// Setup the help args.
-		/// </summary>
-		/// <param name="helpArgs">The help arguments to register.</param>
-		IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs);
+    /// <summary>
+    /// Represents a command line parser which provides methods and properties 
+    /// to easily and fluently parse command line arguments. 
+    /// </summary>
+    public interface IFluentCommandLineParser
+    {
 
-		/// <summary>
-		/// Parses the specified <see><cref>T:System.String[]</cref></see> using the setup Options.
-		/// </summary>
-		/// <param name="args">The <see><cref>T:System.String[]</cref></see> to parse.</param>
-		/// <returns>An <see cref="ICommandLineParserResult"/> representing the results of the parse operation.</returns>
-		ICommandLineParserResult Parse(string[] args);
+        /// <summary>
+        /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified array of names
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>An <see cref="ICommandLineOptionFluent{T}"/> representing the results of the parse operation.</returns>
+        ICommandLineOptionFluent<T> Setup<T>(CaseType caseType,params string[] optionNames);
 
-		/// <summary>
-		/// Returns the Options that have been setup for this parser.
-		/// </summary>
-		IEnumerable<ICommandLineOption> Options { get; }
+        /// <summary>
+        /// Setup the help args.
+        /// </summary>
+        /// <param name="helpArgs">The help arguments to register.</param>
+        IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs);
 
-		/// <summary>
-		/// Gets or sets the help option for this parser.
-		/// </summary>
-		IHelpCommandLineOption HelpOption { get; set; }
-	}
+        /// <summary>
+        /// Parses the specified <see><cref>T:System.String[]</cref></see> using the setup Options.
+        /// </summary>
+        /// <param name="args">The <see><cref>T:System.String[]</cref></see> to parse.</param>
+        /// <returns>An <see cref="ICommandLineParserResult"/> representing the results of the parse operation.</returns>
+        ICommandLineParserResult Parse(string[] args);
+
+        /// <summary>
+        /// Returns the Options that have been setup for this parser.
+        /// </summary>
+        IEnumerable<ICommandLineOption> Options { get; }
+
+        /// <summary>
+        /// Gets or sets the help option for this parser.
+        /// </summary>
+        IHelpCommandLineOption HelpOption { get; set; }
+    }
 }

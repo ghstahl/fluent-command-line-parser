@@ -81,11 +81,11 @@ namespace Fclp.Tests.Integration
 			double? actualDouble = null;
 			TestEnum? actualEnum = null;
 
-			sut.Setup<bool>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleB).Callback(b => actualBoolean = b);
-			sut.Setup<string>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleS).Callback(s => actualString = s);
-			sut.Setup<int>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleI).Callback(i => actualInt32 = i);
-			sut.Setup<double>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleD).Callback(d => actualDouble = d);
-			sut.Setup<TestEnum>().AddCaseInsensitiveOption(WellKnownOptionNames.LittleE).Callback(d => actualEnum = d);
+            sut.Setup<bool>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleB).Callback(b => actualBoolean = b);
+            sut.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleS).Callback(s => actualString = s);
+            sut.Setup<int>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleI).Callback(i => actualInt32 = i);
+            sut.Setup<double>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleD).Callback(d => actualDouble = d);
+            sut.Setup<TestEnum>(CaseType.CaseInsensitive, WellKnownOptionNames.LittleE).Callback(d => actualEnum = d);
 
 			var args = ParseArguments(arguments);
 
@@ -112,9 +112,9 @@ namespace Fclp.Tests.Integration
 			bool? actualYValue = null;
 			bool? actualZValue = null;
 
-			sut.Setup<bool>().AddCaseInsensitiveOption("x").Callback(x => actualXValue = x);
-			sut.Setup<bool>().AddCaseInsensitiveOption("y").Callback(y => actualYValue = y);
-			sut.Setup<bool>().AddCaseInsensitiveOption("z").Callback(z => actualZValue = z);
+            sut.Setup<bool>(CaseType.CaseInsensitive, "x").Callback(x => actualXValue = x);
+            sut.Setup<bool>(CaseType.CaseInsensitive, "y").Callback(y => actualYValue = y);
+            sut.Setup<bool>(CaseType.CaseInsensitive, "z").Callback(z => actualZValue = z);
 
 			var args = ParseArguments(arguments);
 
@@ -146,9 +146,9 @@ namespace Fclp.Tests.Integration
 			string actualYValue = null;
 			string actualZValue = null;
 
-			sut.Setup<string>().AddCaseInsensitiveOption("x").Callback(x => actualXValue = x);
-			sut.Setup<string>().AddCaseInsensitiveOption("y").Callback(y => actualYValue = y);
-			sut.Setup<string>().AddCaseInsensitiveOption("z").Callback(z => actualZValue = z);
+            sut.Setup<string>(CaseType.CaseInsensitive, "x").Callback(x => actualXValue = x);
+            sut.Setup<string>(CaseType.CaseInsensitive, "y").Callback(y => actualYValue = y);
+            sut.Setup<string>(CaseType.CaseInsensitive, "z").Callback(z => actualZValue = z);
 
 			var args = ParseArguments(arguments);
 

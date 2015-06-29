@@ -33,6 +33,6 @@ namespace Fclp
         /// Setup a new <see cref="ICommandLineOptionFluent{T}"/> using the specified data in optionNames.
         /// </summary>
         /// <returns></returns>
-        ICommandLineOptionFluent<TProperty> As();
+        ICommandLineOptionFluent<TProperty> As(CaseType caseType, params string[] optionNames);
 	}
 }

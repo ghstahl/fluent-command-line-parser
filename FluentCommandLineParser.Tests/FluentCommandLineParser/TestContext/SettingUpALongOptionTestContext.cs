@@ -41,7 +41,7 @@ namespace Fclp.Tests.FluentCommandLineParser
 			{
 				CatchAnyError(() =>
 											{
-                                                var ret = sut.Setup<TestType>().AddCaseInsensitiveOption(optionNames);
+                                                var ret = sut.Setup<TestType>(CaseType.CaseInsensitive, optionNames);
 												option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
 											});
 			}

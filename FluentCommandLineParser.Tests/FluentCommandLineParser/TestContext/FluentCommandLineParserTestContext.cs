@@ -30,42 +30,44 @@ using Moq;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace TestContext
-	{
-		[Subject(typeof(Fclp.FluentCommandLineParser), "Unit Tests")]
-		public abstract class FluentCommandLineParserTestContext : TestContext<Fclp.FluentCommandLineParser>
-		{
-			private Establish context = () => { sut = new Fclp.FluentCommandLineParser(); };
+    namespace TestContext
+    {
+        [Subject(typeof(Fclp.FluentCommandLineParser), "Unit Tests")]
+        public abstract class FluentCommandLineParserTestContext : TestContext<Fclp.FluentCommandLineParser>
+        {
+            private Establish context = () => { sut = new Fclp.FluentCommandLineParser(); };
 
-			protected static void AutoMockAll()
-			{
-				AutoMockEngineParser();
-				AutoMockOptionFactory();
-			}
+            protected static void AutoMockAll()
+            {
+               // AutoMockEngineParser();
+               // AutoMockOptionFactory();
+            }
 
-			protected static void AutoMockEngineParser()
-			{
-				sut.ParserEngine = Mock.Of<ICommandLineParserEngine>();
-			}
+            protected static void AutoMockEngineParser()
+            {
+                sut.ParserEngine = Mock.Of<ICommandLineParserEngine>();
+            }
 
-			protected static void AutoMockOptionFactory()
-			{
-				var mock = new Mock<ICommandLineOptionFactory>();
-				var mockOption = new Mock<ICommandLineOptionResult<TestType>>();
+            protected static void AutoMockOptionFactory()
+            {
+                var mock = new Mock<ICommandLineOptionFactory>();
+                var mockOption = new Mock<ICommandLineOptionResult<TestType>>();
 
-				mock.Setup(x => x.CreateOption<TestType>().AddCaseInsensitiveOption(Moq.It.IsAny<string>(), Moq.It.IsAny<string>()))
-					.Returns(mockOption.Object)
-					.Callback<string, string>((s, l) =>
-								{
-									var _dictMock = new Dictionary<string, string> { { s, "" }, { l, "" } };
+                mock.Setup(x => x.CreateOption<TestType>().AddCaseInsensitiveOption(Moq.It.IsAny<string>(), Moq.It.IsAny<string>()))
+                    .Returns(mockOption.Object)
+                    .Callback<string, string>((s, l) =>
+                                {
+                                    var _dictMock = new Dictionary<string, string> { { s, "" }, { l, "" } };
+                                    var _dictMockCase = new Dictionary<string, string> {  };
 
-									var option = new Mock<ICommandLineOption>();
-									option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-								});
+                                    var option = new Mock<ICommandLineOption>();
+                                    option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
+                                    option.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCase);
+                                });
 
 
-				sut.OptionFactory = mock.Object;
-			}
-		}
-	}
+                sut.OptionFactory = mock.Object;
+            }
+        }
+    }
 }

@@ -64,8 +64,8 @@ namespace FluentCommandLineParser.Tests.Internals
         {
             var parser = new Fclp.FluentCommandLineParser();
 
-            var cmdOptionFluent = parser.Setup<string>();
-            cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            var cmdOptionFluent = parser.Setup<string>(
+                CaseType.CaseSensitive,WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
 
             var cmdOptionResult = cmdOptionFluent as ICommandLineOptionResult<string>;
@@ -84,11 +84,9 @@ namespace FluentCommandLineParser.Tests.Internals
         {
             var parser = new Fclp.FluentCommandLineParser();
 
-            var cmdOptionFluentLittleA = parser.Setup<string>()
-                .AddCaseSensitiveOption(WellKnownOptionNames.LittleA);
+            var cmdOptionFluentLittleA = parser.Setup<string>(CaseType.CaseSensitive, WellKnownOptionNames.LittleA);
 
-            var cmdOptionFluentBigA = parser.Setup<string>()
-                .AddCaseSensitiveOption(WellKnownOptionNames.BigA);
+            var cmdOptionFluentBigA = parser.Setup<string>(CaseType.CaseSensitive, WellKnownOptionNames.BigA);
 
 
 
@@ -107,26 +105,22 @@ namespace FluentCommandLineParser.Tests.Internals
 
             Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
             {
-                var cmdOptionFluentBigA2 = parser.Setup<string>()
-                    .AddCaseSensitiveOption(WellKnownOptionNames.BigA);
+                var cmdOptionFluentBigA2 = parser.Setup<string>(CaseType.CaseSensitive,WellKnownOptionNames.BigA);
 
             });
             Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
             {
-                var cmdOptionFluentBigA2 = parser.Setup<string>()
-                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+                var cmdOptionFluentBigA2 = parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.BigA);
 
             });
 
             Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
             {
-                var cmdOptionFluentBigA2 = parser.Setup<string>()
-                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+                var cmdOptionFluentBigA2 = parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.BigA);
             });
             Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
             {
-                var cmdOptionFluentBigA2 = parser.Setup<string>()
-                    .AddCaseInsensitiveOption(WellKnownOptionNames.BigA);
+                var cmdOptionFluentBigA2 = parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.BigA);
             });
         }
 
@@ -134,9 +128,7 @@ namespace FluentCommandLineParser.Tests.Internals
         public void Ensure_Can_Add_CaseInsensitiveOptions()
         {
             var parser = new Fclp.FluentCommandLineParser();
-            var cmdOptionFluent = parser.Setup<string>();
-
-            cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            var cmdOptionFluent = parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
 
             var cmdOptionResult = cmdOptionFluent as ICommandLineOptionResult<string>;
@@ -153,19 +145,19 @@ namespace FluentCommandLineParser.Tests.Internals
         public void Ensure_Throws_Adding_CaseInsensitive_Invalid_Options()
         {
             var parser = new Fclp.FluentCommandLineParser();
-            var cmdOptionFluent = parser.Setup<string>();
+
 
             Assert.Throws<InvalidOptionNameException>(() =>
             {
-                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.NullOptionName);
+                parser.Setup<string>(CaseType.CaseInsensitive,WellKnownOptionNames.NullOptionName);
             });
             Assert.Throws<InvalidOptionNameException>(() =>
             {
-                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.EmptyString);
+                parser.Setup<string>(CaseType.CaseInsensitive,WellKnownOptionNames.EmptyString);
             });
             Assert.Throws<InvalidOptionNameException>(() =>
             {
-                cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.WhiteSpaceString);
+                parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.WhiteSpaceString);
             });
         }
 
@@ -173,7 +165,7 @@ namespace FluentCommandLineParser.Tests.Internals
         public void Ensure_Throws_Adding_CaseSensitive_Invalid_Options()
         {
             var parser = new Fclp.FluentCommandLineParser();
-            var cmdOptionFluent = parser.Setup<string>();
+            var cmdOptionFluent = parser.Setup<string>(CaseType.CaseInsensitive, "Whatever");
 
             Assert.Throws<Fclp.InvalidOptionNameException>(() =>
             {
@@ -193,8 +185,7 @@ namespace FluentCommandLineParser.Tests.Internals
         public void Ensure_Throws_Adding_CaseInsensitive_Duplicates_Option()
         {
             var parser = new Fclp.FluentCommandLineParser();
-            var cmdOptionFluent = parser.Setup<string>();
-            cmdOptionFluent.AddCaseInsensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            var cmdOptionFluent = parser.Setup<string>(CaseType.CaseInsensitive, WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
 
             Assert.Throws<Fclp.OptionAlreadyExistsException>(() =>
@@ -232,8 +223,8 @@ namespace FluentCommandLineParser.Tests.Internals
         public void Ensure_Throws_Adding_CaseSensitive_Duplicates_Option()
         {
             var parser = new Fclp.FluentCommandLineParser();
-            var cmdOptionFluent = parser.Setup<string>();
-            cmdOptionFluent.AddCaseSensitiveOption(WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
+            var cmdOptionFluent = parser.Setup<string>(CaseType.CaseSensitive,
+                WellKnownOptionNames.OptionNameOne, WellKnownOptionNames.OptionNameTwo);
 
 
             Assert.Throws<OptionAlreadyExistsException>(() =>
