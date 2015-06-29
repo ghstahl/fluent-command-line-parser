@@ -17,7 +17,7 @@ build:
   project: FluentCommandLineParser.sln
 
 after_test:
-  - ps: .\nuget\pack.ps1
+  - ps: .\.nuget\pack.ps1
 
 artifacts:
   - path: FluentCommandLineParser\bin\Release\FluentCommandLineParser.dll
