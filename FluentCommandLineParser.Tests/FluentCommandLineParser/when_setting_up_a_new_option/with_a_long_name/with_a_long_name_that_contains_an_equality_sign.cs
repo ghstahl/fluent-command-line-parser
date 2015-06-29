@@ -22,21 +22,35 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using Fclp.Tests.FluentCommandLineParser.Behaviour;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
 using Machine.Specifications;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace when_setting_up_a_new_option
-	{
-		public class with_a_long_name_that_contains_an_equality_sign : SettingUpALongOptionTestContext
-		{
-			Establish context = AutoMockAll;
+    namespace when_setting_up_a_new_option
+    {
+        public class with_a_long_name_that_contains_an_equality_sign : SettingUpALongOptionTestContext
+        {
 
-			Because of = () => SetupOptionWith(valid_short_name, invalid_long_name_with_equality_sign);
+            private static Exception exception;
 
-			Behaves_like<InvalidOptionSetupBehaviour> a_failed_setup_option;
-		}
-	}
+
+            private Because of = () =>
+            {
+                exception = Catch.Exception(() =>
+                    SetupOptionWith(valid_short_name, invalid_long_name_with_equality_sign));
+
+
+            };
+
+            private It should_have_thrown_an_exception = () =>
+                exception.ShouldNotBeNull();
+
+            private It and_should_be_an_ArgumentException = () =>
+                exception.ShouldBeOfType<InvalidOptionNameException>();
+
+        }
+    }
 }

@@ -26,22 +26,22 @@ using System;
 
 namespace Fclp.Internals
 {
-	/// <summary>
-	/// Represents a factory capable of creating command line Options.
-	/// </summary>
-	public interface ICommandLineOptionFactory
-	{
-		/// <summary>
-		/// Creates a new <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <typeparam name="T">The type of <see cref="ICommandLineOptionResult{T}"/> to create.</typeparam>
-		/// <returns>A <see cref="ICommandLineOptionResult{T}"/>.</returns>
+    /// <summary>
+    /// Represents a factory capable of creating command line Options.
+    /// </summary>
+    public interface ICommandLineOptionFactory
+    {
+        /// <summary>
+        /// Creates a new <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="ICommandLineOptionResult{T}"/> to create.</typeparam>
+        /// <returns>A <see cref="ICommandLineOptionResult{T}"/>.</returns>
         ICommandLineOptionResult<T> CreateOption<T>();
 
-		/// <summary>
-		/// Create a new <see cref="IHelpCommandLineOptionResult"/> using the specified args.
-		/// </summary>
-		/// <param name="helpArgs">The args used to display the help option.</param>
-		IHelpCommandLineOptionResult CreateHelpOption(params string[] helpArgs);
-	}
+        /// <summary>
+        /// Create a new <see cref="IHelpCommandLineOptionResult"/> using the specified args.
+        /// </summary>
+        /// <param name="helpArgs">The args used to display the help option.</param>
+        IHelpCommandLineOptionResult CreateHelpOption(params string[] helpArgs);
+    }
 }

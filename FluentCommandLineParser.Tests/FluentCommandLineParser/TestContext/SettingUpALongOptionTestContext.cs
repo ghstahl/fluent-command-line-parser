@@ -26,25 +26,22 @@ using System.Linq;
 
 namespace Fclp.Tests.FluentCommandLineParser
 {
-	namespace TestContext
-	{
-		public abstract class SettingUpALongOptionTestContext : SettingUpAShortOptionTestContext
-		{
-			protected const string valid_long_name_that_is_empty = "";
-			protected const string invalid_long_name_that_is_whitespace = " ";
-			protected const string invalid_long_name_with_spaces = "long name";
-			protected const string invalid_long_name_with_colon = "long:name";
-			protected const string invalid_long_name_with_equality_sign = "long=name";
-			protected const string valid_long_name = "long";
+    namespace TestContext
+    {
+        public abstract class SettingUpALongOptionTestContext : SettingUpAShortOptionTestContext
+        {
+            protected const string valid_long_name_that_is_empty = "";
+            protected const string invalid_long_name_that_is_whitespace = " ";
+            protected const string invalid_long_name_with_spaces = "long name";
+            protected const string invalid_long_name_with_colon = "long:name";
+            protected const string invalid_long_name_with_equality_sign = "long=name";
+            protected const string valid_long_name = "long";
 
-			protected static void SetupOptionWith(params string[] optionNames)
-			{
-				CatchAnyError(() =>
-											{
-                                                var ret = sut.Setup<TestType>(CaseType.CaseInsensitive, optionNames);
-												option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
-											});
-			}
-		}
-	}
+            protected static void SetupOptionWith(params string[] optionNames)
+            {
+                var ret = sut.Setup<string>(CaseType.CaseInsensitive, optionNames);
+                option = sut.Options.SingleOrDefault(x => ReferenceEquals(x, ret));
+            }
+        }
+    }
 }

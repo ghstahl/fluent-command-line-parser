@@ -37,6 +37,7 @@ namespace Fclp.Internals.Validators
     /// </summary>
     public class OptionNameValidator : ICommandLineOptionValidator
     {
+
         /// <summary>
         /// checks if a string contains stuff based upon a predicate
         /// </summary>
@@ -49,7 +50,21 @@ namespace Fclp.Internals.Validators
         }
 
         private static readonly char[] ReservedChars =
-            SpecialCharacters.ValueAssignments.Union(new[] { SpecialCharacters.Whitespace }).ToArray();
+            SpecialCharacters.ValueAssignments.Union(SpecialCharacters.DeniedCharactersForOptionNames).ToArray();
+
+        /// <summary>
+        /// Predicate to test is this char is in the reserved list
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public static bool IsReserved(char c)
+        {
+            if (ReservedChars.Any(reservedChar => c == reservedChar))
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Verifies that the specified <see cref="ICommandLineOption"/> has a valid short/long name combination.
@@ -85,6 +100,10 @@ namespace Fclp.Internals.Validators
                 if (Contains(optionName, char.IsControl))
                 {
                     ThrowInvalid(optionName, "The option name contains control characters.");
+                }
+                if (Contains(optionName, IsReserved))
+                {
+                    ThrowInvalid(optionName, "A reserved character was found in the option name '" + string.Join(",", ReservedChars) + "' .");  
                 }
                 VerifyDoesNotContainsReservedChar(optionName);
             }

@@ -22,6 +22,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Fclp.Internals;
 using Fclp.Tests.FluentCommandLineParser.TestContext;
@@ -35,29 +36,30 @@ namespace Fclp.Tests.FluentCommandLineParser
     {
         public class with_a_long_name_that_is_already_used : SettingUpALongOptionTestContext
         {
-            private const string existingLongName = "longName";
-            private static ICommandLineOption existingOption;
+            private const string existingLongName = "LONGNAME";
 
+            private static Exception exception;
             Establish context = () =>
-                                    {
-                                        AutoMockAll();
-                                        var _dictMockCaseSensitive = new Dictionary<string, string> { };
-                                        var _dictMock = new Dictionary<string, string> { { existingLongName, "" } };
+            {
+                sut.Setup<string>(CaseType.CaseInsensitive, existingLongName);
 
-                                        var option = new Mock<ICommandLineOption>();
-                                        option.SetupGet(x => x.CaseInsensitiveOptionNames).Returns(_dictMock);
-                                        option.SetupGet(x => x.CaseSensitiveOptionNames).Returns(_dictMockCaseSensitive);
-                                        existingOption = option.Object;
-                                    };
+            };
 
-            Because of = () =>
-                                {
-                                    sut.Options.Add(existingOption);
-                                    SetupOptionWith(valid_short_name, existingLongName);
-                                };
+            private Because of = () =>
+            {
+                exception = Catch.Exception(() =>
+                    SetupOptionWith(valid_short_name, existingLongName));
 
-            It should_throw_an_error = () => error.ShouldBeOfType(typeof(OptionAlreadyExistsException));
-            It should_not_have_setup_an_option = () => sut.Options.ShouldContainOnly(existingOption);
+
+            };
+
+            private It should_have_thrown_an_exception = () =>
+                exception.ShouldNotBeNull();
+
+            private It and_should_be_an_ArgumentException = () =>
+                exception.ShouldBeOfType<OptionAlreadyExistsException>();
+
         }
+
     }
 }
