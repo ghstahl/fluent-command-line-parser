@@ -123,6 +123,7 @@
     <Compile Include="UnsupportedTypeException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FluentCommandLineParser.nuspec" />
     <None Include="FluentCommandLineParser.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
