@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Pingo.FluentCommandLineParser</id>
+	  <title>Pingo Variant of Fluent Command Line Parser</title>
+    <version>$version$</version>
+    <authors>siywilliams ghstahl</authors>
+    <owners>siywilliams ghstahl</owners>
+    <projectUrl>https://github.com/ghstahl/fluent-command-line-parser</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>original:https://github.com/fclp/fluent-command-line-parser A simple, strongly typed .NET C# command line parser library using a fluent easy to use interface</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright George Stahl 2015</copyright>
+    <tags>fluent command line parser commandline c# net35</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.dll" target="lib\net35" />
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.pdb" target="lib\net35" />
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.xml" target="lib\net35" />
+  </files>
+</package>
