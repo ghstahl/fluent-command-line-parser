@@ -1110,7 +1110,7 @@ namespace Fclp.Tests
             const bool expectedSwitchBigD = true;
 
             var args = new[] { "-r", expectedRecordId.ToString(CultureInfo.InvariantCulture)
-                , "-v", "\"Mr. Smith\"", "--silent", "-a", "-b", "-c-", "-d", "-D" };
+                , "-v", "\"Mr. Smith\"", "--silent", "-ab", "-c-", "-d", "-D" };
 
             var recordId = 0;
             string newValue = null;

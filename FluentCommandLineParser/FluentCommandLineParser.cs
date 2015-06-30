@@ -38,7 +38,7 @@ namespace Fclp
     /// A command line parser which provides methods and properties 
     /// to easily and fluently parse command line arguments. 
     /// </summary>
-    public class FluentCommandLineParser : IFluentCommandLineParser
+    public class FluentCommandLineParser : IFluentCommandLineParser, IParserAssistant
     {
         
         /// <summary>
@@ -118,7 +118,7 @@ namespace Fclp
         /// </summary>
         public ICommandLineParserEngine ParserEngine
         {
-            get { return _parserEngine ?? (_parserEngine = new CommandLineParserEngineMark2()); }
+            get { return _parserEngine ?? (_parserEngine = new CommandLineParserEngineMark2(this)); }
             set { _parserEngine = value; }
         }
 
@@ -261,6 +261,23 @@ namespace Fclp
         IEnumerable<ICommandLineOption> IFluentCommandLineParser.Options
         {
             get { return Options; }
+        }
+
+        /// <summary>
+        /// Tells the parser that we are interested in this option name
+        /// </summary>
+        /// <param name="optionName"></param>
+        /// <returns></returns>
+        public bool IsBeingWatchedFor(string optionName)
+        {
+            foreach (var option in Options)
+            {
+                if (option.CaseInsensitiveOptionNames.ContainsKey(optionName))
+                    return true;
+                if (option.CaseSensitiveOptionNames.ContainsKey(optionName))
+                    return true;
+            }
+            return false;
         }
     }
 }

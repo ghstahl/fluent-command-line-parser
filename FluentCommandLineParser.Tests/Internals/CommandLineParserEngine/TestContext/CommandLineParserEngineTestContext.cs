@@ -31,13 +31,20 @@ namespace Fclp.Tests
 {
 	namespace CommandLineParserEngine
 	{
+	    class TrueParserAssistant : IParserAssistant
+	    {
+	        public bool IsBeingWatchedFor(string optionName)
+	        {
+	            return true;
+	        }
+	    }
 		[Subject(typeof(CommandLineParserEngineMark2), "CommandLineParserEngine")]
-		public abstract class CommandLineParserEngineTestContext : TestContext<CommandLineParserEngineMark2>
+		public abstract class CommandLineParserEngineTestContext : TestContext<CommandLineParserEngineMark2> 
 		{
 			protected static IEnumerable<ParsedOption> results;
 			protected static string[] args;
 
-			Establish context = () => sut = new CommandLineParserEngineMark2();
+		    private Establish context = () => sut = new CommandLineParserEngineMark2(new TrueParserAssistant());
 
 			protected static void RunParserWith(string[] args)
 			{

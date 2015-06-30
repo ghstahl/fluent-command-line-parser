@@ -92,6 +92,7 @@
     <Compile Include="Internals\Parsing\CommandLineParserResult.cs" />
     <Compile Include="Internals\Parsing\ICommandLineOptionParserFactory.cs" />
     <Compile Include="Internals\Parsing\ICommandLineParserEngine.cs" />
+    <Compile Include="Internals\Parsing\IParserAssistant.cs" />
     <Compile Include="Internals\Parsing\OptionArgumentParser.cs" />
     <Compile Include="Internals\Parsing\CommandLineOptionGrouper.cs" />
     <Compile Include="Internals\Parsing\OptionParsers\NullableCommandLineOptionParser.cs" />

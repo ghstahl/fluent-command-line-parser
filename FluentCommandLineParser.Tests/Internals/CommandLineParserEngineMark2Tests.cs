@@ -74,40 +74,9 @@ namespace Fclp.Tests.Internals
 				It should_return_a_result_with_no_additional_values = () =>
 					result.AdditionalValues.ShouldBeEmpty();
 			}
+ 			
 
-			class when_args_contains_negative_argument_seperated_with_a_colon : ParseTestContext
-			{
-				Establish context = () => SetupArgs("--int:-1");
-
-				It should_return_a_single_option = () =>
-					result.ParsedOptions.Count().ShouldEqual(1);
-
-				It should_set_the_parsed_option_value_to_the_negative_number = () =>
-					result.ParsedOptions.First().Value.ShouldEqual("-1");
-			}
-
-			class when_args_contains_negative_argument_seperated_with_a_equals : ParseTestContext
-			{
-				Establish context = () => SetupArgs("--int=-123");
-
-				It should_return_a_single_option = () =>
-					result.ParsedOptions.Count().ShouldEqual(1);
-
-				It should_set_the_parsed_option_value_to_the_negative_number = () =>
-					result.ParsedOptions.First().Value.ShouldEqual("-123");
-			}
-
-			class when_args_contains_negative_arguments_seperated_with_double_dash : ParseTestContext
-			{
-				Establish context = () => SetupArgs("--int -- -4321");
-
-				It should_return_a_single_option = () =>
-					result.ParsedOptions.Count().ShouldEqual(1);
-
-				It should_set_the_parsed_option_value_to_the_negative_number = () =>
-					result.ParsedOptions.First().Value.ShouldEqual("-4321");
-			}
-
+			
 			class when_args_contains_a_single_switch : ParseTestContext
 			{
 				Establish context = () => SetupArgs("-b");

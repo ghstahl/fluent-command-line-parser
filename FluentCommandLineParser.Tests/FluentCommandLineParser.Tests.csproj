@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\CommandLineParserEngine\CommandLineParserEngineMark2NunitTests.cs" />
     <Compile Include="WellKnownOptionNames.cs" />
     <Compile Include="UriTests.cs" />
     <Compile Include="FluentCommandLineParserBuilderTests.cs" />
