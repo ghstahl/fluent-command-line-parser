@@ -22,7 +22,7 @@ after_test:
 artifacts:
   - path: FluentCommandLineParser\bin\Release\FluentCommandLineParser.dll
     name: FluentCommandLineParser.dll
-  - path: '**\*.nupkg'
+  - path: '.\**\*.nupkg'
 
 #uncomment to publish to NuGet
 #deploy:
