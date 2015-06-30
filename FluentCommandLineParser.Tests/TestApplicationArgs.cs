@@ -26,29 +26,29 @@ using Fclp.Tests.FluentCommandLineParser;
 
 namespace Fclp.Tests
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class TestApplicationArgs
-	{
-		/// <summary>
-		/// Gets or sets the record id.
-		/// </summary>
-		public int RecordId { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TestApplicationArgs
+    {
+        /// <summary>
+        /// Gets or sets the record id.
+        /// </summary>
+        public int RecordId { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="ApplicationArgs"/> is silent.
-		/// </summary>
-		public bool Silent { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="ApplicationArgs"/> is silent.
+        /// </summary>
+        public bool Silent { get; set; }
 
-		/// <summary>
-		/// Gets or sets the new value.
-		/// </summary>
-		public string NewValue { get; set; }
+        /// <summary>
+        /// Gets or sets the new value.
+        /// </summary>
+        public string NewValue { get; set; }
 
         /// <summary>
         /// Gets or sets the Enum value.
         /// </summary>
-		public TestEnum Enum { get; set; }
-	}
+        public TestEnum Enum { get; set; }
+    }
 }

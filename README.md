@@ -5,15 +5,9 @@ A simple, strongly typed .NET C# command line parser library using a fluent easy
 
 See what's new in [v1.4.2](https://github.com/fclp/fluent-command-line-parser/wiki/Roadmap).
 
-You can download the latest release from [CodeBetter's TeamCity server](http://teamcity.codebetter.com/project.html?projectId=project314)
-
-You can also install using [NuGet](http://nuget.org/packages/FluentCommandLineParser/) via the command line
+You can use the Package Manager console in Visual Studio:
 ```
-cmd> nuget install FluentCommandLineParser
-```
-Or use the Package Manager console in Visual Studio:
-```
-PM> Install-Package FluentCommandLineParser
+PM> Install-Package Pingo.FluentCommandLineParser
 ```
 
 ### Usage
@@ -23,17 +17,22 @@ Commands such as `updaterecord.exe -r 10 -v="Mr. Smith" --silent` can be capture
 ```
 static void Main(string[] args)
 {
+
+      var helpOption = p.Setup<bool>(CaseType.CaseInsensitive, helpOptions)
+                .Callback(value => helpSwitch = value)
+                .SetDefault(false);
+
   var p = new FluentCommandLineParser();
 
-  p.Setup<int>('r')
+  p.Setup<int>(CaseType.CaseInsensitive,"r")
    .Callback(record => RecordID = record)
    .Required();
 
-  p.Setup<string>('v')
+  p.Setup<string>(CaseType.CaseInsensitive,"v")
    .Callback(value => NewValue = value)
    .Required();
 
-  p.Setup<bool>('s', "silent")
+  p.Setup<bool>(CaseType.CaseInsensitive,"s", "silent")
    .Callback(silent => InSilentMode = silent)
    .SetDefault(false);
 
@@ -42,9 +41,11 @@ static void Main(string[] args)
 ```
 ### Parser Option Methods
 
-`.Setup<int>('r')` Setup an option using a short name, 
+`.Setup<int>(CaseType.CaseInsensitive,"r")` Setup an option using a short name, 
 
-`.Setup<int>('r', "record")` or short and long name.
+`.Setup<int>(CaseType.CaseInsensitive,"r", "record")` or short and long name.
+
+`.AddCaseSensitiveOption("BigR")` You can add a CaseSensitive name to an option as well.
 
 `.Required()` Indicate the option is required and an error should be raised if it is not provided.
 
@@ -137,10 +138,10 @@ Since v1.2.3 enum types are now supported.
 [Flags]
 enum Direction
 {
-	North = 1,
-	East = 2,
-	South = 4,
-	West = 8,
+    North = 1,
+    East = 2,
+    South = 4,
+    West = 8,
 }
 ```
 ```
@@ -205,22 +206,22 @@ You can setup any help arguments, such as -? or --help to print all parameters w
 
 For example:
 
-	// sets up the parser to execute the callback when -? or --help is detected
-	parser.SetupHelp("?", "help")
-	 .Callback(text => Console.WriteLine(text));
+    // sets up the parser to execute the callback when -? or --help is detected
+    parser.SetupHelp("?", "help")
+     .Callback(text => Console.WriteLine(text));
 
 Since v1.4.1 you can also choose to display the formatted help screen text manually, so that you can display it under other circumstances.
 
 
 For example:
 
-	var parser = new FluentCommandLineParser<Args>();
-	
-	parser.SetupHelp("?", "help")
-	 .Callback(text => Console.WriteLine(text));
-	
-	// triggers the SetupHelp Callback which writes the text to the console
-	parser.HelpOption.ShowHelp(parser.Options);
+    var parser = new FluentCommandLineParser<Args>();
+    
+    parser.SetupHelp("?", "help")
+     .Callback(text => Console.WriteLine(text));
+    
+    // triggers the SetupHelp Callback which writes the text to the console
+    parser.HelpOption.ShowHelp(parser.Options);
 
 
 

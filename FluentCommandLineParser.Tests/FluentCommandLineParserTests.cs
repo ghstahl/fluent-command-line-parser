@@ -1134,9 +1134,11 @@ namespace Fclp.Tests
 
             // create a new Option using a short and long name
             parser.Setup<int>(CaseType.CaseInsensitive, "r", "record")
-                    .WithDescription("The record id to update (required)")
-                    .Callback(record => recordId = record) // use callback to assign the record value to the local RecordID property
-                    .Required(); // fail if this Option is not provided in the arguments
+                .AddCaseSensitiveOption("BigR")
+                .WithDescription("The record id to update (required)")
+                .Callback(record => recordId = record)
+                // use callback to assign the record value to the local RecordID property
+                .Required(); // fail if this Option is not provided in the arguments
 
             parser.Setup<bool>(CaseType.CaseInsensitive, "silent")
                   .WithDescription("Execute the update in silent mode without feedback (default is false)")
@@ -1270,13 +1272,21 @@ namespace Fclp.Tests
         public void Generic_Setup_Help_And_Ensure_It_Can_Be_Called_Manually()
         {
             var parser = new FluentCommandLineParser<TestApplicationArgs>();
-
+            parser.Setup(arg => arg.NewValue)
+                .As(CaseType.CaseInsensitive, "v", "ValUe");
             string callbackResult = null;
+            parser.Setup(arg => arg.Silent)
+                .As(CaseType.CaseInsensitive, "s", "Silent");
 
             parser.SetupHelp("?").Callback(s => callbackResult = s);
 
             parser.HelpOption.ShowHelp(parser.Options);
 
+            string[] args = new[] {"-V", "The Value","-s"};
+            parser.Parse(args);
+
+            Assert.IsTrue(System.String.CompareOrdinal("The Value", parser.Object.NewValue)==0);
+            Assert.IsTrue(parser.Object.Silent);
             Assert.IsNotNullOrEmpty(callbackResult);           
         }
 
