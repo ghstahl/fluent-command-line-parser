@@ -20,8 +20,8 @@ after_test:
   - ps: .\.nuget\pack.ps1
 
 artifacts:
-  - path: .\.nuget\Pingo.FluentCommandLineParser.nupkg
-    name: Pingo.FluentCommandLineParser.nupkg
+  - path: Pingo.FluentCommandLineParser.nupkg
+    
  
 
 #uncomment to publish to NuGet
