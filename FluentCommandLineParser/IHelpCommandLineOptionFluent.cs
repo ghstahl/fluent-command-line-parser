@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Fclp
 {
@@ -76,5 +77,10 @@ namespace Fclp
 		/// </summary>
 		/// <returns>A <see cref="IHelpCommandLineOptionFluent"/>.</returns>
 		IHelpCommandLineOptionFluent UseForEmptyArgs();
+
+	    /// <summary>
+	    /// Gets the registered help arguments.
+	    /// </summary>
+        IDictionary<string, string> HelpArgs { get; }
 	}
 }

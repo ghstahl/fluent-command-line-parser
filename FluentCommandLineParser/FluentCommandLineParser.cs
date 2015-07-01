@@ -52,6 +52,7 @@ namespace Fclp
         ICommandLineOptionFactory _optionFactory;
         ICommandLineParserEngine _parserEngine;
         ICommandLineOptionFormatter _optionFormatter;
+        IHelpCommandLineOptionResult _helpOptionResult;
         IHelpCommandLineOption _helpOption;
         ICommandLineParserErrorFormatter _errorFormatter;
         ICommandLineOptionValidator _optionValidator;
@@ -250,9 +251,9 @@ namespace Fclp
         /// <param name="helpArgs">The help arguments to register.</param>
         public IHelpCommandLineOptionFluent SetupHelp(params string[] helpArgs)
         {
-            var helpOption = this.OptionFactory.CreateHelpOption(helpArgs);
-            this.HelpOption = helpOption;
-            return helpOption;
+            _helpOptionResult = this.OptionFactory.CreateHelpOption(helpArgs);
+            this.HelpOption = _helpOptionResult;
+            return _helpOptionResult;
         }
 
         /// <summary>
@@ -275,6 +276,11 @@ namespace Fclp
                 if (option.CaseInsensitiveOptionNames.ContainsKey(optionName))
                     return true;
                 if (option.CaseSensitiveOptionNames.ContainsKey(optionName))
+                    return true;
+            }
+            if (this._helpOptionResult != null)
+            {
+                if (_helpOptionResult.HelpArgs.ContainsKey(optionName))
                     return true;
             }
             return false;

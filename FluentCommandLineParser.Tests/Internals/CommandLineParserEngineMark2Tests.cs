@@ -75,22 +75,6 @@ namespace Fclp.Tests.Internals
 					result.AdditionalValues.ShouldBeEmpty();
 			}
  			
-
-			
-			class when_args_contains_a_single_switch : ParseTestContext
-			{
-				Establish context = () => SetupArgs("-b");
-
-				It should_return_a_single_option = () =>
-					result.ParsedOptions.Count().ShouldEqual(1);
-
-				It should_set_the_parsed_key_to_the_correct_value = () =>
-					result.ParsedOptions.First().Key.ShouldEqual(WellKnownOptionNames.LittleB);
-
-				It should_set_the_parsed_raw_key_to_the_correct_value = () =>
-					result.ParsedOptions.First().RawKey.ShouldEqual("-b");
-			}
-
 			class when_args_contains_only_the_double_dash_option_prefix : ParseTestContext
 			{
 				Establish context = () => SetupArgs("--");

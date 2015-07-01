@@ -1487,6 +1487,54 @@ namespace Fclp.Tests
         }
 
         #endregion
+
+        [Test]
+        public void when_args_contains_a_single_switch()
+        {
+            var parser = CreateFluentParser();
+
+            int? number = 0;
+            parser.Setup<int>(CaseType.CaseInsensitive, "b").Callback(n => number = n);
+
+            parser.Parse(new[] { "/b=1" });
+
+            Assert.AreEqual(1, number);
+        }
+
+        [Test]
+        public void when_args_are_stacked()
+        {
+            var parser = CreateFluentParser();
+
+            int? number = 0;
+            parser.Setup<int>(CaseType.CaseInsensitive, "a").Required().Callback(n => number = n);
+            int? number2 = 0;
+            parser.Setup<int>(CaseType.CaseInsensitive, "b").Required().Callback(n => number2 = n);
+
+            parser.Parse(new[] { "/ab=1" });
+
+            Assert.AreEqual(1, number);
+            Assert.AreEqual(1, number2);
+        }
+
+        [Test]
+        public void when_args_are_stacked_with_rogue_characters()
+        {
+            var parser = CreateFluentParser();
+
+            int? number = 0;
+            parser.Setup<int>(CaseType.CaseInsensitive, "a").Required().Callback(n => number = n);
+            int? number2 = 0;
+            parser.Setup<int>(CaseType.CaseInsensitive, "b").Required().Callback(n => number2 = n);
+
+            var result  = parser.Parse(new[] { "/abc=1" });
+
+            Assert.AreEqual(0, number);
+            Assert.AreEqual(0, number2);
+            Assert.IsTrue(result.HasErrors);
+            Assert.IsTrue(result.Errors.Count() == 2);
+        }
+
     }
 }
 

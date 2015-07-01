@@ -42,13 +42,31 @@ namespace Fclp.Internals
 		/// <param name="helpArgs">The registered help arguments.</param>
 		public HelpCommandLineOption(IEnumerable<string> helpArgs)
 		{
-			HelpArgs = helpArgs ?? new List<string>();
+            foreach (var arg in helpArgs)
+		    {
+		        CaseInsensitiveHelpDictionary.Add(arg,"");
+		    }
 		}
 
 		/// <summary>
 		/// Gets the registered help arguments.
-		/// </summary>
-		public IEnumerable<string> HelpArgs { get; private set; }
+        /// </summary>
+        public IDictionary<string, string> HelpArgs
+        {
+            get { return CaseInsensitiveHelpDictionary; }
+        }
+
+        private Dictionary<string, string> _caseInsensitiveHelpDictionary;
+        private Dictionary<string, string> CaseInsensitiveHelpDictionary
+        {
+            get
+            {
+                return _caseInsensitiveHelpDictionary
+                       ??
+                       (_caseInsensitiveHelpDictionary =
+                           new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase));
+            }
+        }
 
 		/// <summary>
 		/// Gets or sets the callback method.
@@ -133,27 +151,27 @@ namespace Fclp.Internals
 			return this;
 		}
 
-		/// <summary>
-		/// Determines whether the help text should be shown.
-		/// </summary>
-		/// <param name="parsedOptions">The parsed command line arguments</param>
-		/// <param name="comparisonType">The type of comparison to use when comparing Option names.</param>
-		/// <returns>
-		/// true if the parser operation should cease and <see cref="ShowHelp" /> should be called; otherwise false if the parse operation to continue.
-		/// </returns>
-		public bool ShouldShowHelp(IEnumerable<ParsedOption> parsedOptions, StringComparison comparisonType)
-		{
-			var parsed = parsedOptions != null ? parsedOptions.ToList() : new List<ParsedOption>();
+	    /// <summary>
+	    /// Determines whether the help text should be shown.
+	    /// </summary>
+	    /// <param name="parsedOptions">The parsed command line arguments</param>
+	    /// <param name="comparisonType">The type of comparison to use when comparing Option names.</param>
+	    /// <returns>
+	    /// true if the parser operation should cease and <see cref="ShowHelp" /> should be called; otherwise false if the parse operation to continue.
+	    /// </returns>
+	    public bool ShouldShowHelp(IEnumerable<ParsedOption> parsedOptions, StringComparison comparisonType)
+	    {
+	        var parsed = parsedOptions != null ? parsedOptions.ToList() : new List<ParsedOption>();
 
-			if (parsed.Any() == false && ShouldUseForEmptyArgs)
-			{
-				return true;
-			}
+	        if (parsed.Any() == false && ShouldUseForEmptyArgs)
+	        {
+	            return true;
+	        }
+	        return parsed.Any(p => this.HelpArgs.ContainsKey(p.Key));
 
-			return this.HelpArgs.Any(helpArg => parsed.Any(cmdArg => helpArg.Equals(cmdArg.Key, comparisonType)));
-		}
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// Shows the help text for the specified registered options.
 		/// </summary>
 		/// <param name="options">The options to generate the help text for.</param>
