@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Fclp.Internals.Extensions;
 
@@ -99,9 +100,29 @@ namespace Fclp.Internals.Parsing
             }
             else
             {
-                // This could be a stacked option, so split away
-                _parsedOptions.AddRange(CloneAndSplit(parsedOption));
+                // the stacked options need to all exist, or nothing
+                // i.e. -a -b cannot be turned into -abc, where -c doesn't exist
+                bool validStack = true;
+
+                foreach (char c in parsedOption.Key)
+                {
+                    var isValid = ValidateCharOption(c);
+                    if (isValid) continue;
+                    validStack = false;
+                    break;
+                }
+                if (validStack)
+                {
+                    // This could be a stacked option, so split away
+                    _parsedOptions.AddRange(CloneAndSplit(parsedOption));
+                }
             }
+        }
+
+        private bool ValidateCharOption(char c)
+        {
+            var optionName = c.ToString(CultureInfo.InvariantCulture);
+            return _parserAssistant.IsBeingWatchedFor(optionName);
         }
 
         private void AddAdditionArgument(string argument)
