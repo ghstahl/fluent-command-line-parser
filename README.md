@@ -1,6 +1,16 @@
 Fluent Command Line Parser
 ==========================
 A simple, strongly typed .NET C# command line parser library using a fluent easy to use interface.
+
+### Differences between this variant and the original
+1. All features of the original
+2. No distinction made when it comes to option switch reserved characters: -,--,/ are all equal
+2. No distinction made between short and long option names, expect for stacking, where stacking is only honored for option names of lenght=1
+3. stacking: -a -b, can be writen as -ab, --ab, and /ab.  -Dog -a cannot be stacked, i.e -Doga
+4. The parser honors both case sensitive and case insensitive option names.  i.e. you can have both for any option.
+
+Hopefully "https://github.com/siywilliams/fluent-command-line-parser", will pick up these changes and I will shut down this version.
+
 ### Download
 
 See what's new in [v1.4.2](https://github.com/fclp/fluent-command-line-parser/wiki/Roadmap).
@@ -41,11 +51,13 @@ static void Main(string[] args)
 ```
 ### Parser Option Methods
 
-`.Setup<int>(CaseType.CaseInsensitive,"r")` Setup an option using a short name, 
+`.Setup<int>(CaseType.CaseInsensitive,"r")` Setup an option using a single name, 
 
-`.Setup<int>(CaseType.CaseInsensitive,"r", "record")` or short and long name.
+`.Setup<int>(CaseType.CaseInsensitive,"r", "record")` or any number of names.
 
-`.AddCaseSensitiveOption("BigR")` You can add a CaseSensitive name to an option as well.
+`.AddCaseSensitiveOption("BigR")` You can add a case sensitive name to an option as well.
+
+`.AddCaseInsensitiveOption("WhAtEvEr")` You can add a case Insensitive name to an option as well.
 
 `.Required()` Indicate the option is required and an error should be raised if it is not provided.
 

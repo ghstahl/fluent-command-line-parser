@@ -11,7 +11,7 @@
     <description>original:https://github.com/fclp/fluent-command-line-parser A simple, strongly typed .NET C# command line parser library using a fluent easy to use interface</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright George Stahl 2015</copyright>
-    <tags>fluent command line parser commandline c# net35</tags>
+    <tags>fluent command line parser commandline c# net45</tags>
     <dependencies>
     </dependencies>
   </metadata>
