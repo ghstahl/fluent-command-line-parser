@@ -82,6 +82,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\Int64InlineDataAttribute.cs" />
+    <Compile Include="Integration\Lists\Int64ListInlineDataAttribute.cs" />
     <Compile Include="Internals\CommandLineParserEngine\CommandLineParserEngineMark2NunitTests.cs" />
     <Compile Include="WellKnownOptionNames.cs" />
     <Compile Include="UriTests.cs" />

@@ -17,6 +17,7 @@ namespace Fclp.Tests
         public const string LittleF = "f";
         public const string LittleG = "g";
         public const string LittleI = "i";
+        public const string LittleL = "l";
         public const string LittleR = "r";
         public const string LittleS = "s";
         public const string LittleT = "t";
