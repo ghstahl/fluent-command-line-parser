@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Pingo.FluentCommandLineParser</id>
-	  <title>Pingo Variant of Fluent Command Line Parser</title>
+    <title>Pingo Variant of Fluent Command Line Parser</title>
     <version>$version$</version>
     <authors>siywilliams ghstahl</authors>
     <owners>siywilliams ghstahl</owners>
@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.dll" target="lib\net35" />
-    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.pdb" target="lib\net35" />
-    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.xml" target="lib\net35" />
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.dll" target="lib\net45" />
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.pdb" target="lib\net45" />
+    <file src="..\FluentCommandLineParser\bin\Release\FluentCommandLineParser.xml" target="lib\net45" />
   </files>
 </package>
