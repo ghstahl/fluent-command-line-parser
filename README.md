@@ -6,7 +6,7 @@ A simple, strongly typed .NET C# command line parser library using a fluent easy
 1. All features of the original
 2. No distinction made when it comes to option switch reserved characters: -,--,/ are all equal
 3. No distinction made between short and long option names, expect for stacking, where stacking is only honored for option names of length=1
-4. stacking: -a -b, can be writen as -ab, --ab, and /ab.  -Dog -a cannot be stacked, i.e -Doga
+4. stacking: -a -b, can be written as -ab, --ab, and /ab.  -Dog -a cannot be stacked, i.e -Doga
 5. The parser honors both case sensitive and case insensitive option names.  i.e. you can have both for any option.
 
 Hopefully "https://github.com/siywilliams/fluent-command-line-parser", will pick up these changes and I will shut down this version.
